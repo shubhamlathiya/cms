@@ -10,7 +10,4 @@ public class PathConstant {
     public static final String SUBJECTS_PATH  = "subjects";
     public static final String ROLES_PATH  = "roles";
 
-
-
-
 }
