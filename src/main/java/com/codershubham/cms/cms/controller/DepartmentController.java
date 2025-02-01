@@ -19,13 +19,31 @@ public class DepartmentController {
     @GetMapping
     public String getAllDepartments(Model model) {
         model.addAttribute("departments", departmentService.getAllDepartments());
-        return "departments";
+        return "departments/departments";
+    }
+
+    @GetMapping("/new")
+    public String add(Model model) {
+        model.addAttribute("department", new Department()); // Add a new Department object to the model
+        return "departments/add-department";
     }
 
     @PostMapping("/add")
     public String addDepartment(@ModelAttribute Department department) {
         departmentService.addDepartment(department);
         return "redirect:/departments";
+    }
+
+    @GetMapping("/update/{id}")
+    public String updateDepartment(@PathVariable Long id, Model model) {
+        // Fetch the department from the database using the provided id
+        Department department = departmentService.getDepartmentById(id);
+
+        // Add the department object to the model
+        model.addAttribute("department", department);
+
+        // Return the view name (the form where the department data will be updated)
+        return "departments/edit-department";
     }
 
     @PostMapping("/update/{id}")

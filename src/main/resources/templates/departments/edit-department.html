@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Update Department</title>
+</head>
+<body>
+<h1>Update Department</h1>
+
+<!-- Form for updating department -->
+<form th:action="@{/departments/update/{id}(id=${department.id})}"
+      th:object="${department}" method="post">
+
+  <div>
+    <label for="name">Department Name:</label>
+    <input type="text" id="name" th:field="*{name}" placeholder="Enter department name"/>
+  </div>
+
+  <div>
+    <label for="departmentHead">Department Head:</label>
+    <input type="text" id="departmentHead" th:field="*{departmentHead}" placeholder="Enter department head"/>
+  </div>
+
+  <div>
+    <button type="submit">Update Department</button>
+  </div>
+</form>
+
+<br>
+<a href="/departments">Back to Departments</a>
+</body>
+</html>

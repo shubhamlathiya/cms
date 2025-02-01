@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+
 @Service
 public class DepartmentService {
 
@@ -17,6 +18,12 @@ public class DepartmentService {
 
     public Department addDepartment(Department department) {
         return departmentRepository.save(department);
+    }
+
+    // Method to get a department by its ID
+    public Department getDepartmentById(Long id) {
+        // You may want to handle cases where the department is not found
+        return departmentRepository.findById(id).orElseThrow(() -> new RuntimeException("Department not found with id " + id));
     }
 
     public Department updateDepartment(Long id, Department departmentDetails) {
