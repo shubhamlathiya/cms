@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Update Subject</title>
+</head>
+<body>
+
+<h2>Update Subject</h2>
+
+<!-- Form to update an existing subject -->
+<form th:action="@{/subjects/update/{subjectID}(subjectID=${subject.subjectid})}" th:object="${subject}" method="post">
+  <label for="subjectCode">Subject Code:</label>
+  <input type="text" id="subjectCode" th:field="*{subjectCode}" required>
+  <br><br>
+
+  <label for="subjectName">Subject Name:</label>
+  <input type="text" id="subjectName" th:field="*{subjectName}" required>
+  <br><br>
+
+  <label for="credits">Credits:</label>
+  <input type="number" id="credits" th:field="*{credits}" required>
+  <br><br>
+
+  <label for="course">Course:</label>
+  <select id="course" th:field="*{course}" required>
+    <option th:each="course : ${courses}" th:value="${course.courseID}" th:text="${course.courseName}"
+            th:selected="${course.courseID == subject.course.courseID}"></option>
+  </select>
+  <br><br>
+
+  <button type="submit">Update Subject</button>
+</form>
+
+</body>
+</html>

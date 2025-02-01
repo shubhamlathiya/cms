@@ -17,24 +17,24 @@ public class SubjectService {
     private SubjectRepository subjectRepository;
 
     @Autowired
-    private CourseRepository courseRepository;  // Inject CourseRepository
+    private CourseRepository courseRepository;  // Inject CourseRepository to get course details
 
     // Create a new subject
     public Subjects createSubject(Subjects subject) {
-        // Ensure courseID exists and fetch the corresponding course
-        Long courseID = (long) subject.getCourse().getCourseID();  // Assuming course is passed with courseID
+        // Ensure the course exists and fetch it using courseID
+        Long courseID = subject.getCourse().getCourseID();  // Ensure courseID is being passed properly
         Course course = courseRepository.findById(courseID)
                 .orElseThrow(() -> new RuntimeException("Course not found with ID: " + courseID));
 
-        subject.setCourse(course);  // Set the fetched course to the subject
-        subject.setCreatedAt(LocalDateTime.now()); // Set the creation timestamp
+        subject.setCourse(course);  // Set the course for the subject
+        subject.setCreatedAt(LocalDateTime.now());  // Set the creation timestamp for the subject
 
-        return subjectRepository.save(subject); // Save the subject to the database
+        return subjectRepository.save(subject);  // Save and return the created subject
     }
 
     // Get all subjects
     public List<Subjects> getAllSubjects() {
-        return subjectRepository.findAll(); // Retrieve all subjects from the database
+        return subjectRepository.findAll();  // Retrieve all subjects from the database
     }
 
     // Update an existing subject
@@ -43,18 +43,18 @@ public class SubjectService {
         Subjects subject = subjectRepository.findById(subjectID)
                 .orElseThrow(() -> new RuntimeException("Subject not found with ID: " + subjectID));
 
-        // Ensure courseID exists and fetch the corresponding course
-        Long courseID = (long) updatedSubject.getCourse().getCourseID();
+        // Ensure the course exists and fetch it using the courseID from updatedSubject
+        Long courseID = updatedSubject.getCourse().getCourseID();
         Course course = courseRepository.findById(courseID)
                 .orElseThrow(() -> new RuntimeException("Course not found with ID: " + courseID));
 
-        // Update the subject details
+        // Update the subject fields
         subject.setSubjectCode(updatedSubject.getSubjectCode());
         subject.setSubjectName(updatedSubject.getSubjectName());
         subject.setCredits(updatedSubject.getCredits());
         subject.setCourse(course);  // Set the updated course
 
-        return subjectRepository.save(subject); // Save the updated subject
+        return subjectRepository.save(subject);  // Save and return the updated subject
     }
 
     // Delete a subject by ID
@@ -64,6 +64,12 @@ public class SubjectService {
             throw new RuntimeException("Subject not found with ID: " + subjectID);
         }
 
-        subjectRepository.deleteById(subjectID); // Delete the subject
+        subjectRepository.deleteById(subjectID);  // Delete the subject from the database
+    }
+
+    // Get a subject by ID
+    public Subjects getSubjectById(long subjectID) {
+        return subjectRepository.findById(subjectID)
+                .orElseThrow(() -> new RuntimeException("Subject not found with ID: " + subjectID));  // Return subject if exists
     }
 }

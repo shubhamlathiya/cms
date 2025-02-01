@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Add New Subject</title>
+</head>
+<body>
+
+<h2>Add New Subject</h2>
+
+<!-- Form to add a new subject -->
+<form th:action="@{/subjects/add}" th:object="${subject}" method="post">
+  <label for="subjectCode">Subject Code:</label>
+  <input type="text" id="subjectCode" th:field="*{subjectCode}" required>
+  <br><br>
+
+  <label for="subjectName">Subject Name:</label>
+  <input type="text" id="subjectName" th:field="*{subjectName}" required>
+  <br><br>
+
+  <label for="credits">Credits:</label>
+  <input type="number" id="credits" th:field="*{credits}" required>
+  <br><br>
+
+  <label for="course">Course:</label>
+  <select id="course" th:field="*{course}" required>
+    <option th:each="course : ${courses}" th:value="${course.courseID}" th:text="${course.courseName}"></option>
+  </select>
+  <br><br>
+
+  <button type="submit">Add Subject</button>
+</form>
+
+</body>
+</html>

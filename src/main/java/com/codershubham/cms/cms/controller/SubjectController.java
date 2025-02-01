@@ -19,78 +19,62 @@ import java.util.List;
 public class SubjectController {
 
     @Autowired
-    private DepartmentService departmentService;  // Service to fetch departments
-    @Autowired
     private CourseService courseService;  // Service to fetch courses
     @Autowired
     private SubjectService subjectService;  // Service to handle subject-related operations
 
-    // Get all departments and their associated courses
-    @GetMapping("/create")
-    public String showCreateSubjectPage(Model model) {
-        // Fetch all courses
-        List<Course> courses = courseService.getAllCourses();  // Assuming you have a method to get all courses
-        // Add the courses to the model
-        model.addAttribute("courses", courses);
-
-        return "subjects";  // This should be the template you want to render (createSubject.html)
+    // Get all subjects and display the subject list page
+    @GetMapping
+    public String getAllSubjects(Model model) {
+        // Fetch all subjects
+        model.addAttribute("subjects", subjectService.getAllSubjects());
+        return "subjects/subjects";  // Thymeleaf template for listing subjects
     }
 
+    // Show form for adding a new subject
+    @GetMapping("/add")
+    public String addSubjectForm(Model model) {
+        // Fetch all courses for the dropdown
+        model.addAttribute("courses", courseService.getAllCourses());
+        model.addAttribute("subject", new Subjects());  // Empty subject object for binding
+        return "subjects/add-subject";  // Form to add a new subject
+    }
 
     // Create a new subject
-    @PostMapping("/create")
-    public String createSubject(@RequestParam String subjectCode,
-                                @RequestParam String subjectName,
-                                @RequestParam int credits,
-                                @RequestParam Long courseID) {
-        // Fetch the course using courseID from the request
-        Course course = courseService.getCourseById(courseID);
-
-        // Create a new subject and set the necessary fields
-        Subjects subject = new Subjects();
-        subject.setSubjectCode(subjectCode);
-        subject.setSubjectName(subjectName);
-        subject.setCredits(credits);
+    @PostMapping("/add")
+    public String addSubject(@ModelAttribute Subjects subject) {
+        // Set the current date and time for the creation date
         subject.setCreatedAt(LocalDateTime.now());
-        subject.setCourse(course);
-
         // Save the new subject
         subjectService.createSubject(subject);
+        return "redirect:/subjects";  // Redirect to the subjects list page
+    }
 
-        // Redirect back to the subject creation page (to show newly created subject)
-        return "redirect:/subjects/create";
+    // Show form for updating an existing subject
+    @GetMapping("/update/{subjectID}")
+    public String updateSubjectForm(@PathVariable Long subjectID, Model model) {
+        // Fetch the subject by its ID
+        Subjects subject = subjectService.getSubjectById(subjectID);
+        // Fetch all courses for the dropdown
+        model.addAttribute("courses", courseService.getAllCourses());
+        model.addAttribute("subject", subject);  // Add the subject to the model for editing
+        return "subjects/update-subject";  // Form to update an existing subject
     }
 
     // Update an existing subject
     @PostMapping("/update/{subjectID}")
-    public String updateSubject(@PathVariable Long subjectID,
-                                @RequestParam String subjectCode,
-                                @RequestParam String subjectName,
-                                @RequestParam int credits,
-                                @RequestParam Long courseID) {
-        // Fetch the course using courseID
-        Course course = courseService.getCourseById(courseID);
-
-        // Create a new subject object with updated details
-        Subjects updatedSubject = new Subjects();
-        updatedSubject.setSubjectid(subjectID);
-        updatedSubject.setSubjectCode(subjectCode);
-        updatedSubject.setSubjectName(subjectName);
-        updatedSubject.setCredits(credits);
+    public String updateSubject(@PathVariable Long subjectID, @ModelAttribute Subjects updatedSubject) {
+        // Set the current date and time for the updated date
         updatedSubject.setCreatedAt(LocalDateTime.now());
-        updatedSubject.setCourse(course);
-
-        // Update the subject using the service
+        // Update the subject
         subjectService.updateSubject(subjectID, updatedSubject);
-
-        // Redirect to subject creation page after update
-        return "redirect:/subjects/create";  // You can also redirect to a page that lists all subjects if you wish
+        return "redirect:/subjects";  // Redirect to the subjects list page after update
     }
 
     // Delete a subject
     @GetMapping("/delete/{subjectID}")
     public String deleteSubject(@PathVariable Long subjectID) {
         subjectService.deleteSubject(subjectID);  // Delete the subject
-        return "redirect:/subjects/create";  // Redirect to subject creation page after deletion
+        return "redirect:/subjects";  // Redirect to the subjects list page after deletion
     }
 }
