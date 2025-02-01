@@ -22,7 +22,7 @@ public class CourseService {
         return courseRepository.findAll();
     }
 
-    public Course updateCourse(long courseID, Course updatedCourse) {
+    public Course updateCourse(Long courseID, Course updatedCourse) {
         Course course = courseRepository.findById(courseID)
                 .orElseThrow(() -> new RuntimeException("Course not found"));
         course.setCourseName(updatedCourse.getCourseName());

@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Courses</title>
+</head>
+<body>
+<h1>Courses</h1>
+
+<!-- Button to go to Add Course form -->
+<a href="/courses/add">Add Course</a>
+
+<table>
+    <thead>
+    <tr>
+        <th>Course Name</th>
+        <th>Department</th>
+        <th>Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="course : ${courses}">
+        <td th:text="${course.courseName}"></td>
+        <td th:text="${course.duration}"></td>
+        <td th:text="${course.department.name}"></td>
+        <td th:text="${course.createdAt}"></td>
+        <td>
+            <!-- Edit link for each course -->
+            <a th:href="@{/courses/update/{courseID}(courseID=${course.courseID})}">Edit</a> |
+            <!-- Delete link for each course -->
+            <a th:href="@{/courses/delete/{courseID}(courseID=${course.courseID})}" th:onclick="return confirm('Are you sure you want to delete?')">Delete</a>
+        </td>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>

@@ -23,17 +23,14 @@ public class CourseController {
     public String getAllCourses(Model model) {
         model.addAttribute("courses", courseService.getAllCourses());
         model.addAttribute("departments", departmentService.getAllDepartments());  // Pass list of departments
-        model.addAttribute("course", new Course());  // Initialize a new Course object for the form
-        return "courses";  // Thymeleaf template 'courses.html'
+        return "courses/courses";  // Thymeleaf template 'courses.html'
     }
-
 
     @GetMapping("/add")
     public String addCourseForm(Model model) {
-        // Add a list of departments to the model to populate the dropdown
-        model.addAttribute("departments", departmentService.getAllDepartments());
-        model.addAttribute("course", new Course());  // Add an empty course object for binding
-        return "add-course";  // A view to display the form to add a course
+        model.addAttribute("departments", departmentService.getAllDepartments());  // List of departments for dropdown
+        model.addAttribute("course", new Course());  // Empty Course object for binding
+        return "courses/add-course";  // Form to add a new course
     }
 
     @PostMapping("/add")
@@ -42,8 +39,16 @@ public class CourseController {
         return "redirect:/courses";  // Redirect back to the courses page after creation
     }
 
+    @GetMapping("/update/{courseID}")
+    public String updateCourseForm(@PathVariable Long courseID, Model model) {
+        Course course = courseService.getCourseById(courseID);
+        model.addAttribute("departments", departmentService.getAllDepartments());  // List of departments for dropdown
+        model.addAttribute("course", course);  // Add the course to be updated
+        return "courses/update-course";  // Form to update a course
+    }
+
     @PostMapping("/update/{courseID}")
-    public String updateCourse(@PathVariable int courseID, @ModelAttribute Course updatedCourse) {
+    public String updateCourse(@PathVariable Long courseID, @ModelAttribute Course updatedCourse) {
         courseService.updateCourse(courseID, updatedCourse);
         return "redirect:/courses";  // Redirect back to the courses page after update
     }
