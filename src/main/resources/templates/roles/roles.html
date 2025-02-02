@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Roles</title>
+</head>
+<body>
+<h2>Role Management</h2>
+
+<!-- Add Role Form -->
+<form action="/roles/add" method="post">
+    <input type="text" name="roleName" placeholder="Enter Role Name" required>
+    <button type="submit">Add Role</button>
+</form>
+
+<h3>Existing Roles</h3>
+<table border="1">
+    <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Actions</th>
+    </tr>
+    <tr th:each="role : ${roles}">
+        <td th:text="${role.id}"></td>
+        <td th:text="${role.name}"></td>
+        <td>
+            <!-- Update Role Form -->
+            <form action="/roles/update" method="post" style="display:inline;">
+                <input type="hidden" name="roleId" th:value="${role.id}">
+                <input type="text" name="roleName" placeholder="New Name" required>
+                <button type="submit">Update</button>
+            </form>
+
+            <!-- Delete Role Form -->
+            <form action="/roles/delete" method="post" style="display:inline;">
+                <input type="hidden" name="roleId" th:value="${role.id}">
+                <button type="submit" th:onclick="return confirm('Are you sure you want to delete?')">Delete</button>
+            </form>
+        </td>
+    </tr>
+</table>
+</body>
+</html>
