@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title th:text="${syllabus.syllabusid} ? 'Edit Syllabus' : 'Add Syllabus'"></title>
+  <script>
+    function addTopicField(value = '') {
+      var container = document.getElementById("topicsContainer");
+      var div = document.createElement("div");
+      div.style.marginBottom = "5px";
+
+      var input = document.createElement("input");
+      input.type = "text";
+      input.name = "topics";
+      input.value = value;
+      input.required = true;
+
+      var removeButton = document.createElement("button");
+      removeButton.type = "button";
+      removeButton.innerText = "Remove";
+      removeButton.onclick = function () {
+        container.removeChild(div);
+      };
+
+      div.appendChild(input);
+      div.appendChild(removeButton);
+      container.appendChild(div);
+    }
+
+    function loadExistingTopics() {
+      var topics = document.getElementsByName("topics");
+      if (topics.length === 0) {
+        addTopicField(); // Ensure at least one topic field is present
+      }
+    }
+
+    window.onload = loadExistingTopics;
+  </script>
+</head>
+<body>
+
+<h2 th:text="${syllabus.syllabusid} ? 'Edit Syllabus' : 'Add Syllabus'"></h2>
+
+<form th:action="@{/syllabus/save}" th:object="${syllabus}" method="post">
+  <input type="hidden" th:field="*{syllabusid}" />
+  <input type="hidden" th:field="*{subject.subjectid}" />
+
+  <label>Unit No:</label>
+  <input type="number" th:field="*{unitNo}" required /><br>
+
+  <label>Unit Name:</label>
+  <input type="text" th:field="*{unitName}" required /><br>
+
+  <label>Topics:</label>
+  <div id="topicsContainer">
+    <th:block th:each="topic : *{topics}">
+      <script th:inline="javascript">
+        /*<![CDATA[*/
+        addTopicField([[${topic}]]);
+        /*]]>*/
+      </script>
+    </th:block>
+  </div>
+  <button type="button" onclick="addTopicField()">Add Topic</button><br>
+
+  <label>Resources:</label>
+  <input type="text" th:field="*{resources}" /><br>
+
+  <button type="submit">Save</button>
+</form>
+
+<a href="/syllabus">Back to List</a>
+
+</body>
+</html>

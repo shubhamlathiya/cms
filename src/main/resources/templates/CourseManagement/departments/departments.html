@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Departments</title>
+</head>
+<body>
+<h1>Departments</h1>
+
+<!-- Button to go to Add Department form -->
+<a href="/departments/add">Add Department</a>
+
+<table>
+  <thead>
+  <tr>
+    <th>Department Name</th>
+    <th>Head of Department</th> <!-- New column for Head of Department -->
+    <th>Actions</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr th:each="departmentModel : ${departments}">
+    <td th:text="${departmentModel.name}"></td>
+    <td th:text="${departmentModel.departmentHead}"></td> <!-- Display the Head of Department -->
+    <td>
+      <!-- Edit link for each departmentModel -->
+      <a th:href="@{/departments/update/{id}(id=${departmentModel.id})}">Edit</a> |
+      <!-- Delete link for each departmentModel -->
+      <a th:href="@{/departments/delete/{id}(id=${departmentModel.id})}" th:onclick="return confirm('Are you sure you want to delete?')">Delete</a>
+    </td>
+  </tr>
+  </tbody>
+</table>
+</body>
+</html>

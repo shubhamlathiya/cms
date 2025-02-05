@@ -1,0 +1,90 @@
+package com.codershubham.cms.cms.controller.CourseManagementModules;
+
+
+import com.codershubham.cms.cms.model.CourseManagementModules.SubjectsModel;
+import com.codershubham.cms.cms.model.CourseManagementModules.SyllabusModel;
+import com.codershubham.cms.cms.service.CourseManagementModules.SyllabusService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.Optional;
+
+@Controller
+@RequestMapping("/syllabus")
+public class SyllabusController {
+
+    @Autowired
+    private SyllabusService syllabusService;
+
+    @GetMapping("/subject/{subjectId}")
+    public String getSyllabusBySubject(@PathVariable Long subjectId, Model model) {
+        List<SyllabusModel> syllabusList = syllabusService.getSyllabusBySubject(subjectId);
+        model.addAttribute("syllabusList", syllabusList);
+        model.addAttribute("subjectId", subjectId);
+        return "CourseManagement/syllabus/syllabus-by-subject"; // Returns syllabus-by-subject.html
+    }
+
+    @GetMapping("/add/{subjectId}")
+    public String showAddSyllabusForm(@PathVariable Long subjectId, Model model) {
+        SyllabusModel syllabus = new SyllabusModel();
+        SubjectsModel subject = new SubjectsModel();
+        subject.setSubjectid(subjectId);
+        syllabus.setSubject(subject);
+
+        model.addAttribute("syllabus", syllabus);
+        model.addAttribute("subjectId", subjectId);
+        return "CourseManagement/syllabus/syllabus-form"; // Navigate to syllabus form
+    }
+
+    // 2️⃣ Show Add Syllabus Form
+    @GetMapping("/add")
+    public String showAddSyllabusForm(Model model) {
+        model.addAttribute("syllabus", new SyllabusModel());
+        return "CourseManagement/syllabus/syllabus-form";  // Returns syllabus-form.html
+    }
+
+    // 3️⃣ Process Add Syllabus Form
+    @PostMapping("/save")
+    public String createSyllabus(@ModelAttribute SyllabusModel syllabus) {
+        syllabusService.addSyllabus(syllabus);
+        return "redirect:/syllabus/subject/" + syllabus.getSubject().getSubjectid();
+        // Redirect to syllabus list of that subject
+    }
+
+    // 4️⃣ Show Update Syllabus Form
+    @GetMapping("/edit/{id}")
+    public String showUpdateSyllabusForm(@PathVariable Long id, Model model) {
+        Optional<SyllabusModel> syllabus = syllabusService.getSyllabusById(id);
+        if (syllabus.isPresent()) {
+            model.addAttribute("syllabus", syllabus.get());
+            model.addAttribute("subjectId", syllabus.get().getSubject().getSubjectid());
+            return "CourseManagement/syllabus/syllabus-form"; // Navigate to syllabus form
+        } else {
+            return "redirect:/syllabus";  // Redirect to main syllabus list if not found
+        }
+    }
+
+    // 5️⃣ Process Update Syllabus
+    @PostMapping("/update/{id}")
+    public String updateSyllabus(@PathVariable Long id, @ModelAttribute SyllabusModel syllabus) {
+        syllabusService.updateSyllabus(id, syllabus);
+        return "redirect:/syllabus/subject/" + syllabus.getSubject().getSubjectid();
+        // Redirect to syllabus list of that subject after update
+    }
+
+
+    @GetMapping("/delete/{id}")
+    public String deleteSyllabus(@PathVariable Long id) {
+        Optional<SyllabusModel> syllabus = syllabusService.getSyllabusById(id);
+        if (syllabus.isPresent()) {
+            Long subjectId = syllabus.get().getSubject().getSubjectid();
+            syllabusService.deleteSyllabus(id);
+            return "redirect:/syllabus/subject/" + subjectId;
+            // Redirect to syllabus list of the respective subject after deletion
+        }
+        return "redirect:/syllabus";  // Redirect to syllabus home if not found
+    }
+}

@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Syllabus List</title>
+</head>
+<body>
+<h2>Syllabus List</h2>
+<a href="/syllabus/add">Add New Syllabus</a>
+<table border="1">
+  <thead>
+  <tr>
+    <th>Unit No</th>
+    <th>Unit Name</th>
+    <th>Topics</th>
+    <th>Resources</th>
+    <th>Actions</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr th:each="syllabus : ${syllabusList}">
+    <td th:text="${syllabus.unitNo}"></td>
+    <td th:text="${syllabus.unitName}"></td>
+    <td>
+      <ul>
+        <li th:each="topic : ${syllabus.topics}" th:text="${topic}"></li>
+      </ul>
+    </td>
+    <td th:text="${syllabus.resources}"></td>
+    <td>
+      <a th:href="@{/syllabus/edit/{id}(id=${syllabus.syllabusid})}">Edit</a>
+      <a th:href="@{/syllabus/delete/{id}(id=${syllabus.syllabusid})}" onclick="return confirm('Are you sure?')">Delete</a>
+    </td>
+  </tr>
+  </tbody>
+</table>
+</body>
+</html>
