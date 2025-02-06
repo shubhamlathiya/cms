@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Permissions for Role</title>
+</head>
+<body>
+
+<h2>Manage Permissions for Role: <span th:text="${role.name}"></span></h2>
+
+<h3>Available Permissions</h3>
+<table border="1">
+    <thead>
+    <tr>
+        <th>Permission</th>
+        <th>Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="permission : ${allPermissions}">
+        <td th:text="${permission.permissionName}"></td>
+        <td>
+            <form action="/roles/{role.id}/permissions/add" method="post" style="display:inline;">
+                <input type="hidden" name="permissionId" th:value="${permission.permissionId}">
+                <button type="submit">Add Permission</button>
+            </form>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+<h3>Assigned Permissions</h3>
+<table border="1">
+    <thead>
+    <tr>
+        <th>Permission</th>
+        <th>Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="permission : ${rolePermissions}">
+        <td th:text="${permission.permissionName}"></td>
+        <td>
+            <form action="/roles/{role.id}/permissions/remove" method="post" style="display:inline;">
+                <input type="hidden" name="permissionId" th:value="${permission.permissionId}">
+                <button type="submit">Remove Permission</button>
+            </form>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+</body>
+</html>

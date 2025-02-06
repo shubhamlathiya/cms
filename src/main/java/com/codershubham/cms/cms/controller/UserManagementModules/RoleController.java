@@ -1,14 +1,17 @@
 package com.codershubham.cms.cms.controller.UserManagementModules;
 
 import com.codershubham.cms.cms.constant.PathConstant;
+import com.codershubham.cms.cms.model.UserManagementModules.PermissionModel;
+import com.codershubham.cms.cms.model.UserManagementModules.RoleModel;
+import com.codershubham.cms.cms.repository.UserManagementModules.RolePermissionRepository;
+import com.codershubham.cms.cms.service.UserManagementModules.PermissionService;
 import com.codershubham.cms.cms.service.UserManagementModules.RoleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @Controller
 @RequestMapping(PathConstant.ROLES_PATH)
@@ -16,6 +19,12 @@ public class RoleController {
 
     @Autowired
     private RoleService roleService;
+
+    @Autowired
+    private PermissionService permissionService;
+
+    @Autowired
+    private RolePermissionRepository rolePermissionRepository;
 
     // Show all roles
     @GetMapping
@@ -43,5 +52,47 @@ public class RoleController {
     public String deleteRole(@RequestParam Long roleId) {
         roleService.deleteRole(roleId);
         return "redirect:/roles";
+    }
+
+    @PostMapping("/{roleId}/permissions")
+    public List<PermissionModel> findPermissionsByRoleId(Long roleId) {
+        // Assuming the repository returns a list of Permissions
+        return rolePermissionRepository.findPermissionsByRoleId(roleId);
+    }
+
+    // Method to view and manage permissions for a role
+    @GetMapping("/{roleId}/permissions")
+    public String viewPermissions(@PathVariable Long roleId, Model model) {
+        // Get the role by id
+        RoleModel role = roleService.findById(roleId);
+
+        // Get all permissions
+        List<PermissionModel> allPermissions = permissionService.getAllPermissions();
+
+        // Get role's current permissions (from the RolePermission relationship)
+        List<PermissionModel> rolePermissions = permissionService.getPermissionsByRoleId(roleId);
+
+        // Add attributes to the model to be used in the view (Thymeleaf or JSP)
+        model.addAttribute("role", role);
+        model.addAttribute("allPermissions", allPermissions);
+        model.addAttribute("rolePermissions", rolePermissions);
+
+        // Return the view name (Assumes you have a template named manage_permissions.html or manage_permissions.jsp)
+        return "UserManagement/roles/manage_permissions";
+    }
+
+
+    // Method to add permission to a role
+    @PostMapping("/{roleId}/permissions/add")
+    public String addPermissionToRole(@PathVariable Long roleId, @RequestParam Long permissionId) {
+        roleService.addPermissionToRole(roleId, permissionId);
+        return "redirect:/roles/{roleId}/permissions"; // Redirect back to the role's permissions page
+    }
+
+    // Method to remove permission from a role
+    @PostMapping("/{roleId}/permissions/remove")
+    public String removePermissionFromRole(@PathVariable Long roleId, @RequestParam Long permissionId) {
+        roleService.removePermissionFromRole(roleId, permissionId);
+        return "redirect:/roles/{roleId}/permissions"; // Redirect back to the role's permissions page
     }
 }
