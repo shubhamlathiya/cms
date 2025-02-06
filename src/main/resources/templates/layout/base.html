@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="'${pageTitle}'">Custom Page Title</title>
+    <link rel="stylesheet" type="text/css" href="/css/styles.css">
+</head>
+<body>
+
+<!-- Include header -->
+<div th:replace="layout/header.html :: header"></div>
+
+<!-- Dynamic Content Section -->
+<div>
+    <div th:insert="~{::content}"></div>
+</div>
+
+<!-- Include footer -->
+<div th:replace="layout/footer.html :: footer"></div>
+
+</body>
+</html>
