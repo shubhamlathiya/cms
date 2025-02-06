@@ -37,21 +37,21 @@ public class RoleController {
     @PostMapping("/add")
     public String addRole(@RequestParam String roleName) {
         roleService.addRole(roleName);
-        return "redirect:/roles";
+        return "redirect:/" + PathConstant.ROLES_PATH;
     }
 
     // Update an existing role
     @PostMapping("/update")
     public String updateRole(@RequestParam Long roleId, @RequestParam String roleName) {
         roleService.updateRole(roleId, roleName);
-        return "redirect:/roles";
+        return "redirect:/" + PathConstant.ROLES_PATH;
     }
 
     // Delete a role
     @PostMapping("/delete")
     public String deleteRole(@RequestParam Long roleId) {
         roleService.deleteRole(roleId);
-        return "redirect:/roles";
+        return "redirect:/" + PathConstant.ROLES_PATH;
     }
 
     @PostMapping("/{roleId}/permissions")

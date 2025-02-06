@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Manage Roles</title>
-
 </head>
 <body>
 
@@ -29,6 +28,7 @@
     <tr th:each="role : ${roles}">
         <td th:text="${role.id}"></td>
         <td>
+            <!-- Update Role Form -->
             <form action="/roles/update" method="post">
                 <input type="hidden" name="roleId" th:value="${role.id}">
                 <input type="text" name="roleName" th:value="${role.name}" required>
@@ -37,25 +37,44 @@
         </td>
         <td>
             <!-- Manage Permissions Button -->
-            <a th:href="@{/roles/{id}/permissions(id=${role.id})}">
+            <a th:href="@{'/roles/' + ${role.id} + '/permissions'}">
                 <button type="button">Manage Permissions</button>
             </a>
 
-            <!-- Delete Role Form -->
-            <form id="deleteForm-[[${role.id}]]" action="/roles/delete" method="post">
-                <input type="hidden" name="roleId" th:value="${role.id}">
-                <button type="button" onclick="confirmDelete([[${role.id}]])">Delete</button>
-            </form>
+            <!-- Delete Role Button (API Call) -->
+            <button type="button" th:onclick="'deleteRole(' + ${role.id} + ')'" >Delete</button>
+
         </td>
     </tr>
     </tbody>
 </table>
 <script>
-    function confirmDelete(roleId) {
+    function deleteRole(roleId) {
+        // Confirm if user really wants to delete
         if (confirm("Are you sure you want to delete this role?")) {
-            document.getElementById('deleteForm-' + roleId).submit();
+            // Make a DELETE request
+            fetch(`/roles/delete`, {
+                method: "POST",  // POST method is being used here instead of DELETE because Thymeleaf is using a POST request
+                headers: {
+                    "Content-Type": "application/x-www-form-urlencoded",  // Ensure the request is URL encoded
+                },
+                body: new URLSearchParams({ 'roleId': roleId })  // Sending roleId in body for request
+            })
+                .then(response => {
+                    if (response.ok) {
+                        alert("Role deleted successfully!");
+                        location.reload(); // Reload the page to see the changes
+                    } else {
+                        return response.text().then(text => { throw new Error(text); });
+                    }
+                })
+                .catch(error => {
+                    alert("Error deleting role: " + error.message);
+                });
         }
     }
 </script>
+
+
 </body>
 </html>
