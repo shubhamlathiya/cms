@@ -10,7 +10,7 @@
 <h2>Role Management</h2>
 
 <!-- Add Role Form -->
-<form action="/roles/add" method="post">
+<form action="/admin/roles/add" method="post">
     <input type="text" name="roleName" placeholder="Enter Role Name" required>
     <button type="submit">Add Role</button>
 </form>
@@ -29,7 +29,7 @@
         <td th:text="${role.id}"></td>
         <td>
             <!-- Update Role Form -->
-            <form action="/roles/update" method="post">
+            <form action="/admin/roles/update" method="post">
                 <input type="hidden" name="roleId" th:value="${role.id}">
                 <input type="text" name="roleName" th:value="${role.name}" required>
                 <button type="submit">Update</button>
@@ -37,7 +37,7 @@
         </td>
         <td>
             <!-- Manage Permissions Button -->
-            <a th:href="@{'/roles/' + ${role.id} + '/permissions'}">
+            <a th:href="@{'/admin/roles/' + ${role.id} + '/permissions'}">
                 <button type="button">Manage Permissions</button>
             </a>
 
@@ -53,7 +53,7 @@
         // Confirm if user really wants to delete
         if (confirm("Are you sure you want to delete this role?")) {
             // Make a DELETE request
-            fetch(`/roles/delete`, {
+            fetch(`/admin/roles/delete`, {
                 method: "POST",  // POST method is being used here instead of DELETE because Thymeleaf is using a POST request
                 headers: {
                     "Content-Type": "application/x-www-form-urlencoded",  // Ensure the request is URL encoded

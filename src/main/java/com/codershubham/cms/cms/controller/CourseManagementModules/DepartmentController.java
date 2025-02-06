@@ -30,7 +30,7 @@ public class DepartmentController {
     @PostMapping("/add")
     public String addDepartment(@ModelAttribute DepartmentModel departmentModel) {
         departmentService.addDepartment(departmentModel);
-        return "redirect:/departments";
+        return "redirect:/" + PathConstant.DEPARTMENTS_PATH;
     }
 
     @GetMapping("/update/{id}")
@@ -48,12 +48,12 @@ public class DepartmentController {
     @PostMapping("/update/{id}")
     public String updateDepartment(@PathVariable Long id, @ModelAttribute DepartmentModel departmentModel) {
         departmentService.updateDepartment(id, departmentModel);
-        return "redirect:/departments";
+        return "redirect:/" + PathConstant.DEPARTMENTS_PATH;
     }
 
     @GetMapping("/delete/{id}")
     public String deleteDepartment(@PathVariable Long id) {
         departmentService.deleteDepartment(id);
-        return "redirect:/departments";
+        return "redirect:/" + PathConstant.DEPARTMENTS_PATH;
     }
 }

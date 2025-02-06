@@ -36,7 +36,7 @@ public class CourseController {
     @PostMapping("/add")
     public String addCourse(@ModelAttribute CourseModel courseModel) {
         courseService.createCourse(courseModel);
-        return "redirect:/courses";  // Redirect back to the courses page after creation
+        return "redirect:/" + PathConstant.COURSES_PATH;  // Redirect back to the courses page after creation
     }
 
     @GetMapping("/update/{courseID}")
@@ -50,12 +50,12 @@ public class CourseController {
     @PostMapping("/update/{courseID}")
     public String updateCourse(@PathVariable Long courseID, @ModelAttribute CourseModel updatedCourseModel) {
         courseService.updateCourse(courseID, updatedCourseModel);
-        return "redirect:/courses";  // Redirect back to the courses page after update
+        return "redirect:/" + PathConstant.COURSES_PATH;   // Redirect back to the courses page after update
     }
 
     @GetMapping("/delete/{courseID}")
     public String deleteCourse(@PathVariable int courseID) {
         courseService.deleteCourse(courseID);
-        return "redirect:/courses";  // Redirect back to the courses page after deletion
+        return "redirect:/" + PathConstant.COURSES_PATH;   // Redirect back to the courses page after deletion
     }
 }

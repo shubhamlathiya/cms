@@ -44,7 +44,7 @@ public class SubjectController {
         subject.setCreatedAt(LocalDateTime.now());
         // Save the new subject
         subjectService.createSubject(subject);
-        return "redirect:/subjects";  // Redirect to the subjects list page
+        return "redirect:/" + PathConstant.SUBJECTS_PATH;   // Redirect to the subjects list page
     }
 
     // Show form for updating an existing subject
@@ -65,13 +65,13 @@ public class SubjectController {
         updatedSubject.setCreatedAt(LocalDateTime.now());
         // Update the subject
         subjectService.updateSubject(subjectID, updatedSubject);
-        return "redirect:/subjects";  // Redirect to the subjects list page after update
+        return "redirect:/" + PathConstant.SUBJECTS_PATH;   // Redirect to the subjects list page after update
     }
 
     // Delete a subject
     @GetMapping("/delete/{subjectID}")
     public String deleteSubject(@PathVariable Long subjectID) {
         subjectService.deleteSubject(subjectID);  // Delete the subject
-        return "redirect:/subjects";  // Redirect to the subjects list page after deletion
+        return "redirect:/" + PathConstant.SUBJECTS_PATH;   // Redirect to the subjects list page after deletion
     }
 }

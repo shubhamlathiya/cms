@@ -1,6 +1,7 @@
 package com.codershubham.cms.cms.controller.CourseManagementModules;
 
 
+import com.codershubham.cms.cms.constant.PathConstant;
 import com.codershubham.cms.cms.model.CourseManagementModules.SubjectsModel;
 import com.codershubham.cms.cms.model.CourseManagementModules.SyllabusModel;
 import com.codershubham.cms.cms.service.CourseManagementModules.SyllabusService;
@@ -13,7 +14,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Controller
-@RequestMapping("/syllabus")
+@RequestMapping(PathConstant.SYLLABUS_PATH)
 public class SyllabusController {
 
     @Autowired
@@ -63,7 +64,7 @@ public class SyllabusController {
             model.addAttribute("subjectId", syllabus.get().getSubject().getSubjectid());
             return "CourseManagement/syllabus/syllabus-form"; // Navigate to syllabus form
         } else {
-            return "redirect:/syllabus";  // Redirect to main syllabus list if not found
+            return "redirect:/" + PathConstant.SYLLABUS_PATH;  // Redirect to main syllabus list if not found
         }
     }
 
@@ -85,6 +86,6 @@ public class SyllabusController {
             return "redirect:/syllabus/subject/" + subjectId;
             // Redirect to syllabus list of the respective subject after deletion
         }
-        return "redirect:/syllabus";  // Redirect to syllabus home if not found
+        return "redirect:/" + PathConstant.SYLLABUS_PATH;   // Redirect to syllabus home if not found
     }
 }
