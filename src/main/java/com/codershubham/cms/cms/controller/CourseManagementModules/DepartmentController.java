@@ -21,13 +21,13 @@ public class DepartmentController {
         return "CourseManagement/departments/departments";
     }
 
-    @GetMapping("/add")
+    @GetMapping(PathConstant.ADD_PATH)
     public String add(Model model) {
         model.addAttribute("department", new DepartmentModel()); // Add a new Department object to the model
         return "CourseManagement/departments/add-department";
     }
 
-    @PostMapping("/add")
+    @PostMapping(PathConstant.ADD_PATH)
     public String addDepartment(@ModelAttribute DepartmentModel departmentModel) {
         departmentService.addDepartment(departmentModel);
         return "redirect:/" + PathConstant.DEPARTMENTS_PATH;

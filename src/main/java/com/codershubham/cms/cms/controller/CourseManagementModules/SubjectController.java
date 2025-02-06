@@ -29,7 +29,7 @@ public class SubjectController {
     }
 
     // Show form for adding a new subject
-    @GetMapping("/add")
+    @GetMapping(PathConstant.ADD_PATH)
     public String addSubjectForm(Model model) {
         // Fetch all courses for the dropdown
         model.addAttribute("courses", courseService.getAllCourses());
@@ -38,7 +38,7 @@ public class SubjectController {
     }
 
     // Create a new subject
-    @PostMapping("/add")
+    @PostMapping(PathConstant.ADD_PATH)
     public String addSubject(@ModelAttribute SubjectsModel subject) {
         // Set the current date and time for the creation date
         subject.setCreatedAt(LocalDateTime.now());

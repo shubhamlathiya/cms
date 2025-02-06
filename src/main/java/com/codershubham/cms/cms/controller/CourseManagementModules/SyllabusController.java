@@ -41,14 +41,14 @@ public class SyllabusController {
     }
 
     // 2️⃣ Show Add Syllabus Form
-    @GetMapping("/add")
+    @GetMapping(PathConstant.ADD_PATH)
     public String showAddSyllabusForm(Model model) {
         model.addAttribute("syllabus", new SyllabusModel());
         return "CourseManagement/syllabus/syllabus-form";  // Returns syllabus-form.html
     }
 
     // 3️⃣ Process Add Syllabus Form
-    @PostMapping("/save")
+    @PostMapping(PathConstant.ADD_PATH)
     public String createSyllabus(@ModelAttribute SyllabusModel syllabus) {
         syllabusService.addSyllabus(syllabus);
         return "redirect:/syllabus/subject/" + syllabus.getSubject().getSubjectid();

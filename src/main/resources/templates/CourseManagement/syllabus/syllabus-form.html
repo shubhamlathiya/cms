@@ -40,7 +40,7 @@
 
 <h2 th:text="${syllabus.syllabusid} ? 'Edit Syllabus' : 'Add Syllabus'"></h2>
 
-<form th:action="@{/syllabus/save}" th:object="${syllabus}" method="post">
+<form th:action="@{/syllabus/add}" th:object="${syllabus}" method="post">
   <input type="hidden" th:field="*{syllabusid}" />
   <input type="hidden" th:field="*{subject.subjectid}" />
 

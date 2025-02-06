@@ -9,6 +9,9 @@ public class PathConstant {
     public static final String COURSES_PATH = "courses";
     public static final String SUBJECTS_PATH = "subjects";
     public static final String ROLES_PATH = "admin/roles";
-    public static final String SYLLABUS_PATH ="syllabus";
+    public static final String SYLLABUS_PATH = "syllabus";
 
+
+    // comman url
+    public static final String ADD_PATH = "add";
 }

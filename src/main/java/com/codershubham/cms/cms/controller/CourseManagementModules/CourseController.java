@@ -26,14 +26,14 @@ public class CourseController {
         return "CourseManagement/courses/courses";  // Thymeleaf template 'courses.html'
     }
 
-    @GetMapping("/add")
+    @GetMapping(PathConstant.ADD_PATH)
     public String addCourseForm(Model model) {
         model.addAttribute("departments", departmentService.getAllDepartments());  // List of departments for dropdown
         model.addAttribute("course", new CourseModel());  // Empty Course object for binding
         return "CourseManagement/courses/add-course";  // Form to add a new course
     }
 
-    @PostMapping("/add")
+    @PostMapping(PathConstant.ADD_PATH)
     public String addCourse(@ModelAttribute CourseModel courseModel) {
         courseService.createCourse(courseModel);
         return "redirect:/" + PathConstant.COURSES_PATH;  // Redirect back to the courses page after creation
