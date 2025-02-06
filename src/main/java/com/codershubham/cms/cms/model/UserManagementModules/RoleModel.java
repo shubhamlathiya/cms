@@ -1,10 +1,10 @@
-package com.codershubham.cms.cms.model;
+package com.codershubham.cms.cms.model.UserManagementModules;
 import jakarta.persistence.*;
 
 
 @Entity
 @Table(name = "roles")
-public class Role {
+public class RoleModel {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

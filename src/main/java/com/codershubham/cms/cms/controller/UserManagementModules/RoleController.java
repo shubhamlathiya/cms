@@ -1,7 +1,7 @@
-package com.codershubham.cms.cms.controller;
+package com.codershubham.cms.cms.controller.UserManagementModules;
 
 import com.codershubham.cms.cms.constant.PathConstant;
-import com.codershubham.cms.cms.service.RoleService;
+import com.codershubham.cms.cms.service.UserManagementModules.RoleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -21,7 +21,7 @@ public class RoleController {
     @GetMapping
     public String getAllRoles(Model model) {
         model.addAttribute("roles", roleService.getAllRoles());
-        return "roles/roles";
+        return "UserManagement/roles/roles";
     }
 
     // Add a new role

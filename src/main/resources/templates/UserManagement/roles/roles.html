@@ -21,20 +21,20 @@
         <th>Name</th>
         <th>Actions</th>
     </tr>
-    <tr th:each="role : ${roles}">
-        <td th:text="${role.id}"></td>
-        <td th:text="${role.name}"></td>
+    <tr th:each="roleModel : ${roles}">
+        <td th:text="${roleModel.id}"></td>
+        <td th:text="${roleModel.name}"></td>
         <td>
             <!-- Update Role Form -->
             <form action="/roles/update" method="post" style="display:inline;">
-                <input type="hidden" name="roleId" th:value="${role.id}">
+                <input type="hidden" name="roleId" th:value="${roleModel.id}">
                 <input type="text" name="roleName" placeholder="New Name" required>
                 <button type="submit">Update</button>
             </form>
 
             <!-- Delete Role Form -->
             <form action="/roles/delete" method="post" style="display:inline;">
-                <input type="hidden" name="roleId" th:value="${role.id}">
+                <input type="hidden" name="roleId" th:value="${roleModel.id}">
                 <button type="submit" th:onclick="return confirm('Are you sure you want to delete?')">Delete</button>
             </form>
         </td>

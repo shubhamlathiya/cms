@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-  <title>Update Subject</title>
+    <title>Update Subject</title>
 </head>
 <body>
 
@@ -9,26 +9,27 @@
 
 <!-- Form to update an existing subject -->
 <form th:action="@{/subjects/update/{subjectID}(subjectID=${subject.subjectid})}" th:object="${subject}" method="post">
-  <label for="subjectCode">Subject Code:</label>
-  <input type="text" id="subjectCode" th:field="*{subjectCode}" required>
-  <br><br>
+    <label for="subjectCode">Subject Code:</label>
+    <input type="text" id="subjectCode" th:field="*{subjectCode}" required>
+    <br><br>
 
-  <label for="subjectName">Subject Name:</label>
-  <input type="text" id="subjectName" th:field="*{subjectName}" required>
-  <br><br>
+    <label for="subjectName">Subject Name:</label>
+    <input type="text" id="subjectName" th:field="*{subjectName}" required>
+    <br><br>
 
-  <label for="credits">Credits:</label>
-  <input type="number" id="credits" th:field="*{credits}" required>
-  <br><br>
+    <label for="credits">Credits:</label>
+    <input type="number" id="credits" th:field="*{credits}" required>
+    <br><br>
 
-  <label for="courseModel">Course:</label>
-  <select id="courseModel" th:field="*{course}" required>
-    <option th:each="courseModel : ${courses}" th:value="${courseModel.courseID}" th:text="${courseModel.courseName}"
-            th:selected="${courseModel.courseID == subject.course.courseID}"></option>
-  </select>
-  <br><br>
+    <label for="courseModel">Course:</label>
+    <select id="courseModel" th:field="*{course}" required>
+        <option th:each="courseModel : ${courses}" th:value="${courseModel.courseID}"
+                th:text="${courseModel.courseName}"
+                th:selected="${courseModel.courseID == subject.course.courseID}"></option>
+    </select>
+    <br><br>
 
-  <button type="submit">Update Subject</button>
+    <button type="submit">Update Subject</button>
 </form>
 
 </body>

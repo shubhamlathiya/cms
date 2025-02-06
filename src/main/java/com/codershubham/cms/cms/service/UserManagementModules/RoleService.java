@@ -1,7 +1,7 @@
-package com.codershubham.cms.cms.service;
+package com.codershubham.cms.cms.service.UserManagementModules;
 
-import com.codershubham.cms.cms.model.Role;
-import com.codershubham.cms.cms.repository.RoleRepository;
+import com.codershubham.cms.cms.model.UserManagementModules.RoleModel;
+import com.codershubham.cms.cms.repository.UserManagementModules.RoleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,28 +14,28 @@ public class RoleService {
     private RoleRepository roleRepository;
 
     // Create a new role
-    public Role addRole(String roleName) {
+    public RoleModel addRole(String roleName) {
         if (roleRepository.findByName(roleName).isPresent()) {
             throw new RuntimeException("Role already exists!");
         }
 
-        Role role = new Role();
-        role.setName(roleName.toUpperCase());
-        return roleRepository.save(role);
+        RoleModel roleModel = new RoleModel();
+        roleModel.setName(roleName.toUpperCase());
+        return roleRepository.save(roleModel);
     }
 
     // Get all roles
-    public List<Role> getAllRoles() {
+    public List<RoleModel> getAllRoles() {
         return roleRepository.findAll();
     }
 
     // Update role name
-    public Role updateRole(Long id, String newName) {
-        Role role = roleRepository.findById(id)
+    public RoleModel updateRole(Long id, String newName) {
+        RoleModel roleModel = roleRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Role not found!"));
 
-        role.setName(newName.toUpperCase());
-        return roleRepository.save(role);
+        roleModel.setName(newName.toUpperCase());
+        return roleRepository.save(roleModel);
     }
 
     // Delete role
