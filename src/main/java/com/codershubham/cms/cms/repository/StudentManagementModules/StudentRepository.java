@@ -12,15 +12,15 @@ public interface StudentRepository extends JpaRepository<StudentModel, Long> {
     // Add custom query methods if necessary
     boolean existsByEmail(String email);
 
-//    List<Student> findByCourseId(Long courseId);
+//    List<StudentModel> findByCourseId(Long courseId);
 
     List<StudentModel> findByCourse(CourseModel course);
 
-    // Fetch students who are NOT assigned to any semester or division
+//     Fetch students who are NOT assigned to any semester or division
     @Query("SELECT s FROM StudentModel s WHERE s.id NOT IN (SELECT se.student.id FROM StudentEnrollmentModel se)")
     List<StudentModel> findUnassignedStudents();
 
-//    List<Student> findByDivisionId(Long divisionId);
+//    List<StudentModel> findByDivisionId(Long divisionId);
 
     @Query("SELECT s FROM StudentModel s WHERE s.course.id = " +
             "(SELECT sem.course.id FROM SemesterModel sem WHERE sem.id = :semesterId) " +
