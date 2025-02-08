@@ -13,7 +13,8 @@ public class PathConstant {
     public static final String SYLLABUS_PATH =ADMIN_PATH + "/syllabus";
     public static final String ROLES_PATH =  ADMIN_PATH +  "/roles";
 
-
+    public static final String FACULTY_PATH = "faculty";
+    public static final String SEMESTER_PATH = "semester";
 
     // comman url
     public static final String ADD_PATH = "add";

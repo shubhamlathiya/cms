@@ -1,5 +1,6 @@
 package com.codershubham.cms.cms.controller.StudentManagementModules;
 
+import com.codershubham.cms.cms.constant.PathConstant;
 import com.codershubham.cms.cms.model.CourseManagementModules.CourseModel;
 import com.codershubham.cms.cms.model.StudentManagementModules.DivisionModel;
 import com.codershubham.cms.cms.model.StudentManagementModules.SemesterModel;
@@ -10,14 +11,12 @@ import com.codershubham.cms.cms.service.StudentManagementModules.StudentEnrollme
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @Controller
+@RequestMapping(PathConstant.SEMESTER_PATH)
 public class SemesterController {
 
     @Autowired
@@ -29,7 +28,7 @@ public class SemesterController {
 
 
     // Show the form to create a semester for a course
-    @GetMapping("/create-semester")
+    @GetMapping(PathConstant.ADD_PATH)
     public String showCreateSemesterForm(Model model) {
         model.addAttribute("semester", new SemesterModel());
         model.addAttribute("courses", courseService.getAllCourses()); // All available courses
@@ -37,17 +36,17 @@ public class SemesterController {
     }
 
     // Handle the form submission to create a semester for the selected course
-    @PostMapping("/create-semester")
+    @PostMapping(PathConstant.ADD_PATH)
     public String createSemester(@ModelAttribute SemesterModel semester, @RequestParam Long courseId, Model model) {
         CourseModel course = courseService.getCourseById(courseId); // Fetch the selected course
         semester.setCourse(course); // Link the semester to the course
 
         SemesterModel createdSemester = semesterService.createSemester(semester); // Save the semester
         model.addAttribute("semester", createdSemester);
-        return "redirect:/create-semester";  // Show success page after creating the semester
+        return "redirect:/" + PathConstant.SEMESTER_PATH;  // Show success page after creating the semester
     }
 
-    @GetMapping("/semesters")
+    @GetMapping
     public String listSemesters(Model model) {
         List<SemesterModel> semesters = semesterService.findAll();
         System.out.println(semesters);

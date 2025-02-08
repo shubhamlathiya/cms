@@ -5,7 +5,7 @@
     <title>Title</title>
 </head>
 <body>
-<form th:action="@{/create-semester}"  th:object="${semester}" method="post">
+<form th:action="@{/semester/add}"  th:object="${semester}" method="post">
     <label for="course">Course:</label>
     <select name="courseId" id="course">
         <th:block th:each="course : ${courses}">

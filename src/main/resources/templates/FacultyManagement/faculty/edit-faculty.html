@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Faculty</title>
+</head>
+<body>
+<h2>Edit Faculty</h2>
+<form th:action="@{/faculty/update/{id}(id=${faculty.facultyId })}" th:object="${faculty}" method="post">
+    <!-- Hidden ID field -->
+    <input type="hidden" th:field="*{facultyId}" />
+
+<!--    <label>Username:</label>-->
+<!--    <input type="text" th:field="*{username}" required><br>-->
+
+<!--    <label>Password:</label>-->
+<!--    <input type="password" th:field="*{password}" required><br>-->
+
+    <label>Designation:</label>
+    <input type="text" th:field="*{designation}" required><br>
+
+    <label>Qualification:</label>
+    <input type="text" th:field="*{qualification}" required><br>
+
+    <label>Experience (Years):</label>
+    <input type="number" th:field="*{experience}" required><br>
+
+    <label>Phone Number:</label>
+    <input type="text" th:field="*{phoneNumber}" required><br>
+
+    <label>Email:</label>
+    <input type="email" th:field="*{email}" required><br>
+
+    <label>Status:</label>
+    <select name="status" required>
+        <option value="Active" th:selected="${faculty.status == 'Active'}">Active</option>
+        <option value="Inactive" th:selected="${faculty.status == 'Inactive'}">Inactive</option>
+    </select><br>
+
+    <label>Department:</label>
+    <select name="department" required>
+        <option th:each="department : ${departments}"
+                th:value="${department.id}"
+                th:text="${department.name}"
+                th:selected="${faculty.department.id == department.id}"></option>
+    </select><br>
+    <button type="submit">Update Faculty</button>
+</form>
+
+<br>
+<a href="/faculty">Back to Faculty List</a>
+</body>
+</html>
