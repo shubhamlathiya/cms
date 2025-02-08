@@ -43,4 +43,9 @@ public class CourseService {
     public List<CourseModel> getCoursesByDepartmentId(Long departmentId) {
         return courseRepository.findByDepartmentId(departmentId);  // Assuming you have this method in your repository
     }
+
+    public CourseModel findById(Long courseId) {
+        return courseRepository.findById(courseId)
+                .orElseThrow(() -> new RuntimeException("Course not found with ID: " + courseId));
+    }
 }

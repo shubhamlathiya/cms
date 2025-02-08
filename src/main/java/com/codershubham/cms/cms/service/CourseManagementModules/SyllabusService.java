@@ -14,9 +14,9 @@ public class SyllabusService {
     @Autowired
     private SyllabusRepository syllabusRepository;
 
-    public List<SyllabusModel> getAllSyllabus() {
-        return syllabusRepository.findAll();
-    }
+//    public List<SyllabusModel> getAllSyllabus() {
+//        return syllabusRepository.findAll();
+//    }
 
     public Optional<SyllabusModel> getSyllabusById(Long id) {
         return syllabusRepository.findById(id);

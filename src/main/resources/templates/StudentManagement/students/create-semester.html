@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<form action="/admin/createSemester" method="POST">
+    <label for="semesterName">Semester Name</label>
+    <input type="text" id="semesterName" name="semesterName" placeholder="e.g. Fall 2025" required />
+
+    <label for="students">Select Students</label>
+    <th:block th:each="student : ${students}" >
+        <input type="checkbox" name="studentIds" id="students" th:value="${student.id}" th:id="'student_' + ${student.id}" />
+        <label th:for="'student_' + ${student.id}" th:text="${student.firstName} + ' ' + ${student.lastName}"></label><br />
+    </th:block>
+
+    <button type="submit">Create Semester and Assign Students</button>
+</form>
+
+</body>
+</html>

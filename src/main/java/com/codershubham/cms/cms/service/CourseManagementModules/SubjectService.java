@@ -72,4 +72,15 @@ public class SubjectService {
         return subjectRepository.findById(subjectID)
                 .orElseThrow(() -> new RuntimeException("Subject not found with ID: " + subjectID));  // Return subject if exists
     }
+
+    public List<SubjectsModel> getSubjectsByCourseId(Long courseId) {
+        CourseModel course = courseRepository.findById(courseId)
+                .orElseThrow(() -> new RuntimeException("Course not found"));
+        return subjectRepository.findByCourseModel(course);
+    }
+
+    public SubjectsModel findById(Long subjectId) {
+        return subjectRepository.findById(subjectId)
+                .orElseThrow(() -> new IllegalArgumentException("Subject not found with ID: " + subjectId));
+    }
 }

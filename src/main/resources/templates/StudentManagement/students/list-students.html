@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Enrollment Selection</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+</head>
+<body>
+
+<h1>Student Enrollment Selection</h1>
+
+<form action="#" method="post">
+    <label for="department">Select Department:</label>
+    <select name="departmentId" id="department" required>
+        <option value="">--Select Department--</option>
+        <th:block th:each="department : ${departments}">
+            <option th:value="${department.id}" th:text="${department.name}"></option>
+        </th:block>
+    </select>
+
+    <label for="course">Select Course:</label>
+    <select name="courseId" id="course" required>
+        <option value="">--Select Course--</option>
+    </select>
+
+    <label for="semester">Select Semester:</label>
+    <select name="semesterId" id="semester" required>
+        <option value="">--Select Semester--</option>
+    </select>
+
+    <label for="division">Select Division:</label>
+    <select name="divisionId" id="division" required>
+        <option value="">--Select Division--</option>
+    </select>
+</form>
+
+<h2>Student List</h2>
+<table id="studentTable">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>First Name</th>
+        <th>Last Name</th>
+        <th>Email</th>
+    </tr>
+    </thead>
+    <tbody>
+    </tbody>
+</table>
+
+<script>
+    $('#department').change(function() {
+        var departmentId = $(this).val();
+        if(departmentId) {
+            $.get("/students/courses/" + departmentId, function(courses) {
+                $('#course').empty().append('<option value="">--Select Course--</option>');
+                $.each(courses, function(index, course) {
+                    $('#course').append('<option value="' + course.courseID + '">' + course.courseName + '</option>');
+                });
+            });
+        } else {
+            $('#course, #semester, #division').empty().append('<option value="">--Select--</option>');
+            $('#studentTable tbody').empty();
+        }
+    });
+
+    $('#course').change(function() {
+        var courseId = $(this).val();
+        if(courseId) {
+            $.get("/students/semesters/" + courseId, function(semesters) {
+                $('#semester').empty().append('<option value="">--Select Semester--</option>');
+                $.each(semesters, function(index, semester) {
+                    $('#semester').append('<option value="' + semester.id + '">' + semester.name + '</option>');
+                });
+            });
+        } else {
+            $('#semester, #division').empty().append('<option value="">--Select--</option>');
+            $('#studentTable tbody').empty();
+        }
+    });
+
+    $('#semester').change(function() {
+        var semesterId = $(this).val();
+        if(semesterId) {
+            $.get("/students/divisions/" + semesterId, function(divisions) {
+                $('#division').empty().append('<option value="">--Select Division--</option>');
+                $.each(divisions, function(index, division) {
+                    $('#division').append('<option value="' + division.id + '">' + division.name + '</option>');
+                });
+            });
+        } else {
+            $('#division').empty().append('<option value="">--Select Division--</option>');
+            $('#studentTable tbody').empty();
+        }
+    });
+
+    $('#division').change(function() {
+        var divisionId = $(this).val();
+        if(divisionId) {
+            $.get("/students/list/" + divisionId, function(students) {
+                var tableBody = $('#studentTable tbody');
+                tableBody.empty();
+                $.each(students, function(index, student) {
+                    tableBody.append('<tr>' +
+                        '<td>' + student.id + '</td>' +
+                        '<td>' + student.firstName + '</td>' +
+                        '<td>' + student.lastName + '</td>' +
+                        '<td>' + student.email + '</td>' +
+                        '</tr>');
+                });
+            });
+        } else {
+            $('#studentTable tbody').empty();
+        }
+    });
+</script>
+
+</body>
+</html>

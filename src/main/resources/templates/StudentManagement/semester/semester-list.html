@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Semester List</title>
+</head>
+<body>
+<h1>Semesters List</h1>
+<table border="1">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Semester Name</th>
+        <th>Academic Year</th>
+        <th>Start Date</th>
+        <th>End Date</th>
+        <th>Action</th>
+    </tr>
+    </thead>
+    <tbody>
+    <th:block th:each="semester : ${semesters}">
+        <tr>
+            <td th:text="${semester.id}"></td>
+            <td th:text="${semester.name}"></td>
+            <td th:text="${semester.academicYear}"></td>
+            <td th:text="${semester.startDate}"></td>
+            <td th:text="${semester.endDate}"></td>
+<!--            <td th:text-="${semesters.course}">-->
+            <td>
+                <a th:href="@{/create-division-page(semesterId=${semester.id})}">
+                    <button>Create Division</button>
+                </a>
+
+                <!-- New Button to Assign Students to Division -->
+                <a th:href="@{/enrollments/assign-students-to-division/{semesterId}(semesterId=${semester.id})}">
+                    <button>Assign Students to Division</button>
+                </a>
+
+
+            </td>
+        </tr>
+    </th:block>
+    </tbody>
+
+</table>
+</body>
+</html>

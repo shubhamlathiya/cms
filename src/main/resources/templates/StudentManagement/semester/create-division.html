@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Create Divisions</title>
+
+</head>
+<body>
+
+<h2>Create Divisions</h2>
+<form action="/create-divisions" method="post">
+    <label for="semesterId">Semester ID:</label>
+    <input type="number" name="semesterId" id="semesterId" th:value="${semesterId}" required>
+
+    <div id="divisionContainer">
+        <div>
+            <input type="text" name="divisionNames" required placeholder="Enter Division Name">
+            <button type="button" onclick="removeDivisionField(this)">Remove</button>
+        </div>
+    </div>
+
+    <button type="button" onclick="addDivisionField()">Add More</button>
+    <button type="submit">Create Divisions</button>
+</form>
+<script>
+    function addDivisionField() {
+        let container = document.getElementById("divisionContainer");
+        let div = document.createElement("div");
+        div.innerHTML = `
+                <input type="text" name="divisionNames" required placeholder="Enter Division Name">
+                <button type="button" onclick="removeDivisionField(this)">Remove</button>
+            `;
+        container.appendChild(div);
+    }
+
+    function removeDivisionField(button) {
+        button.parentElement.remove();
+    }
+</script>
+
+</body>
+</html>

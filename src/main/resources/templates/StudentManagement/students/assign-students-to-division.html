@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Assign Students to Division</title>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+</head>
+<body>
+
+<h1>Assign Students to Division</h1>
+
+<!-- Semester Info -->
+<h3>Semester ID: <span th:text="${semesterId}"></span></h3>
+
+<!-- Division Selection -->
+<label for="division">Select Division:</label>
+<select id="division" required>
+  <option value="">--Select Division--</option>
+  <option th:each="division : ${divisions}" th:value="${division.id}" th:text="${division.name}"></option>
+</select>
+
+<!-- Student Selection -->
+<h3>Unassigned Students</h3>
+<div id="studentsList">
+  <th:block th:each="student : ${unassignedStudents}">
+    <label>
+      <input type="checkbox" class="studentCheckbox" th:value="${student.id}">
+      <span th:text="${student.firstName + ' ' + student.lastName}"></span>
+    </label><br>
+  </th:block>
+</div>
+
+<!-- Assign Button -->
+<button id="assignButton">Assign Selected Students</button>
+
+<script>
+  $(document).ready(function () {
+    $("#assignButton").click(function () {
+      var semesterId = "[[${semesterId}]]";
+      var divisionId = $("#division").val();
+      var selectedStudents = [];
+
+      $(".studentCheckbox:checked").each(function () {
+        selectedStudents.push($(this).val());
+      });
+
+      if (divisionId && selectedStudents.length > 0) {
+        $.ajax({
+          type: "POST",
+          url: "/enrollments/assign",
+          contentType: "application/json",
+          data: JSON.stringify({
+            semesterId: semesterId,
+            divisionId: divisionId,
+            studentIds: selectedStudents
+          }),
+          success: function (response) {
+            alert(response);
+            location.reload(); // Refresh page after assignment
+          }
+        });
+      } else {
+        alert("Please select a division and at least one student.");
+      }
+    });
+  });
+</script>
+
+</body>
+</html>

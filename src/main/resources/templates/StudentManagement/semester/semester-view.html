@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Semester View</title>
+</head>
+<body>
+<h1>Semester: ${semester.name}</h1>
+<h2>Divisions:</h2>
+
+<ul>
+    <th:block th:each="division : ${divisions}">
+        <li th:text="${division.name}"></li>
+    </th:block>
+</ul>
+
+<h3>Create New Division</h3>
+<form action="/create-division" method="post">
+    <input type="hidden" name="semesterId" th:value="${semester.id}" />
+    <label for="divisionName">Division Name:</label>
+    <input type="text" name="divisionName" id="divisionName" required>
+    <button type="submit">Create Division</button>
+</form>
+</body>
+</html>
