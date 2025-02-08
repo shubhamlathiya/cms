@@ -16,6 +16,8 @@ public class CourseModel {
 
     @Column(nullable = false)
     private int duration;
+
+    @Column(nullable = false)
     private LocalDateTime createdAt;
 
     @ManyToOne

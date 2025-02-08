@@ -21,6 +21,8 @@ public class SubjectsModel {
 
     @Column(nullable = false)
     private int credits;
+
+    @Column(nullable = false)
     private LocalDateTime createdAt;
 
     @ManyToOne
