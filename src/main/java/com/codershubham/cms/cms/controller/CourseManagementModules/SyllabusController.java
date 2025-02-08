@@ -51,7 +51,7 @@ public class SyllabusController {
     @PostMapping(PathConstant.ADD_PATH)
     public String createSyllabus(@ModelAttribute SyllabusModel syllabus) {
         syllabusService.addSyllabus(syllabus);
-        return "redirect:/syllabus/subject/" + syllabus.getSubject().getSubjectid();
+        return "redirect:" + PathConstant.SYLLABUS_PATH + "/subject/" + syllabus.getSubject().getSubjectid();
         // Redirect to syllabus list of that subject
     }
 
@@ -72,7 +72,7 @@ public class SyllabusController {
     @PostMapping("/update/{id}")
     public String updateSyllabus(@PathVariable Long id, @ModelAttribute SyllabusModel syllabus) {
         syllabusService.updateSyllabus(id, syllabus);
-        return "redirect:/syllabus/subject/" + syllabus.getSubject().getSubjectid();
+        return "redirect:" + PathConstant.SYLLABUS_PATH + "/subject/" + syllabus.getSubject().getSubjectid();
         // Redirect to syllabus list of that subject after update
     }
 

@@ -7,7 +7,7 @@
 <body>
 <h1>Update Course</h1>
 
-<form th:action="@{/courses/update/{courseID}(courseID=${course.courseID})}" th:object="${course}" method="post">
+<form th:action="@{/admin/courses/update/{courseID}(courseID=${course.courseID})}" th:object="${course}" method="post">
   <label for="name">Course Name:</label>
   <input type="text" id="name" th:field="*{courseName}" required>
 
@@ -32,6 +32,6 @@
 
 
 <br>
-<a href="/courses">Back to Courses List</a>
+<a href="/admin/courses">Back to Courses List</a>
 </body>
 </html>

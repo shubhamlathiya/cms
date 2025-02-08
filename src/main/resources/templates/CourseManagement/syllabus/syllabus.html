@@ -27,8 +27,8 @@
     </td>
     <td th:text="${syllabus.resources}"></td>
     <td>
-      <a th:href="@{/syllabus/edit/{id}(id=${syllabus.syllabusid})}">Edit</a>
-      <a th:href="@{/syllabus/delete/{id}(id=${syllabus.syllabusid})}" onclick="return confirm('Are you sure?')">Delete</a>
+      <a th:href="@{/admin/syllabus/edit/{id}(id=${syllabus.syllabusid})}">Edit</a>
+      <a th:href="@{/admin/syllabus/delete/{id}(id=${syllabus.syllabusid})}" onclick="return confirm('Are you sure?')">Delete</a>
     </td>
   </tr>
   </tbody>

@@ -8,7 +8,7 @@
 <h1>Departments</h1>
 
 <!-- Button to go to Add Department form -->
-<a href="/departments/add">Add Department</a>
+<a href="/admin/departments/add">Add Department</a>
 
 <table>
   <thead>
@@ -24,9 +24,9 @@
     <td th:text="${departmentModel.departmentHead}"></td> <!-- Display the Head of Department -->
     <td>
       <!-- Edit link for each departmentModel -->
-      <a th:href="@{/departments/update/{id}(id=${departmentModel.id})}">Edit</a> |
+      <a th:href="@{/admin/departments/update/{id}(id=${departmentModel.id})}">Edit</a> |
       <!-- Delete link for each departmentModel -->
-      <a th:href="@{/departments/delete/{id}(id=${departmentModel.id})}" th:onclick="return confirm('Are you sure you want to delete?')">Delete</a>
+      <a th:href="@{/admin/departments/delete/{id}(id=${departmentModel.id})}" th:onclick="return confirm('Are you sure you want to delete?')">Delete</a>
     </td>
   </tr>
   </tbody>

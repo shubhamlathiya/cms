@@ -8,7 +8,7 @@
 <h1>Courses</h1>
 
 <!-- Button to go to Add Course form -->
-<a href="/courses/add">Add Course</a>
+<a href="/admin/courses/add">Add Course</a>
 
 <table>
     <thead>
@@ -26,9 +26,9 @@
         <td th:text="${courseModel.createdAt}"></td>
         <td>
             <!-- Edit link for each courseModel -->
-            <a th:href="@{/courses/update/{courseID}(courseID=${courseModel.courseID})}">Edit</a> |
+            <a th:href="@{/admin/courses/update/{courseID}(courseID=${courseModel.courseID})}">Edit</a> |
             <!-- Delete link for each courseModel -->
-            <a th:href="@{/courses/delete/{courseID}(courseID=${courseModel.courseID})}" th:onclick="return confirm('Are you sure you want to delete?')">Delete</a>
+            <a th:href="@{/admin/courses/delete/{courseID}(courseID=${courseModel.courseID})}" th:onclick="return confirm('Are you sure you want to delete?')">Delete</a>
         </td>
     </tr>
     </tbody>

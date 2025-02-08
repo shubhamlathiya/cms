@@ -8,7 +8,7 @@
 <h1>Update Department</h1>
 
 <!-- Form for updating departmentModel -->
-<form th:action="@{/departments/update/{id}(id=${department.id})}"
+<form th:action="@{/admin/departments/update/{id}(id=${department.id})}"
       th:object="${department}" method="post">
 
   <div>
@@ -27,6 +27,6 @@
 </form>
 
 <br>
-<a href="/departments">Back to Departments</a>
+<a href="/admin/departments">Back to Departments</a>
 </body>
 </html>

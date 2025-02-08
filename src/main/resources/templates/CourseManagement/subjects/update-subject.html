@@ -8,7 +8,7 @@
 <h2>Update Subject</h2>
 
 <!-- Form to update an existing subject -->
-<form th:action="@{/subjects/update/{subjectID}(subjectID=${subject.subjectid})}" th:object="${subject}" method="post">
+<form th:action="@{/admin/subjects/update/{subjectID}(subjectID=${subject.subjectid})}" th:object="${subject}" method="post">
     <label for="subjectCode">Subject Code:</label>
     <input type="text" id="subjectCode" th:field="*{subjectCode}" required>
     <br><br>
@@ -32,5 +32,7 @@
     <button type="submit">Update Subject</button>
 </form>
 
+<br>
+<a href="/admin/subjects">Back to Subjects List</a>
 </body>
 </html>

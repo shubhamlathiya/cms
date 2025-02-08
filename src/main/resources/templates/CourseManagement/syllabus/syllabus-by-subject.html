@@ -5,7 +5,7 @@
 </head>
 <body>
 <h2>Syllabus for Subject</h2>
-<a th:href="@{/syllabus/add/{subjectID}(subjectID=${subjectId})}">Add New Syllabus</a>
+<a th:href="@{/admin/syllabus/add/{subjectID}(subjectID=${subjectId})}">Add New Syllabus</a>
 
 <table border="1">
   <thead>
@@ -28,12 +28,11 @@
     </td>
     <td th:text="${syllabus.resources}"></td>
     <td>
-      <a th:href="@{/syllabus/edit/{id}(id=${syllabus.syllabusid})}">Edit</a> |
-      <a th:href="@{/syllabus/delete/{id}(id=${syllabus.syllabusid})}" onclick="return confirm('Are you sure?')">Delete</a>
+      <a th:href="@{/admin/syllabus/edit/{id}(id=${syllabus.syllabusid})}">Edit</a> |
+      <a th:href="@{/admin/syllabus/delete/{id}(id=${syllabus.syllabusid})}" onclick="return confirm('Are you sure?')">Delete</a>
     </td>
   </tr>
   </tbody>
 </table>
-<a href="/subjects">Back to Subjects</a>
 </body>
 </html>

@@ -6,7 +6,7 @@
 </head>
 <body>
 <h1>Add Department</h1>
-<form th:action="@{/departments/add}" th:object="${department}" method="post">
+<form th:action="@{/admin/departments/add}" th:object="${department}" method="post">
   <label for="name">Department Name:</label>
   <input type="text" id="name" th:field="*{name}" required>
 
@@ -21,6 +21,6 @@
 </form>
 
 <br>
-<a href="/departments">Back to Departments List</a>
+<a href="/admin/departments">Back to Departments List</a>
 </body>
 </html>

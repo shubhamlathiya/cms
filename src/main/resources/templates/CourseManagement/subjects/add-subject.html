@@ -8,7 +8,7 @@
 <h2>Add New Subject</h2>
 
 <!-- Form to add a new subject -->
-<form th:action="@{/subjects/add}" th:object="${subject}" method="post">
+<form th:action="@{/admin/subjects/add}" th:object="${subject}" method="post">
     <label for="subjectCode">Subject Code:</label>
     <input type="text" id="subjectCode" th:field="*{subjectCode}" required>
     <br><br>
@@ -31,5 +31,7 @@
     <button type="submit">Add Subject</button>
 </form>
 
+<br>
+<a href="/admin/subjects">Back to subjects List</a>
 </body>
 </html>

@@ -26,19 +26,19 @@
         <td th:text="${subject.course.courseName}"></td>
         <td>
             <!-- Edit and Delete actions -->
-            <a th:href="@{/subjects/update/{subjectID}(subjectID=${subject.subjectid})}">Edit</a> |
-            <a th:href="@{/subjects/delete/{subjectID}(subjectID=${subject.subjectid})}"
+            <a th:href="@{/admin/subjects/update/{subjectID}(subjectID=${subject.subjectid})}">Edit</a> |
+            <a th:href="@{/admin/subjects/delete/{subjectID}(subjectID=${subject.subjectid})}"
                th:onclick="return confirm('Are you sure you want to delete?')">Delete</a>
 
             <!-- View Syllabus for this Subject -->
-            <a th:href="@{/syllabus/subject/{subjectID}(subjectID=${subject.subjectid})}">View Syllabus</a>
+            <a th:href="@{/admin/syllabus/subject/{subjectID}(subjectID=${subject.subjectid})}">View Syllabus</a>
         </td>
     </tr>
     </tbody>
 </table>
 
 <!-- Link to add a new subject -->
-<a href="/subjects/add">Add New Subject</a>
+<a href="/admin/subjects/add">Add New Subject</a>
 
 </body>
 </html>

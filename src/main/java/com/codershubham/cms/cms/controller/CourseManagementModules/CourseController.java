@@ -22,7 +22,6 @@ public class CourseController {
     @GetMapping
     public String getAllCourses(Model model) {
         model.addAttribute("courses", courseService.getAllCourses());
-        model.addAttribute("departments", departmentService.getAllDepartments());  // Pass list of departments
         return "CourseManagement/courses/courses";  // Thymeleaf template 'courses.html'
     }
 
