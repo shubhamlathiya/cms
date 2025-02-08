@@ -28,7 +28,7 @@
             <td th:text="${semester.academicYear}"></td>
             <td th:text="${semester.startDate}"></td>
             <td th:text="${semester.endDate}"></td>
-<!--            <td th:text-="${semesters.course}">-->
+            <!--            <td th:text-="${semesters.course}">-->
             <td>
                 <a th:href="@{/semesters/create-division-page(semesterId=${semester.id})}">
                     <button>Create Division</button>
@@ -40,13 +40,13 @@
                 </a>
 
 
-<!--                <a th:href="@{/enrollments/assign-subjects-to-faculty/{semesterId}(semesterId=${semester.id})}">-->
-<!--                    <button>Assign Subjects to Faculty</button>-->
-<!--                </a>-->
+                <!--                <a th:href="@{/enrollments/assign-subjects-to-faculty/{semesterId}(semesterId=${semester.id})}">-->
+                <!--                    <button>Assign Subjects to Faculty</button>-->
+                <!--                </a>-->
 
-                                <a th:href="@{/faculty-subject/assign-subject}">
-                                    <button>Assign Subjects to Faculty</button>
-                                </a>
+                <a th:href="@{/faculty-subject/assign-subject}">
+                    <button>Assign Subjects to Faculty</button>
+                </a>
             </td>
         </tr>
     </th:block>
