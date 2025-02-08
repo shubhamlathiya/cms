@@ -13,13 +13,18 @@ public class SubjectsModel {
     @Column(name = "subjectid")  // Ensure this matches the column name in the DB
     private Long subjectid;
 
+    @Column(unique = true, nullable = false)
     private String subjectCode;
+
+    @Column(nullable = false)
     private String subjectName;
+
+    @Column(nullable = false)
     private int credits;
     private LocalDateTime createdAt;
 
     @ManyToOne
-    @JoinColumn(name = "courseID")
+    @JoinColumn(name = "course_id")
     private CourseModel courseModel;
 
     public Long getSubjectid() {

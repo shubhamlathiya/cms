@@ -11,12 +11,15 @@ public class CourseModel {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int courseID;
 
+    @Column(unique = true, nullable = false)
     private String courseName;
+
+    @Column(nullable = false)
     private int duration;
     private LocalDateTime createdAt;
 
     @ManyToOne
-    @JoinColumn(name = "departmentID")
+    @JoinColumn(name = "department_id")
     private DepartmentModel department;
 
     public long getCourseID() {

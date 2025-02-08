@@ -6,12 +6,14 @@ import jakarta.persistence.*;
 import java.time.LocalDate;
 
 @Entity
+@Table(name = "Semester")
 public class SemesterModel {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false)
     private String name; // For example, "Fall 2025"
 
     @ManyToOne
@@ -19,8 +21,13 @@ public class SemesterModel {
     private CourseModel course;
 
     // New fields added to match the form data
+    @Column(nullable = false)
     private int academicYear; // For example, 2025
+
+    @Column(nullable = false)
     private LocalDate startDate; // Start date for the semester
+
+    @Column(nullable = false)
     private LocalDate endDate; // End date for the semester
 
     // Constructors, getters, setters

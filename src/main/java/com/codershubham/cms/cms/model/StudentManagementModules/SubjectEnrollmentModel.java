@@ -7,7 +7,7 @@ import jakarta.persistence.*;
 import java.util.Date;
 
 @Entity
-@Table(name = "student_subjects")
+@Table(name = "StudentSubjects")
 public class SubjectEnrollmentModel {
 
     @Id

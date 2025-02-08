@@ -11,7 +11,10 @@ public class SyllabusModel {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long syllabusid;
 
+    @Column(nullable = false)
     private int unitNo;
+
+    @Column(nullable = false)
     private String unitName;
 
     @ElementCollection
@@ -21,7 +24,7 @@ public class SyllabusModel {
     private String resources;
 
     @ManyToOne
-    @JoinColumn(name = "subjectid", nullable = false)
+    @JoinColumn(name = "subject_id", nullable = false)
     private SubjectsModel subject;
 
     public Long getSyllabusid() {

@@ -5,7 +5,7 @@ import com.codershubham.cms.cms.model.UserManagementModules.UserModel;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "students")
+@Table(name = "Students")
 public class StudentModel {
 
     @Id
@@ -13,13 +13,22 @@ public class StudentModel {
     private Long id;
 
     @OneToOne
-    @JoinColumn(name = "userId")
+    @JoinColumn(name = "user_id")
     private UserModel user; // Represents the user details (username, password, etc.)
 
+    @Column(nullable = false)
     private String firstName;
+
+    @Column(nullable = false)
     private String lastName;
+
+    @Column(nullable = false , unique = true)
     private String email;
+
+    @Column(nullable = false)
     private String phoneNumber;
+
+    @Column(nullable = false)
     private String address;
 
     @ManyToOne

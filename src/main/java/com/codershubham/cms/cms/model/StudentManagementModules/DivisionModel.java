@@ -3,12 +3,14 @@ package com.codershubham.cms.cms.model.StudentManagementModules;
 import jakarta.persistence.*;
 
 @Entity
+@Table(name = "Division")
 public class DivisionModel {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(unique = true, nullable = false)
     private String name; // For example: "Group A", "Group B"
 
     @ManyToOne

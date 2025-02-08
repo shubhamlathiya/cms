@@ -3,7 +3,7 @@ package com.codershubham.cms.cms.model.StudentManagementModules;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "student_enrollments")
+@Table(name = "StudentEnrollments")
 public class StudentEnrollmentModel {
 
     @Id

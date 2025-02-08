@@ -3,7 +3,7 @@ import jakarta.persistence.*;
 
 
 @Entity
-@Table(name = "roles")
+@Table(name = "Roles")
 public class RoleModel {
 
     @Id
