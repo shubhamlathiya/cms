@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Assign Subject to Faculty</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+</head>
+<body>
+
+<h1>Assign Subject to Faculty</h1>
+
+<!-- Dropdowns for Selection -->
+<form id="facultyAssignmentForm">
+    <label for="department">Select Department:</label>
+    <select name="departmentId" id="department" required>
+        <option value="">--Select Department--</option>
+        <th:block th:each="department : ${departments}">
+            <option th:value="${department.id}" th:text="${department.name}"></option>
+        </th:block>
+    </select>
+
+
+    <label for="course">Select Course:</label>
+    <select name="courseId" id="course" required>
+        <option value="">--Select Course--</option>
+    </select>
+
+    <label for="faculty">Select Faculty:</label>
+    <select name="facultyId" id="faculty" required>
+        <option value="">--Select Faculty--</option>
+    </select>
+
+    <label for="semester">Select Semester:</label>
+    <select name="semesterId" id="semester" required>
+        <option value="">--Select Semester--</option>
+    </select>
+
+    <label for="division">Select Division:</label>
+    <select name="divisionId" id="division" required>
+        <option value="">--Select Division--</option>
+    </select>
+
+    <label for="subject">Select Subject:</label>
+    <select name="subjectId" id="subject" required>
+        <option value="">--Select Subject--</option>
+    </select>
+
+    <button type="button" id="assignFaculty">Assign Subject</button>
+</form>
+
+<script>
+    $(document).ready(function () {
+
+        // Fetch Courses & Faculty based on Department
+        $('#department').change(function () {
+            let departmentId = $(this).val();
+            if (departmentId) {
+                // Fetch Courses
+                $.get(`/faculty-subject/courses/${departmentId}`, function (courses) {
+                    $('#course').empty().append('<option value="">--Select Course--</option>');
+                    $.each(courses, function (index, course) {
+                        $('#course').append('<option value="' + course.courseID + '">' + course.courseName + '</option>');
+                    });
+                });
+
+                // Fetch Faculty
+                $.get(`/faculty-subject/faculty/${departmentId}`, function (faculty) {
+                    $('#faculty').empty().append('<option value="">--Select Faculty--</option>');
+                    $.each(faculty, function (index, prof) {
+                        $('#faculty').append(`<option value="${prof.facultyId}">${prof.email}</option>`);
+                    });
+                });
+            }
+        });
+
+        // Fetch Semesters based on Course
+        $('#course').change(function () {
+            let courseId = $(this).val();
+            if (courseId) {
+                $.get(`/faculty-subject/semesters/${courseId}`, function (semesters) {
+                    $('#semester').empty().append('<option value="">--Select Semester--</option>');
+                    $.each(semesters, function (index, semester) {
+                        $('#semester').append(`<option value="${semester.id}">${semester.name}</option>`);
+                    });
+                });
+
+                $.get(`/faculty-subject/subjects/${courseId}`, function (subjects) {
+                    $('#subject').empty().append('<option value="">--Select Subject--</option>');
+                    $.each(subjects, function (index, subject) {
+                        $('#subject').append('<option value="' + subject.subjectid + '">' + subject.subjectName + '</option>');
+                    });
+                });
+            }
+        });
+
+        // Fetch Divisions based on Semester
+        $('#semester').change(function () {
+            let semesterId = $(this).val();
+            if (semesterId) {
+                $.get(`/faculty-subject/divisions/${semesterId}`, function (divisions) {
+                    $('#division').empty().append('<option value="">--Select Division--</option>');
+                    $.each(divisions, function (index, division) {
+                        $('#division').append(`<option value="${division.id}">${division.name}</option>`);
+                    });
+                });
+            }
+        });
+
+        // Assign Faculty to Subject
+        $('#assignFaculty').click(function () {
+            let request = {
+                facultyId: $('#faculty').val(),
+                semesterId: $('#semester').val(),
+                divisionId: $('#division').val(),
+                subjectId: $('#subject').val()
+            };
+
+            $.ajax({
+                type: "POST",
+                url: "/faculty-subject/assign-subject",
+                contentType: "application/json",
+                data: JSON.stringify(request),
+                success: function (response) {
+                    alert("Faculty assigned successfully!");
+                },
+                error: function (error) {
+                    alert("Error: " + error.responseText);
+                }
+            });
+        });
+
+    });
+</script>
+
+</body>
+</html>
