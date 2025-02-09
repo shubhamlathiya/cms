@@ -19,6 +19,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -125,6 +126,15 @@ public class StudentController {
             ex.printStackTrace();
             return "redirect:/students/error";
         }
+    }
+
+    @PostMapping("/upload")
+    public ResponseEntity<String> uploadFile(@RequestParam("file") MultipartFile file) {
+        if (file.isEmpty()) {
+            return ResponseEntity.badRequest().body("Please upload a valid Excel file.");
+        }
+        studentService.saveStudentsFromExcel(file);
+        return ResponseEntity.ok("Students successfully uploaded!");
     }
 
 

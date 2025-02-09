@@ -90,7 +90,7 @@ public class StudentEnrollmentController {
 
             studentEnrollmentService.enrollStudent(enrollment);
         }
-
-        return "Students assigned successfully!";
+        return "redirect:/students/select";
+//        return "Students assigned successfully!";
     }
 }

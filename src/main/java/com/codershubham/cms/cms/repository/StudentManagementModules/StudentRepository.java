@@ -7,16 +7,18 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface StudentRepository extends JpaRepository<StudentModel, Long> {
     // Add custom query methods if necessary
     boolean existsByEmail(String email);
 
-//    List<StudentModel> findByCourseId(Long courseId);
+    //    List<StudentModel> findByCourseId(Long courseId);
+    Optional<StudentModel> findByUserId(Long userId);
 
     List<StudentModel> findByCourse(CourseModel course);
 
-//     Fetch students who are NOT assigned to any semester or division
+    //     Fetch students who are NOT assigned to any semester or division
     @Query("SELECT s FROM StudentModel s WHERE s.id NOT IN (SELECT se.student.id FROM StudentEnrollmentModel se)")
     List<StudentModel> findUnassignedStudents();
 

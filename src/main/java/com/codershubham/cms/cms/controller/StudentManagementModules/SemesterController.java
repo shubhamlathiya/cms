@@ -13,7 +13,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping(PathConstant.SEMESTER_PATH)
@@ -22,6 +25,8 @@ public class SemesterController {
     @Autowired
     private SemesterService semesterService;
 
+    @Autowired
+    private DivisionService divisionService;
 
     @Autowired
     private CourseService courseService;
@@ -49,14 +54,36 @@ public class SemesterController {
     @GetMapping
     public String listSemesters(Model model) {
         List<SemesterModel> semesters = semesterService.findAll();
-        System.out.println(semesters);
-        model.addAttribute("semesters", semesters);
-        return "StudentManagement/semester/semester-list"; // Returns the semester list view
+
+        List<Map<String, Object>> semesterDetails = semesters.stream().map(semester -> {
+            Map<String, Object> map = new HashMap<>();
+            map.put("id", semester.getId());
+            map.put("name", semester.getName());
+            map.put("academicYear", semester.getAcademicYear());
+            map.put("startDate", semester.getStartDate());
+            map.put("endDate", semester.getEndDate());
+
+            // Fetch courseName using the CourseModel relation
+            String courseName = (semester.getCourse() != null) ? semester.getCourse().getCourseName() : "N/A";
+            map.put("courseName", courseName);
+
+            return map;
+        }).collect(Collectors.toList());
+
+        model.addAttribute("semesterDetails", semesterDetails);
+        return "StudentManagement/semester/semester-list"; // Updated HTML page
     }
+
+
 
     @GetMapping("/create-division-page")
     public String showCreateDivisionPage(@RequestParam Long semesterId, Model model) {
+        // Fetch existing divisions for the given semester
+        List<DivisionModel> divisions = divisionService.getDivisionsBySemester(semesterId);
+
         model.addAttribute("semesterId", semesterId);
+        model.addAttribute("divisions", divisions); // Pass divisions list to the view
+
         return "StudentManagement/semester/create-division"; // Returns the division creation view
     }
 

@@ -48,14 +48,15 @@ public class FacultyController {
 
     // 3️⃣ Save new faculty
     @PostMapping("/register")
-    public String registerFaculty(
-            @ModelAttribute FacultyModel faculty,        // Faculty object
-            @ModelAttribute UserModel user) {            // User object for username, password, and role
+    public String registerFaculty(@ModelAttribute FacultyModel faculty,        // Faculty object
+                                  @ModelAttribute UserModel user) {            // User object for username, password, and role
 
         try {
             // Accessing values directly from faculty and user objects
             String username = user.getUsername();
             String password = user.getPassword();
+            String firstName = faculty.getFirstName();
+            String lastName = faculty.getLastName();
             String designation = faculty.getDesignation();
             String qualification = faculty.getQualification();
             int experience = faculty.getExperience();
@@ -71,6 +72,8 @@ public class FacultyController {
             // Log all the values to check that they are correctly mapped
             System.out.println("Username: " + username);
             System.out.println("Password: " + password);
+            System.out.println("First Name: " + firstName);
+            System.out.println("Last Name: " + lastName);
             System.out.println("Designation: " + designation);
             System.out.println("Qualification: " + qualification);
             System.out.println("Experience: " + experience);
@@ -80,7 +83,7 @@ public class FacultyController {
             System.out.println("Department: " + department.getName());
 
             // Call the service to register the faculty
-            facultyService.registerFaculty(username,password,designation,qualification,experience,phoneNumber,email,department,status);
+            facultyService.registerFaculty(username, password, firstName, lastName, designation, qualification, experience, phoneNumber, email, department, status);
 
             // Redirect to success page
             return "redirect:/faculty";  // Success page after registration
@@ -96,7 +99,7 @@ public class FacultyController {
     // 4️⃣ Show update faculty form
     @GetMapping("/edit/{id}")
     public String showEditFacultyForm(@PathVariable Long id, Model model) {
-        Optional<FacultyModel> faculty = facultyService.findById(id);
+        Optional<FacultyModel> faculty = facultyService.getFacultyById(id);
         if (faculty.isPresent()) {
             model.addAttribute("faculty", faculty.get());
             model.addAttribute("departments", departmentService.getAllDepartments()); // Load departments for selection

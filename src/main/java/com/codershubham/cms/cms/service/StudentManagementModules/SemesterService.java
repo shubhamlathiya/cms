@@ -25,16 +25,6 @@ public class SemesterService {
         return semesterRepository.save(semester);
     }
 
-    // Method to find a semester by its ID
-    public SemesterModel findById(Long semesterId) {
-        Optional<SemesterModel> semester = semesterRepository.findById(semesterId);
-        if (semester.isPresent()) {
-            return semester.get();
-        } else {
-            throw new RuntimeException("Semester not found with ID: " + semesterId);
-        }
-    }
-
     // Fetch all semesters
     public List<SemesterModel> findAll() {
         return semesterRepository.findAll();

@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Leave Requests</title>
+</head>
+<body>
+
+<div th:if="${student != null}">
+    <p>Student Name: <span th:text="${student.firstName} + ' ' + ${student.lastName}"></span></p>
+</div>
+<div th:unless="${student != null}">
+    <p>This user is not a student.</p>
+</div>
+
+
+<!--<h2>Leave Requests for <span th:text="${user.firstName} + ' ' + ${user.lastName}"></span></h2>-->
+
+<!-- Form to Submit Leave Request -->
+<h3>Submit Leave Request</h3>
+<form action="/leave-requests/submit" method="post">
+    <input type="hidden" name="userId" th:value="${user.id}">
+
+    <label for="reason">Reason:</label>
+    <input type="text" id="reason" name="reason" required><br>
+
+    <label for="startDate">Start Date:</label>
+    <input type="date" id="startDate" name="startDate" required><br>
+
+    <label for="endDate">End Date:</label>
+    <input type="date" id="endDate" name="endDate" required><br>
+
+    <button type="submit">Submit Leave Request</button>
+</form>
+
+<!-- Table to Display Leave Requests -->
+<h3>Your Leave Requests</h3>
+<table border="1">
+    <thead>
+    <tr>
+        <th>Leave ID</th>
+        <th>Reason</th>
+        <th>Status</th>
+        <th>Start Date</th>
+        <th>End Date</th>
+        <th>Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    <th:block th:each="leave : ${leaveRequests}">
+        <tr>
+            <td th:text="${leave.id}"></td>
+            <td th:text="${leave.reason}"></td>
+            <td th:text="${leave.status}"></td>
+            <td th:text="${leave.startDate}"></td>
+            <td th:text="${leave.endDate}"></td>
+            <td>
+                <form action="/leave-requests/update" method="post">
+                    <input type="hidden" name="leaveId" th:value="${leave.id}">
+                    <input type="hidden" name="userId" th:value="${user.id}">
+                    <button type="submit" name="status" value="APPROVED">Approve</button>
+                    <button type="submit" name="status" value="REJECTED">Reject</button>
+                </form>
+            </td>
+        </tr>
+    </th:block>
+    </tbody>
+</table>
+
+</body>
+</html>

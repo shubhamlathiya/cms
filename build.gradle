@@ -34,6 +34,8 @@ dependencies {
 
 	implementation 'org.springframework.security:spring-security-crypto'
 
+	implementation 'org.apache.poi:poi-ooxml:5.2.3' // Latest Apache POI for Excel handling
+
 }
 
 tasks.named('test') {

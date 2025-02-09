@@ -79,8 +79,11 @@ public class SubjectService {
         return subjectRepository.findByCourseModel(course);
     }
 
-    public SubjectsModel findById(Long subjectId) {
-        return subjectRepository.findById(subjectId)
-                .orElseThrow(() -> new IllegalArgumentException("Subject not found with ID: " + subjectId));
-    }
+//    public List<SubjectsModel> getAssignedSubjectsBySemester(Long semesterId) {
+//        return subjectRepository.findSubjectsAssignedToFaculty(semesterId);
+//    }
+//
+//    public List<SubjectsModel> getUnassignedSubjectsBySemester(Long semesterId) {
+//        return subjectRepository.findSubjectsNotAssignedToFaculty(semesterId);
+//    }
 }

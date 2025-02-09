@@ -20,7 +20,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/faculty-subject")
@@ -92,19 +94,15 @@ public class FacultySubjectAssignmentController {
         return ResponseEntity.ok(divisions);
     }
 
-//    // Handle the form submission
-//    @PostMapping("/assign")
-//    public String assignSubjectToFaculty(@RequestParam Long facultyId,
-//                                         @RequestParam Long semesterId,
-//                                         @RequestParam Long divisionId,
-//                                         @RequestParam Long subjectId,
-//                                         Model model) {
-//        // Call service to assign subject
-//        String result = facultySubjectAssignmentService.assignSubjectToFaculty(
-//                new FacultySubjectAssignmentRequestDto(facultyId, semesterId, divisionId, subjectId));
+//    @GetMapping("/semester/{semesterId}/subjects")
+//    public ResponseEntity<Map<String, Object>> getSubjectsAssignmentStatus(@PathVariable Long semesterId) {
+//        List<SubjectsModel> assignedSubjects = subjectService.getAssignedSubjectsBySemester(semesterId);
+//        List<SubjectsModel> unassignedSubjects = subjectService.getUnassignedSubjectsBySemester(semesterId);
 //
-//        // Pass the result message to the view
-//        model.addAttribute("message", result);
-//        return "faculty_assignment"; // Reload the same page with the message
+//        Map<String, Object> response = new HashMap<>();
+//        response.put("assignedSubjects", assignedSubjects);
+//        response.put("unassignedSubjects", unassignedSubjects);
+//
+//        return ResponseEntity.ok(response);
 //    }
 }

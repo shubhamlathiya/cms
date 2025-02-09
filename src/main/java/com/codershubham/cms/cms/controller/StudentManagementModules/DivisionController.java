@@ -29,7 +29,7 @@ public class DivisionController {
         System.out.println(request.getDivisionNames());
 
         // Fetch the semester object by semesterId
-        SemesterModel semester = semesterService.findById(request.getSemesterId());
+        SemesterModel semester = semesterService.getSemesterById(request.getSemesterId());
 
         // Iterate over division names and save each one
         for (String divisionName : request.getDivisionNames()) {

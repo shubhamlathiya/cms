@@ -35,10 +35,10 @@ public class SubjectEnrollmentService {
 
         for (Long studentId : request.getStudentIds()) {
             StudentModel student = studentService.findById(studentId);
-            CourseModel course = courseService.findById(request.getCourseId());
+            CourseModel course = courseService.getCourseById(request.getCourseId());
 
             for (Long subjectId : request.getSubjectIds()) {
-                SubjectsModel subject = subjectService.findById(subjectId);
+                SubjectsModel subject = subjectService.getSubjectById(subjectId);
 
                 SubjectEnrollmentModel enrollment = new SubjectEnrollmentModel();
                 enrollment.setStudent(student);

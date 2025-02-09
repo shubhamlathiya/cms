@@ -10,6 +10,7 @@ import com.codershubham.cms.cms.repository.UserManagementModules.RoleRepository;
 import com.codershubham.cms.cms.repository.UserManagementModules.UserRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -31,6 +32,9 @@ public class FacultyService {
     @Autowired
     private RoleRepository roleRepository;
 
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
     public List<FacultyModel> getAllFaculties() {
         return facultyRepository.findAll();
     }
@@ -40,8 +44,8 @@ public class FacultyService {
     }
 
     @Transactional
-    public FacultyModel registerFaculty(String username, String password, String designation, String qualification,
-                                        int experience, String phoneNumber, String email, DepartmentModel department , String status) {
+    public FacultyModel registerFaculty(String username, String password, String firstName, String lastName, String designation, String qualification,
+                                        int experience, String phoneNumber, String email, DepartmentModel department, String status) {
         // Check if username already exists
         if (userRepository.existsByUsername(username)) {
             throw new RuntimeException("Username already exists");
@@ -63,7 +67,7 @@ public class FacultyService {
         // Create User object
         UserModel user = new UserModel();
         user.setUsername(username);
-        user.setPassword(password);  // Ensure password is hashed
+        user.setPassword(passwordEncoder.encode(password));  // Ensure password is hashed
         user.setRole(role);
         user = userRepository.save(user); // Save user to the database
 
@@ -73,7 +77,9 @@ public class FacultyService {
 
         // Create Faculty object
         FacultyModel faculty = new FacultyModel();
-        faculty.setUser(user);  // Link the faculty to the user
+        faculty.setUser(user);
+        faculty.setFirstName(firstName);
+        faculty.setLastName(lastName);
         faculty.setDesignation(designation);
         faculty.setQualification(qualification);
         faculty.setExperience(experience);
@@ -106,12 +112,12 @@ public class FacultyService {
         facultyRepository.deleteById(id);
     }
 
-    public Optional<FacultyModel> findById(Long id) {
-        return facultyRepository.findById(id);
-    }
-
     public List<FacultyModel> getFacultyByDepartment(Long departmentId) {
         return facultyRepository.findByDepartmentId(departmentId);
     }
 
+    public FacultyModel getFacultyByUserId(Long userId) {
+        return facultyRepository.findByUserId(userId)
+                .orElse(null); // Return null if no faculty member is found
+    }
 }

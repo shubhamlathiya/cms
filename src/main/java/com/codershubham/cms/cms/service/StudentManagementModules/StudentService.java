@@ -10,13 +10,21 @@ import com.codershubham.cms.cms.repository.StudentManagementModules.StudentEnrol
 import com.codershubham.cms.cms.repository.StudentManagementModules.StudentRepository;
 import com.codershubham.cms.cms.repository.UserManagementModules.RoleRepository;
 import com.codershubham.cms.cms.repository.UserManagementModules.UserRepository;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class StudentService {
@@ -57,12 +65,12 @@ public class StudentService {
         System.out.println("Assigned Role: " + role.getName());
 
         // Hash the password (Use BCryptPasswordEncoder)
-        String hashedPassword = passwordEncoder.encode(password);
+//        String hashedPassword = passwordEncoder.encode(password);
 //
         // Create User object
         UserModel user = new UserModel();
         user.setUsername(username);
-        user.setPassword(password);
+        user.setPassword(passwordEncoder.encode(password));
         user.setRole(role);
         user = userRepository.save(user); // Save user to the database
 
@@ -83,6 +91,61 @@ public class StudentService {
         return studentRepository.save(student); // Save the student to the database
     }
 
+    public void saveStudentsFromExcel(MultipartFile file) {
+        try (InputStream inputStream = file.getInputStream();
+             Workbook workbook = new XSSFWorkbook(inputStream)) {
+
+            Sheet sheet = workbook.getSheetAt(0);
+
+            for (int i = 1; i <= sheet.getLastRowNum(); i++) {
+                Row row = sheet.getRow(i);
+                if (row == null) continue;
+
+                String username = row.getCell(0).getStringCellValue();
+                String password = row.getCell(1).getStringCellValue();
+                String roleName = row.getCell(2).getStringCellValue();
+                String firstName = row.getCell(3).getStringCellValue();
+                String lastName = row.getCell(4).getStringCellValue();
+                String email = row.getCell(5).getStringCellValue();
+                String phoneNumber = row.getCell(6).getStringCellValue();
+                String address = row.getCell(7).getStringCellValue();
+                Long courseId = (long) row.getCell(8).getNumericCellValue();
+
+                if (userRepository.existsByUsername(username)) {
+                    throw new RuntimeException("Username already exists");
+                }
+                if (studentRepository.existsByEmail(email)) {
+                    throw new RuntimeException("Email already exists");
+                }
+
+                // Create new student
+                UserModel user = new UserModel();
+                user.setUsername(username);
+                user.setPassword(passwordEncoder.encode(password));
+
+                RoleModel role = roleRepository.findByName(roleName)
+                        .orElseThrow(() -> new RuntimeException("Role not found"));
+                user.setRole(role);
+                userRepository.save(user);
+
+                CourseModel course = courseRepository.findById(courseId)
+                        .orElseThrow(() -> new RuntimeException("Course not found"));
+
+                StudentModel student = new StudentModel();
+                student.setUser(user);
+                student.setFirstName(firstName);
+                student.setLastName(lastName);
+                student.setEmail(email);
+                student.setPhoneNumber(phoneNumber);
+                student.setAddress(address);
+                student.setCourse(course);
+                studentRepository.save(student);
+            }
+
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to process Excel file: " + e.getMessage());
+        }
+    }
 //    public List<StudentModel> getAllStudents() {
 //        return studentRepository.findAll();
 //    }
@@ -91,7 +154,8 @@ public class StudentService {
 //        CourseModel course = courseRepository.findById(courseId)
 //                .orElseThrow(() -> new RuntimeException("Course not found"));
 //        return studentRepository.findByCourse(course);
-////        return studentRepository.findByCourseId(courseId);
+
+    /// /        return studentRepository.findByCourseId(courseId);
 //    }
 //
 //
@@ -100,7 +164,6 @@ public class StudentService {
 //                .orElseThrow(() -> new RuntimeException("Course not found"));
 //        return studentRepository.findByCourse(course);  // Pass Course object
 //    }
-
     public List<StudentModel> getStudentsByDivision(Long divisionId) {
         List<StudentEnrollmentModel> enrollments = studentEnrollmentRepository.findByDivisionId(divisionId);
         return enrollments.stream().map(StudentEnrollmentModel::getStudent).toList();
@@ -119,5 +182,8 @@ public class StudentService {
                 .orElseThrow(() -> new IllegalArgumentException("Student not found with ID: " + studentId));
     }
 
-
+    public StudentModel getStudentByUserId(Long userId) {
+        return studentRepository.findByUserId(userId)
+                .orElse(null); // Return null if no student is found
+    }
 }
