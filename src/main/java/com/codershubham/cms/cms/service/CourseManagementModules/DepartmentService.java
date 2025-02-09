@@ -1,7 +1,6 @@
 package com.codershubham.cms.cms.service.CourseManagementModules;
 
 
-
 import com.codershubham.cms.cms.model.CourseManagementModules.DepartmentModel;
 import com.codershubham.cms.cms.repository.CourseManagementModules.DepartmentRepository;
 import org.springframework.beans.factory.annotation.Autowired;

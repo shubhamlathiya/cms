@@ -60,6 +60,6 @@ public class SubjectEnrollmentService {
 
     // Get subjects enrolled by a student in a semester
     public List<SubjectEnrollmentModel> getStudentSubjects(Long studentId, Long semesterId) {
-        return subjectEnrollmentRepository.findByStudentIdAndSemester_Id(studentId, semesterId);
+        return subjectEnrollmentRepository.findByStudentIdAndSemesterId(studentId, semesterId);
     }
 }

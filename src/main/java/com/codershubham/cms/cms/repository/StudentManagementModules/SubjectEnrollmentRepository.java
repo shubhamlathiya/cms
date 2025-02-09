@@ -10,7 +10,7 @@ import java.util.List;
 @Repository
 public interface SubjectEnrollmentRepository extends JpaRepository<SubjectEnrollmentModel, Long> {
 
-    List<SubjectEnrollmentModel> findByStudentIdAndSemester_Id(Long studentId, Long semesterId);
+    List<SubjectEnrollmentModel> findByStudentIdAndSemesterId(Long studentId, Long semesterId);
 
 }
 

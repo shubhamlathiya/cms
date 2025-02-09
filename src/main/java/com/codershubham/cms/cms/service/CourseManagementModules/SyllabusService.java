@@ -23,7 +23,7 @@ public class SyllabusService {
     }
 
     public List<SyllabusModel> getSyllabusBySubject(Long subjectId) {
-        return syllabusRepository.findBySubject_Subjectid(subjectId);
+        return syllabusRepository.findBySubjectSubjectid(subjectId);
     }
 
     public SyllabusModel addSyllabus(SyllabusModel syllabus) {
