@@ -28,6 +28,7 @@ public class SyllabusController {
         return "CourseManagement/syllabus/syllabus-by-subject"; // Returns syllabus-by-subject.html
     }
 
+
     @GetMapping("/add/{subjectId}")
     public String showAddSyllabusForm(@PathVariable Long subjectId, Model model) {
         SyllabusModel syllabus = new SyllabusModel();
