@@ -8,7 +8,8 @@ public class SubjectEnrollmentRequestDto {
     private List<Long> studentIds;
     private List<Long> subjectIds;
     private Long courseId;
-    private int semester;
+    private Long semesterId;  // ✅ Should be Long, NOT int
+
     private Date enrollmentDate;
 
     // Getters and Setters
@@ -21,8 +22,13 @@ public class SubjectEnrollmentRequestDto {
     public Long getCourseId() { return courseId; }
     public void setCourseId(Long courseId) { this.courseId = courseId; }
 
-    public int getSemester() { return semester; }
-    public void setSemester(int semester) { this.semester = semester; }
+    public Long getSemesterId() {
+        return semesterId;
+    }
+
+    public void setSemesterId(Long semesterId) {
+        this.semesterId = semesterId;
+    }
 
     public Date getEnrollmentDate() { return enrollmentDate; }
     public void setEnrollmentDate(Date enrollmentDate) { this.enrollmentDate = enrollmentDate; }

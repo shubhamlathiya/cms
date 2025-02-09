@@ -32,7 +32,7 @@
             <td th:text="${semester.courseName}"></td>
             <td>
                 <a th:href="@{/semesters/create-division-page(semesterId=${semester.id})}">
-                    <button>Create Division</button>
+                    <button>Show and Create Division</button>
                 </a>
                 <a th:href="@{/enrollments/assign-students-to-division/{semesterId}(semesterId=${semester.id})}">
                     <button>Assign Students to Division</button>

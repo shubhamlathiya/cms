@@ -4,6 +4,7 @@ package com.codershubham.cms.cms.service.StudentManagementModules;
 import com.codershubham.cms.cms.model.CourseManagementModules.CourseModel;
 import com.codershubham.cms.cms.model.CourseManagementModules.SubjectsModel;
 import com.codershubham.cms.cms.model.DTO.SubjectEnrollmentRequestDto;
+import com.codershubham.cms.cms.model.StudentManagementModules.SemesterModel;
 import com.codershubham.cms.cms.model.StudentManagementModules.StudentModel;
 import com.codershubham.cms.cms.model.StudentManagementModules.SubjectEnrollmentModel;
 import com.codershubham.cms.cms.repository.StudentManagementModules.SubjectEnrollmentRepository;
@@ -28,6 +29,8 @@ public class SubjectEnrollmentService {
     private SubjectService subjectService;
 
     @Autowired
+    private SemesterService semesterService;
+    @Autowired
     private CourseService courseService;
 
     public void enrollStudentsInSubjects(SubjectEnrollmentRequestDto request) {
@@ -37,6 +40,9 @@ public class SubjectEnrollmentService {
             StudentModel student = studentService.findById(studentId);
             CourseModel course = courseService.getCourseById(request.getCourseId());
 
+            // ✅ Fetch SemesterModel using semesterId
+            SemesterModel semester = semesterService.getSemesterById(request.getSemesterId());
+
             for (Long subjectId : request.getSubjectIds()) {
                 SubjectsModel subject = subjectService.getSubjectById(subjectId);
 
@@ -44,15 +50,16 @@ public class SubjectEnrollmentService {
                 enrollment.setStudent(student);
                 enrollment.setSubject(subject);
                 enrollment.setCourse(course);
-                enrollment.setSemester(request.getSemester());
+                enrollment.setSemester(semester);  // ✅ Now we set SemesterModel instead of int
                 enrollment.setEnrollmentDate(enrollmentDate);
 
                 subjectEnrollmentRepository.save(enrollment);
             }
         }
     }
+
     // Get subjects enrolled by a student in a semester
-//    public List<SubjectEnrollmentModel> getStudentSubjects(Long studentId, Long semesterId) {
-//        return subjectEnrollmentRepository.findByStudentIdAndSemesterId(studentId, semesterId);
-//    }
+    public List<SubjectEnrollmentModel> getStudentSubjects(Long studentId, Long semesterId) {
+        return subjectEnrollmentRepository.findByStudentIdAndSemester_Id(studentId, semesterId);
+    }
 }

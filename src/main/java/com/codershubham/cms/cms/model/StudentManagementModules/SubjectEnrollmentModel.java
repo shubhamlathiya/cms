@@ -26,8 +26,9 @@ public class SubjectEnrollmentModel {
     @JoinColumn(name = "course_id", nullable = false)
     private CourseModel course;
 
-    @Column(name = "semester", nullable = false)
-    private int semester;
+    @ManyToOne
+    @JoinColumn(name = "semester_id", nullable = false)
+    private SemesterModel semester;
 
     @Column(name = "enrollment_date", nullable = false)
     @Temporal(TemporalType.DATE)
@@ -46,8 +47,13 @@ public class SubjectEnrollmentModel {
     public CourseModel getCourse() { return course; }
     public void setCourse(CourseModel course) { this.course = course; }
 
-    public int getSemester() { return semester; }
-    public void setSemester(int semester) { this.semester = semester; }
+    public SemesterModel getSemester() {
+        return semester;
+    }
+
+    public void setSemester(SemesterModel semester) {
+        this.semester = semester;
+    }
 
     public Date getEnrollmentDate() { return enrollmentDate; }
     public void setEnrollmentDate(Date enrollmentDate) { this.enrollmentDate = enrollmentDate; }
