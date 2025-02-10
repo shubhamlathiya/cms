@@ -1,36 +1,47 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Faculty List</title>
+    <meta charset="UTF-8">
+    <title th:text="'Faculty List'">Faculty List</title>
+    <link rel="stylesheet" type="text/css" href="/css/styles.css">
 </head>
 <body>
-<h2>Faculty Members</h2>
-<a href="/faculty/add">Add New Faculty</a>
-<table border="1">
-    <thead>
-    <tr>
-        <th>Faculty ID</th>
-        <th>Name</th>
-        <th>Email</th>
-        <th>Department</th>
-        <th>Designation</th>
-        <th>Actions</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr th:each="faculty : ${faculties}">
-        <td th:text="${faculty.facultyId}"></td>
-        <td th:text="${faculty.user != null ? faculty.user.username : 'N/A'}"></td>
-        <td th:text="${faculty.user != null ? faculty.email : 'N/A'}"></td>
-        <td th:text="${faculty.department != null ? faculty.department.name : 'No Department'}"></td>
-        <td th:text="${faculty.designation}"></td>
-        <td>
-            <a th:href="@{/faculty/edit/{id}(id=${faculty.facultyId})}">Edit</a> |
-            <a th:href="@{/faculty/delete/{id}(id=${faculty.facultyId})}"
-               th:onclick="return confirm('Are you sure you want to delete this faculty?')">Delete</a>
-        </td>
-    </tr>
-    </tbody>
-</table>
+
+<!-- Replace the content section -->
+<div th:replace="layout/base.html">
+    <div th:fragment="content">
+        <main>
+            <h2>Faculty Members</h2>
+            <a href="/faculty/add">Add New Faculty</a>
+            <table border="1">
+                <thead>
+                <tr>
+                    <th>Faculty ID</th>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Department</th>
+                    <th>Designation</th>
+                    <th>Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="faculty : ${faculties}">
+                    <td th:text="${faculty.facultyId}"></td>
+                    <td th:text="${faculty.user != null ? faculty.user.username : 'N/A'}"></td>
+                    <td th:text="${faculty.user != null ? faculty.email : 'N/A'}"></td>
+                    <td th:text="${faculty.department != null ? faculty.department.name : 'No Department'}"></td>
+                    <td th:text="${faculty.designation}"></td>
+                    <td>
+                        <a th:href="@{/faculty/edit/{id}(id=${faculty.facultyId})}">Edit</a> |
+                        <a th:href="@{/faculty/delete/{id}(id=${faculty.facultyId})}"
+                           th:onclick="return confirm('Are you sure you want to delete this faculty?')">Delete</a>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </main>
+    </div>
+</div>
+
 </body>
 </html>

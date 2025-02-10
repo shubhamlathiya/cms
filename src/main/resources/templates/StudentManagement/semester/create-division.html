@@ -1,54 +1,64 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Create Divisions</title>
+    <title th:text="'Custom Page Title'">Custom Page Title</title>
+    <link rel="stylesheet" type="text/css" href="/css/styles.css">
 </head>
 <body>
 
-<h2>Create Divisions</h2>
+<!-- Replace the content section -->
+<div th:replace="layout/base.html">
+    <div th:fragment="content">
+        <main>
 
-<form action="/create-divisions" method="post">
-    <label for="semesterId">Semester ID:</label>
-    <input type="number" name="semesterId" id="semesterId" th:value="${semesterId}" required>
+            <h2>Create Divisions</h2>
 
-    <h3>Existing Divisions:</h3>
-    <div id="divisionContainer">
-        <!-- Display existing divisions if available -->
-        <th:block th:if="${divisions != null and !divisions.isEmpty()}">
-            <div th:each="division : ${divisions}">
-                <input type="text" name="divisionNames" th:value="${division.name}" readonly>
-            </div>
-        </th:block>
+            <form action="/create-divisions" method="post">
+                <label for="semesterId">Semester ID:</label>
+                <input type="number" name="semesterId" id="semesterId" th:value="${semesterId}" required>
 
-        <!-- If no existing divisions, allow adding new ones -->
-        <th:block th:if="${divisions == null or divisions.isEmpty()}">
-            <div>
-                <input type="text" name="divisionNames" required placeholder="Enter Division Name">
-                <button type="button" onclick="removeDivisionField(this)">Remove</button>
-            </div>
-        </th:block>
-    </div>
+                <h3>Existing Divisions:</h3>
+                <div id="divisionContainer">
+                    <!-- Display existing divisions if available -->
+                    <th:block th:if="${divisions != null and !divisions.isEmpty()}">
+                        <div th:each="division : ${divisions}">
+                            <input type="text" name="divisionNames" th:value="${division.name}" readonly>
+                        </div>
+                    </th:block>
 
-    <button type="button" onclick="addDivisionField()">Add More</button>
-    <button type="submit">Create Divisions</button>
-</form>
+                    <!-- If no existing divisions, allow adding new ones -->
+                    <th:block th:if="${divisions == null or divisions.isEmpty()}">
+                        <div>
+                            <input type="text" name="divisionNames" required placeholder="Enter Division Name">
+                            <button type="button" onclick="removeDivisionField(this)">Remove</button>
+                        </div>
+                    </th:block>
+                </div>
 
-<script>
-    function addDivisionField() {
-        let container = document.getElementById("divisionContainer");
-        let div = document.createElement("div");
-        div.innerHTML = `
+                <button type="button" onclick="addDivisionField()">Add More</button>
+                <button type="submit">Create Divisions</button>
+            </form>
+
+            <script>
+                function addDivisionField() {
+                    let container = document.getElementById("divisionContainer");
+                    let div = document.createElement("div");
+                    div.innerHTML = `
             <input type="text" name="divisionNames" required placeholder="Enter Division Name">
             <button type="button" onclick="removeDivisionField(this)">Remove</button>
         `;
-        container.appendChild(div);
-    }
+                    container.appendChild(div);
+                }
 
-    function removeDivisionField(button) {
-        button.parentElement.remove();
-    }
-</script>
+                function removeDivisionField(button) {
+                    button.parentElement.remove();
+                }
+            </script>
+
+        </main>
+    </div>
+</div>
 
 </body>
 </html>

@@ -8,185 +8,205 @@
 </head>
 <body>
 
-<h1>Student Subject Enrollment</h1>
+</body>
+</html>
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="'Student Subject Enrollment'">Student Subject Enrollment</title>
+    <link rel="stylesheet" type="text/css" href="/css/styles.css">
+</head>
+<body>
 
-<!-- Dropdowns for Selection -->
-<form id="enrollmentForm">
-    <label for="department">Select Department:</label>
-    <select name="departmentId" id="department" required>
-        <option value="">--Select Department--</option>
-        <th:block th:each="department : ${departments}">
-            <option th:value="${department.id}" th:text="${department.name}"></option>
-        </th:block>
-    </select>
+<!-- Replace the content section -->
+<div th:replace="layout/base.html">
+    <div th:fragment="content">
+        <main>
 
-    <label for="course">Select Course:</label>
-    <select name="courseId" id="course" required>
-        <option value="">--Select Course--</option>
-    </select>
+            <h1>Student Subject Enrollment</h1>
 
-    <label for="semester">Select Semester:</label>
-    <select name="semesterId" id="semester" required>
-        <option value="">--Select Semester--</option>
-    </select>
+            <!-- Dropdowns for Selection -->
+            <form id="enrollmentForm">
+                <label for="department">Select Department:</label>
+                <select name="departmentId" id="department" required>
+                    <option value="">--Select Department--</option>
+                    <th:block th:each="department : ${departments}">
+                        <option th:value="${department.id}" th:text="${department.name}"></option>
+                    </th:block>
+                </select>
 
-    <label for="subject">Select Subject:</label>
-    <select name="subjectId" id="subject" required>
-        <option value="">--Select Subject--</option>
-    </select>
+                <label for="course">Select Course:</label>
+                <select name="courseId" id="course" required>
+                    <option value="">--Select Course--</option>
+                </select>
 
-    <label for="division">Select Division:</label>
-    <select name="divisionId" id="division" required>
-        <option value="">--Select Division--</option>
-    </select>
-</form>
+                <label for="semester">Select Semester:</label>
+                <select name="semesterId" id="semester" required>
+                    <option value="">--Select Semester--</option>
+                </select>
 
-<!-- Student List -->
-<h2>Select Students</h2>
-<table id="studentTable">
-    <thead>
-    <tr>
-        <th>Select</th>
-        <th>ID</th>
-        <th>First Name</th>
-        <th>Last Name</th>
-        <th>Email</th>
-    </tr>
-    </thead>
-    <tbody>
-    </tbody>
-</table>
+                <label for="subject">Select Subject:</label>
+                <select name="subjectId" id="subject" required>
+                    <option value="">--Select Subject--</option>
+                </select>
 
-<!-- Submit Button -->
-<button id="assignSubjects" disabled>Assign Subject to Selected Students</button>
+                <label for="division">Select Division:</label>
+                <select name="divisionId" id="division" required>
+                    <option value="">--Select Division--</option>
+                </select>
+            </form>
 
-<script>
-    $(document).ready(function () {
-        // Fetch courses when a department is selected
-        $('#department').change(function () {
-            var departmentId = $(this).val();
-            if (departmentId) {
-                $.get("/students/courses/" + departmentId, function (courses) {
-                    $('#course').empty().append('<option value="">--Select Course--</option>');
-                    $.each(courses, function (index, course) {
-                        $('#course').append('<option value="' + course.courseID + '">' + course.courseName + '</option>');
+            <!-- Student List -->
+            <h2>Select Students</h2>
+            <table id="studentTable">
+                <thead>
+                <tr>
+                    <th>Select</th>
+                    <th>ID</th>
+                    <th>First Name</th>
+                    <th>Last Name</th>
+                    <th>Email</th>
+                </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+
+            <!-- Submit Button -->
+            <button id="assignSubjects" disabled>Assign Subject to Selected Students</button>
+
+            <script>
+                $(document).ready(function () {
+                    // Fetch courses when a department is selected
+                    $('#department').change(function () {
+                        var departmentId = $(this).val();
+                        if (departmentId) {
+                            $.get("/students/courses/" + departmentId, function (courses) {
+                                $('#course').empty().append('<option value="">--Select Course--</option>');
+                                $.each(courses, function (index, course) {
+                                    $('#course').append('<option value="' + course.courseID + '">' + course.courseName + '</option>');
+                                });
+                            });
+                        } else {
+                            $('#course, #semester, #subject, #division').empty().append('<option value="">--Select--</option>');
+                            $('#studentTable tbody').empty();
+                        }
                     });
-                });
-            } else {
-                $('#course, #semester, #subject, #division').empty().append('<option value="">--Select--</option>');
-                $('#studentTable tbody').empty();
-            }
-        });
 
-        // Fetch semesters when a course is selected
-        $('#course').change(function () {
-            var courseId = $(this).val();
-            if (courseId) {
-                $.get("/students/semesters/" + courseId, function (semesters) {
-                    $('#semester').empty().append('<option value="">--Select Semester--</option>');
-                    $.each(semesters, function (index, semester) {
-                        $('#semester').append('<option value="' + semester.id + '">' + semester.name + '</option>');
+                    // Fetch semesters when a course is selected
+                    $('#course').change(function () {
+                        var courseId = $(this).val();
+                        if (courseId) {
+                            $.get("/students/semesters/" + courseId, function (semesters) {
+                                $('#semester').empty().append('<option value="">--Select Semester--</option>');
+                                $.each(semesters, function (index, semester) {
+                                    $('#semester').append('<option value="' + semester.id + '">' + semester.name + '</option>');
+                                });
+                            });
+                        } else {
+                            $('#semester, #subject, #division').empty().append('<option value="">--Select--</option>');
+                            $('#studentTable tbody').empty();
+                        }
                     });
-                });
-            } else {
-                $('#semester, #subject, #division').empty().append('<option value="">--Select--</option>');
-                $('#studentTable tbody').empty();
-            }
-        });
 
-        // Fetch subjects when a semester is selected
-        $('#semester').change(function () {
-            var semesterId = $(this).val();
-            if (semesterId) {
-                $.get("/students/subjects/" + semesterId, function (subjects) {
-                    $('#subject').empty().append('<option value="">--Select Subject--</option>');
-                    $.each(subjects, function (index, subject) {
-                        $('#subject').append('<option value="' + subject.subjectid + '">' + subject.subjectName + '</option>');
+                    // Fetch subjects when a semester is selected
+                    $('#semester').change(function () {
+                        var semesterId = $(this).val();
+                        if (semesterId) {
+                            $.get("/students/subjects/" + semesterId, function (subjects) {
+                                $('#subject').empty().append('<option value="">--Select Subject--</option>');
+                                $.each(subjects, function (index, subject) {
+                                    $('#subject').append('<option value="' + subject.subjectid + '">' + subject.subjectName + '</option>');
+                                });
+                            });
+                        } else {
+                            $('#subject').empty().append('<option value="">--Select Subject--</option>');
+                        }
                     });
-                });
-            } else {
-                $('#subject').empty().append('<option value="">--Select Subject--</option>');
-            }
-        });
 
-        // Fetch divisions when a semester is selected
-        $('#semester').change(function () {
-            var semesterId = $(this).val();
-            if (semesterId) {
-                $.get("/students/divisions/" + semesterId, function (divisions) {
-                    $('#division').empty().append('<option value="">--Select Division--</option>');
-                    $.each(divisions, function (index, division) {
-                        $('#division').append('<option value="' + division.id + '">' + division.name + '</option>');
+                    // Fetch divisions when a semester is selected
+                    $('#semester').change(function () {
+                        var semesterId = $(this).val();
+                        if (semesterId) {
+                            $.get("/students/divisions/" + semesterId, function (divisions) {
+                                $('#division').empty().append('<option value="">--Select Division--</option>');
+                                $.each(divisions, function (index, division) {
+                                    $('#division').append('<option value="' + division.id + '">' + division.name + '</option>');
+                                });
+                            });
+                        } else {
+                            $('#division').empty().append('<option value="">--Select Division--</option>');
+                            $('#studentTable tbody').empty();
+                        }
                     });
-                });
-            } else {
-                $('#division').empty().append('<option value="">--Select Division--</option>');
-                $('#studentTable tbody').empty();
-            }
-        });
 
-        // Fetch students when a division is selected
-        $('#division').change(function () {
-            var divisionId = $(this).val();
-            if (divisionId) {
-                $.get("/students/list/" + divisionId, function (students) {
-                    var tableBody = $('#studentTable tbody');
-                    tableBody.empty();
-                    $.each(students, function (index, student) {
-                        tableBody.append('<tr>' +
-                            '<td><input type="checkbox" class="student-checkbox" value="' + student.id + '"></td>' +
-                            '<td>' + student.id + '</td>' +
-                            '<td>' + student.firstName + '</td>' +
-                            '<td>' + student.lastName + '</td>' +
-                            '<td>' + student.email + '</td>' +
-                            '</tr>');
+                    // Fetch students when a division is selected
+                    $('#division').change(function () {
+                        var divisionId = $(this).val();
+                        if (divisionId) {
+                            $.get("/students/list/" + divisionId, function (students) {
+                                var tableBody = $('#studentTable tbody');
+                                tableBody.empty();
+                                $.each(students, function (index, student) {
+                                    tableBody.append('<tr>' +
+                                        '<td><input type="checkbox" class="student-checkbox" value="' + student.id + '"></td>' +
+                                        '<td>' + student.id + '</td>' +
+                                        '<td>' + student.firstName + '</td>' +
+                                        '<td>' + student.lastName + '</td>' +
+                                        '<td>' + student.email + '</td>' +
+                                        '</tr>');
+                                });
+                                $('#assignSubjects').prop('disabled', false);
+                            });
+                        } else {
+                            $('#studentTable tbody').empty();
+                            $('#assignSubjects').prop('disabled', true);
+                        }
                     });
-                    $('#assignSubjects').prop('disabled', false);
+
+                    // Submit selected students for subject enrollment
+                    $('#assignSubjects').click(function () {
+                        let selectedStudents = [];
+                        $('.student-checkbox:checked').each(function () {
+                            selectedStudents.push($(this).val());
+                        });
+
+                        if (selectedStudents.length === 0) {
+                            alert("Please select at least one student.");
+                            return;
+                        }
+
+                        let request = {
+                            studentIds: selectedStudents,
+                            subjectIds: [$('#subject').val()],
+                            courseId: $('#course').val(),
+                            semesterId: $('#semester').val(),
+                            enrollmentDate: new Date().toISOString().split('T')[0] // Current date
+                        };
+
+                        console.log(request);
+
+                        $.ajax({
+                            type: "POST",
+                            url: "/subject-enrollment/enroll",
+                            contentType: "application/json",
+                            data: JSON.stringify(request),
+                            success: function (response) {
+                                alert("Enrollment successful!");
+                            },
+                            error: function (error) {
+                                alert("Error: " + error.responseText);
+                            }
+                        });
+                    });
+
                 });
-            } else {
-                $('#studentTable tbody').empty();
-                $('#assignSubjects').prop('disabled', true);
-            }
-        });
+            </script>
 
-        // Submit selected students for subject enrollment
-        $('#assignSubjects').click(function () {
-            let selectedStudents = [];
-            $('.student-checkbox:checked').each(function () {
-                selectedStudents.push($(this).val());
-            });
-
-            if (selectedStudents.length === 0) {
-                alert("Please select at least one student.");
-                return;
-            }
-
-            let request = {
-                studentIds: selectedStudents,
-                subjectIds: [$('#subject').val()],
-                courseId: $('#course').val(),
-                semesterId: $('#semester').val(),
-                enrollmentDate: new Date().toISOString().split('T')[0] // Current date
-            };
-
-            console.log(request);
-
-            $.ajax({
-                type: "POST",
-                url: "/subject-enrollment/enroll",
-                contentType: "application/json",
-                data: JSON.stringify(request),
-                success: function (response) {
-                    alert("Enrollment successful!");
-                },
-                error: function (error) {
-                    alert("Error: " + error.responseText);
-                }
-            });
-        });
-
-    });
-</script>
+        </main>
+    </div>
+</div>
 
 </body>
 </html>

@@ -1,44 +1,55 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Subjects List</title>
+    <meta charset="UTF-8">
+    <title th:text="'Subjects List'">Subjects List</title>
+    <link rel="stylesheet" type="text/css" href="/css/styles.css">
 </head>
 <body>
 
-<h2>Subjects List</h2>
+<!-- Replace the content section -->
+<div th:replace="layout/base.html">
+    <div th:fragment="content">
+        <main>
 
-<!-- Table displaying all subjects -->
-<table>
-    <thead>
-    <tr>
-        <th>Subject Code</th>
-        <th>Subject Name</th>
-        <th>Credits</th>
-        <th>Course</th>
-        <th>Actions</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr th:each="subject : ${subjects}">
-        <td th:text="${subject.subjectCode}"></td>
-        <td th:text="${subject.subjectName}"></td>
-        <td th:text="${subject.credits}"></td>
-        <td th:text="${subject.course.courseName}"></td>
-        <td>
-            <!-- Edit and Delete actions -->
-            <a th:href="@{/admin/subjects/update/{subjectID}(subjectID=${subject.subjectid})}">Edit</a> |
-            <a th:href="@{/admin/subjects/delete/{subjectID}(subjectID=${subject.subjectid})}"
-               th:onclick="return confirm('Are you sure you want to delete?')">Delete</a>
+            <h2>Subjects List</h2>
 
-            <!-- View Syllabus for this Subject -->
-            <a th:href="@{/admin/syllabus/subject/{subjectID}(subjectID=${subject.subjectid})}">View Syllabus</a>
-        </td>
-    </tr>
-    </tbody>
-</table>
+            <!-- Table displaying all subjects -->
+            <table>
+                <thead>
+                <tr>
+                    <th>Subject Code</th>
+                    <th>Subject Name</th>
+                    <th>Credits</th>
+                    <th>Course</th>
+                    <th>Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="subject : ${subjects}">
+                    <td th:text="${subject.subjectCode}"></td>
+                    <td th:text="${subject.subjectName}"></td>
+                    <td th:text="${subject.credits}"></td>
+                    <td th:text="${subject.course.courseName}"></td>
+                    <td>
+                        <!-- Edit and Delete actions -->
+                        <a th:href="@{/admin/subjects/update/{subjectID}(subjectID=${subject.subjectid})}">Edit</a> |
+                        <a th:href="@{/admin/subjects/delete/{subjectID}(subjectID=${subject.subjectid})}"
+                           th:onclick="return confirm('Are you sure you want to delete?')">Delete</a>
 
-<!-- Link to add a new subject -->
-<a href="/admin/subjects/add">Add New Subject</a>
+                        <!-- View Syllabus for this Subject -->
+                        <a th:href="@{/admin/syllabus/subject/{subjectID}(subjectID=${subject.subjectid})}">View Syllabus</a>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+
+            <!-- Link to add a new subject -->
+            <a href="/admin/subjects/add">Add New Subject</a>
+
+        </main>
+    </div>
+</div>
 
 </body>
 </html>

@@ -2,9 +2,15 @@
     <h1>My Website</h1>
     <nav>
         <ul>
-            <li><a href="/">Home</a></li>
-            <li><a href="/about">About</a></li>
-            <li><a href="/contact">Contact</a></li>
+
+            <li><a th:href="@{/admin/departments}">Manage Departments</a></li>
+            <li><a th:href="@{/admin/courses}">Manage Courses</a></li>
+            <li><a th:href="@{/admin/subjects}">Manage Subjects</a></li>
+            <li><a th:href="@{/admin/roles}">Manage Roles</a></li>
+            <li><a th:href="@{/students/add}">Student Register</a></li>
+            <li><a th:href="@{/semesters}">Semesters</a></li>
+            <li><a th:href="@{/admin/users}">Manage Users</a></li>
+            <li><a th:href="@{/admin/settings}">Settings</a></li>
         </ul>
     </nav>
 </header>

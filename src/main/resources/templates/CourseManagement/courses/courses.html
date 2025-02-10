@@ -2,36 +2,46 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Courses</title>
+    <title th:text="'Admin Dashboard'">Courses</title>
+    <link rel="stylesheet" type="text/css" href="/css/styles.css">
 </head>
 <body>
-<h1>Courses</h1>
 
-<!-- Button to go to Add Course form -->
-<a href="/admin/courses/add">Add Course</a>
+<!-- Replace the content section -->
+<div th:replace="layout/base.html">
+    <div th:fragment="content">
+        <main>
 
-<table>
-    <thead>
-    <tr>
-        <th>Course Name</th>
-        <th>Department</th>
-        <th>Actions</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr th:each="courseModel : ${courses}">
-        <td th:text="${courseModel.courseName}"></td>
-        <td th:text="${courseModel.duration}"></td>
-        <td th:text="${courseModel.department.name}"></td>
-        <td th:text="${courseModel.createdAt}"></td>
-        <td>
-            <!-- Edit link for each courseModel -->
-            <a th:href="@{/admin/courses/update/{courseID}(courseID=${courseModel.courseID})}">Edit</a> |
-            <!-- Delete link for each courseModel -->
-            <a th:href="@{/admin/courses/delete/{courseID}(courseID=${courseModel.courseID})}" th:onclick="return confirm('Are you sure you want to delete?')">Delete</a>
-        </td>
-    </tr>
-    </tbody>
-</table>
+            <!-- Button to go to Add Course form -->
+            <a href="/admin/courses/add">Add Course</a>
+
+            <table>
+                <thead>
+                <tr>
+                    <th>Course Name</th>
+                    <th>Department</th>
+                    <th>Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="courseModel : ${courses}">
+                    <td th:text="${courseModel.courseName}"></td>
+                    <td th:text="${courseModel.duration}"></td>
+                    <td th:text="${courseModel.department.name}"></td>
+                    <td th:text="${courseModel.createdAt}"></td>
+                    <td>
+                        <!-- Edit link for each courseModel -->
+                        <a th:href="@{/admin/courses/update/{courseID}(courseID=${courseModel.courseID})}">Edit</a> |
+                        <!-- Delete link for each courseModel -->
+                        <a th:href="@{/admin/courses/delete/{courseID}(courseID=${courseModel.courseID})}"
+                           th:onclick="return confirm('Are you sure you want to delete?')">Delete</a>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </main>
+    </div>
+</div>
+
 </body>
 </html>

@@ -2,34 +2,44 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="UTF-8">
-  <title>Departments</title>
+  <title th:text="'Admin Dashboard'">Departments</title>
+  <link rel="stylesheet" type="text/css" href="/css/styles.css">
 </head>
 <body>
-<h1>Departments</h1>
 
-<!-- Button to go to Add Department form -->
-<a href="/admin/departments/add">Add Department</a>
+<!-- Replace the content section -->
+<div th:replace="layout/base.html">
+  <div th:fragment="content">
+    <main>
+      <h1>Departments</h1>
 
-<table>
-  <thead>
-  <tr>
-    <th>Department Name</th>
-    <th>Head of Department</th> <!-- New column for Head of Department -->
-    <th>Actions</th>
-  </tr>
-  </thead>
-  <tbody>
-  <tr th:each="departmentModel : ${departments}">
-    <td th:text="${departmentModel.name}"></td>
-    <td th:text="${departmentModel.departmentHead}"></td> <!-- Display the Head of Department -->
-    <td>
-      <!-- Edit link for each departmentModel -->
-      <a th:href="@{/admin/departments/update/{id}(id=${departmentModel.id})}">Edit</a> |
-      <!-- Delete link for each departmentModel -->
-      <a th:href="@{/admin/departments/delete/{id}(id=${departmentModel.id})}" th:onclick="return confirm('Are you sure you want to delete?')">Delete</a>
-    </td>
-  </tr>
-  </tbody>
-</table>
+      <!-- Button to go to Add Department form -->
+      <a href="/admin/departments/add">Add Department</a>
+
+      <table>
+        <thead>
+        <tr>
+          <th>Department Name</th>
+          <th>Head of Department</th> <!-- New column for Head of Department -->
+          <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="departmentModel : ${departments}">
+          <td th:text="${departmentModel.name}"></td>
+          <td th:text="${departmentModel.departmentHead}"></td> <!-- Display the Head of Department -->
+          <td>
+            <!-- Edit link for each departmentModel -->
+            <a th:href="@{/admin/departments/update/{id}(id=${departmentModel.id})}">Edit</a> |
+            <!-- Delete link for each departmentModel -->
+            <a th:href="@{/admin/departments/delete/{id}(id=${departmentModel.id})}" th:onclick="return confirm('Are you sure you want to delete?')">Delete</a>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+    </main>
+  </div>
+</div>
+
 </body>
 </html>

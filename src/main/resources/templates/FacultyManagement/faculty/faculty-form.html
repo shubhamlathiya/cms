@@ -1,52 +1,62 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Register Faculty</title>
+  <title th:text="'Register Faculty'">Register Faculty</title>
+  <link rel="stylesheet" type="text/css" href="/css/styles.css">
 </head>
 <body>
-<h2>Register New Faculty</h2>
-<form action="/faculty/register" method="post">
-  <label>Username:</label>
-  <input type="text" name="username" required><br>
 
-  <label>Password:</label>
-  <input type="password" name="password" required><br>
+<!-- Replace the content section -->
+<div th:replace="layout/base.html">
+  <div th:fragment="content">
+    <main>
 
-  <label>First Name:</label>
-  <input type="text" name="firstName" required><br>
+      <h2>Register New Faculty</h2>
+      <form action="/faculty/register" method="post">
+        <label>Username:</label>
+        <input type="text" name="username" required><br>
 
-  <label>Last Name:</label>
-  <input type="text" name="lastName" required><br>
+        <label>Password:</label>
+        <input type="password" name="password" required><br>
 
-  <label>Designation:</label>
-  <input type="text" name="designation" required><br>
+        <label>First Name:</label>
+        <input type="text" name="firstName" required><br>
 
-  <label>Qualification:</label>
-  <input type="text" name="qualification" required><br>
+        <label>Last Name:</label>
+        <input type="text" name="lastName" required><br>
 
-  <label>Experience (Years):</label>
-  <input type="number" name="experience" required><br>
+        <label>Designation:</label>
+        <input type="text" name="designation" required><br>
 
-  <label>Phone Number:</label>
-  <input type="text" name="phoneNumber" required><br>
+        <label>Qualification:</label>
+        <input type="text" name="qualification" required><br>
 
-  <label>Email:</label>
-  <input type="email" name="email" required><br>
+        <label>Experience (Years):</label>
+        <input type="number" name="experience" required><br>
 
-  <label>Status:</label>
-  <select name="status" required>
-    <option value="Active">Active</option>
-    <option value="Inactive">Inactive</option>
-  </select><br>
+        <label>Phone Number:</label>
+        <input type="text" name="phoneNumber" required><br>
 
-  <label>Department:</label>
-  <select name="department" required>
-    <option th:each="department : ${departments}" th:value="${department.id}" th:text="${department.name}"></option>
-  </select><br>
+        <label>Email:</label>
+        <input type="email" name="email" required><br>
 
-  <button type="submit">Register Faculty</button>
-</form>
+        <label>Status:</label>
+        <select name="status" required>
+          <option value="Active">Active</option>
+          <option value="Inactive">Inactive</option>
+        </select><br>
+
+        <label>Department:</label>
+        <select name="department" required>
+          <option th:each="department : ${departments}" th:value="${department.id}" th:text="${department.name}"></option>
+        </select><br>
+
+        <button type="submit">Register Faculty</button>
+      </form>
+    </main>
+  </div>
+</div>
+
 </body>
 </html>

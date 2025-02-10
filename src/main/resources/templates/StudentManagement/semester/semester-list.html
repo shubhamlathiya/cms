@@ -1,50 +1,61 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Semester List</title>
+    <title th:text="'Semester List'">Semester List</title>
+    <link rel="stylesheet" type="text/css" href="/css/styles.css">
 </head>
 <body>
-<h1>Semesters List</h1>
-<!-- Button to go to Add Course form -->
-<a href="/semester/add">Add Semester</a>
 
-<table border="1">
-    <thead>
-    <tr>
-        <th>ID</th>
-        <th>Semester Name</th>
-        <th>Academic Year</th>
-        <th>Start Date</th>
-        <th>End Date</th>
-        <th>Course Name</th>
-        <th>Action</th>
-    </tr>
-    </thead>
-    <tbody>
-    <th:block th:each="semester : ${semesterDetails}">
-        <tr>
-            <td th:text="${semester.id}"></td>
-            <td th:text="${semester.name}"></td>
-            <td th:text="${semester.academicYear}"></td>
-            <td th:text="${semester.startDate}"></td>
-            <td th:text="${semester.endDate}"></td>
-            <td th:text="${semester.courseName}"></td>
-            <td>
-                <a th:href="@{/semesters/create-division-page(semesterId=${semester.id})}">
-                    <button>Show and Create Division</button>
-                </a>
-                <a th:href="@{/enrollments/assign-students-to-division/{semesterId}(semesterId=${semester.id})}">
-                    <button>Assign Students to Division</button>
-                </a>
-                <a th:href="@{/faculty-subject/assign-subject}">
-                    <button>Assign Subjects to Faculty</button>
-                </a>
-            </td>
-        </tr>
-    </th:block>
-    </tbody>
-</table>
+<!-- Replace the content section -->
+<div th:replace="layout/base.html">
+    <div th:fragment="content">
+        <main>
+
+            <h1>Semesters List</h1>
+            <!-- Button to go to Add Course form -->
+            <a href="/semesters/add">Add Semester</a>
+
+            <table border="1">
+                <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Semester Name</th>
+                    <th>Academic Year</th>
+                    <th>Start Date</th>
+                    <th>End Date</th>
+                    <th>Course Name</th>
+                    <th>Action</th>
+                </tr>
+                </thead>
+                <tbody>
+                <th:block th:each="semester : ${semesterDetails}">
+                    <tr>
+                        <td th:text="${semester.id}"></td>
+                        <td th:text="${semester.name}"></td>
+                        <td th:text="${semester.academicYear}"></td>
+                        <td th:text="${semester.startDate}"></td>
+                        <td th:text="${semester.endDate}"></td>
+                        <td th:text="${semester.courseName}"></td>
+                        <td>
+                            <a th:href="@{/semesters/create-division-page(semesterId=${semester.id})}">
+                                <button>Show and Create Division</button>
+                            </a>
+                            <a th:href="@{/enrollments/assign-students-to-division/{semesterId}(semesterId=${semester.id})}">
+                                <button>Assign Students to Division</button>
+                            </a>
+                            <a th:href="@{/faculty-subject/assign-subject}">
+                                <button>Assign Subjects to Faculty</button>
+                            </a>
+                        </td>
+                    </tr>
+                </th:block>
+                </tbody>
+            </table>
+
+        </main>
+    </div>
+</div>
 
 </body>
 </html>

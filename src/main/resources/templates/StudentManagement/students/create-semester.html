@@ -1,22 +1,33 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title th:text="'Custom Page Title'">Custom Page Title</title>
+    <link rel="stylesheet" type="text/css" href="/css/styles.css">
 </head>
 <body>
-<form action="/admin/createSemester" method="POST">
-    <label for="semesterName">Semester Name</label>
-    <input type="text" id="semesterName" name="semesterName" placeholder="e.g. Fall 2025" required />
 
-    <label for="students">Select Students</label>
-    <th:block th:each="student : ${students}" >
-        <input type="checkbox" name="studentIds" id="students" th:value="${student.id}" th:id="'student_' + ${student.id}" />
-        <label th:for="'student_' + ${student.id}" th:text="${student.firstName} + ' ' + ${student.lastName}"></label><br />
-    </th:block>
+<!-- Replace the content section -->
+<div th:replace="layout/base.html">
+    <div th:fragment="content">
+        <main>
 
-    <button type="submit">Create Semester and Assign Students</button>
-</form>
+            <form action="/admin/createSemester" method="POST">
+                <label for="semesterName">Semester Name</label>
+                <input type="text" id="semesterName" name="semesterName" placeholder="e.g. Fall 2025" required />
+
+                <label for="students">Select Students</label>
+                <th:block th:each="student : ${students}" >
+                    <input type="checkbox" name="studentIds" id="students" th:value="${student.id}" th:id="'student_' + ${student.id}" />
+                    <label th:for="'student_' + ${student.id}" th:text="${student.firstName} + ' ' + ${student.lastName}"></label><br />
+                </th:block>
+
+                <button type="submit">Create Semester and Assign Students</button>
+            </form>
+
+        </main>
+    </div>
+</div>
 
 </body>
 </html>

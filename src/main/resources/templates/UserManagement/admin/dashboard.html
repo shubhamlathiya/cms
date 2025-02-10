@@ -1,22 +1,21 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Dashboard</title>
+    <title th:text="'Admin Dashboard'">Admin Dashboard</title>
+    <link rel="stylesheet" type="text/css" href="/css/styles.css">
 </head>
 <body>
-<h2>Admin Dashboard</h2>
-<ul>
 
-    <li><a th:href="@{/admin/departments}">Manage Departments</a></li>
-    <li><a th:href="@{/admin/courses}">Manage Courses</a></li>
-    <li><a th:href="@{/admin/subjects}">Manage Subjects</a></li>
-    <li><a th:href="@{/admin/roles}">Manage Roles</a></li>
+<!-- Replace the content section -->
+<div th:replace="layout/base.html">
+    <div th:fragment="content">
+        <main>
+            <h2>Custom Content</h2>
+            <p>This replaces the default content in base.html.</p>
+        </main>
+    </div>
+</div>
 
-
-    <li><a th:href="@{/admin/users}">Manage Users</a></li>
-    <li><a th:href="@{/admin/settings}">Settings</a></li>
-</ul>
 </body>
 </html>
