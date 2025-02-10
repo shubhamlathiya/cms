@@ -1,6 +1,7 @@
 package com.codershubham.cms.cms.controller.StudentManagementModules;
 
 
+import com.codershubham.cms.cms.constant.PathConstant;
 import com.codershubham.cms.cms.model.DTO.CreateDivisionsRequestDto;
 import com.codershubham.cms.cms.model.StudentManagementModules.DivisionModel;
 import com.codershubham.cms.cms.model.StudentManagementModules.SemesterModel;
@@ -42,7 +43,7 @@ public class DivisionController {
         // Optionally, add success message to the model
         model.addAttribute("message", "Divisions created successfully!");
 
-        return "redirect:/semesters"; // Redirect to semester view after saving
+        return "redirect:/" + PathConstant.SEMESTER_PATH; // Redirect to semester view after saving
     }
 }
 
