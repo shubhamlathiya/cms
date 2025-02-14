@@ -3,12 +3,13 @@ package com.codershubham.cms.cms.controller.FacultyManagementModules;
 import com.codershubham.cms.cms.constant.PathConstant;
 import com.codershubham.cms.cms.model.CourseManagementModules.DepartmentModel;
 import com.codershubham.cms.cms.model.FacultyManagementModules.FacultyModel;
+import com.codershubham.cms.cms.model.FacultyManagementModules.FacultySubjectAssignmentModel;
 import com.codershubham.cms.cms.model.UserManagementModules.UserModel;
 import com.codershubham.cms.cms.service.CourseManagementModules.DepartmentService;
 import com.codershubham.cms.cms.service.FacultyManagementModules.FacultyService;
+import com.codershubham.cms.cms.service.FacultyManagementModules.FacultySubjectAssignmentService;
 import com.codershubham.cms.cms.util.EmailUtil;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.jpa.domain.JpaSort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -26,6 +27,8 @@ public class FacultyController {
     @Autowired
     private DepartmentService departmentService;
 
+    @Autowired
+    private FacultySubjectAssignmentService facultySubjectAssignmentService;
     @Autowired
     private EmailUtil emailUtil;
 
@@ -122,4 +125,12 @@ public class FacultyController {
         facultyService.deleteFaculty(id);
         return "redirect:/faculty"; // Redirect after deleting
     }
+
+    @GetMapping("/subjects/{facultyId}")
+    public String getFacultySubjects(@PathVariable Long facultyId, Model model) {
+        List<FacultySubjectAssignmentModel> assignedSubjects = facultySubjectAssignmentService.getSubjectsByFaculty(facultyId);
+        model.addAttribute("assignedSubjects", assignedSubjects);
+        return "FacultyManagement/faculty/faculty_subjects"; // Renders faculty-subjects.html
+    }
+
 }

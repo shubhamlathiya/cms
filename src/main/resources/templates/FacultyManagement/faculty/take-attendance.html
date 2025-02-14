@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Attendance Management System</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+<div class="container mt-5">
+    <!-- Attendance Table -->
+    <h3 class="mb-4">Attendance Map</h3>
+    <div class="card shadow">
+        <table class="table table-hover mb-0">
+            <thead class="table-primary">
+            <tr>
+                <th class="text-center">Lecture</th>
+                <th class="text-center">Status</th>
+                <th class="text-center">Date</th>
+                <th class="text-center">Time</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="entry : ${attendanceMap}">
+                <td class="text-center" th:text="${entry.key}"></td>
+                <td class="text-center">
+                    <span th:if="${entry.value != null and entry.value != false}">
+                 <button class="btn btn-sm btn-warning"
+                         data-bs-toggle="modal"
+                         th:data-bs-target="'#editModal' + ${entry.key}"
+                         th:data-lecture="${entry.key}"
+                         th:data-records="${entry.value.records}"
+                         th:data-time="${entry.value.time}"
+                         onclick="openEditModal(this)">
+    Edit
+                        </button>
+                    </span>
+                    <span th:if="${entry.value == null or entry.value == false}">
+                        <button class="btn btn-sm btn-success"
+                                th:onclick="'openAddModal(' + ${entry.key} + ')'">
+                            Add
+                        </button>
+                    </span>
+                </td>
+                <td>
+                    <span th:if="${entry.value != null and entry.value != false}" th:text="${entry.value.date}"></span>
+                    <span th:if="${entry.value == null or entry.value == false}">N/A</span>
+                </td>
+                <td>
+                    <span th:if="${entry.value != null and entry.value != false}" th:text="${entry.value.time}"></span>
+                    <span th:if="${entry.value == null or entry.value == false}">N/A</span>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Add Attendance Modal -->
+    <div id="addAttendanceModal" class="modal fade">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header bg-success text-white">
+                    <h5 class="modal-title">Mark Attendance for Lecture <span id="addModalLectureNumber"></span></h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <!-- Time Selection -->
+                    <h4>Select Time Slot:</h4>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="timeSlot" value="08:40 - 09:40">
+                        <label class="form-check-label">08:40 - 09:40</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="timeSlot" value="09:40 - 10:40">
+                        <label class="form-check-label">09:40 - 10:40</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="timeSlot" value="11:00 - 12:00">
+                        <label class="form-check-label">11:00 - 12:00</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="timeSlot" value="12:00 - 13:00">
+                        <label class="form-check-label">12:00 - 13:00</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="timeSlot" value="13:50 - 14:50">
+                        <label class="form-check-label">13:50 - 14:50</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="timeSlot" value="14:50 - 15:50">
+                        <label class="form-check-label">14:50 - 15:50</label>
+                    </div>
+
+                    <!-- Attendance Form -->
+                    <form th:action="@{/attendance/mark}" method="post" id="addAttendanceForm">
+                        <table class="table table-bordered text-center mt-3">
+                            <thead class="table-light">
+                            <tr>
+                                <th>Student ID</th>
+                                <th>Name</th>
+                                <th>
+                                    <input type="checkbox" id="selectAllAdd" onclick="toggleAll(this, 'add')"> Select
+                                    All
+                                </th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:each="student, iterStat : ${students}">
+                                <td th:text="${student.id}"></td>
+                                <td th:text="${student.name}"></td>
+                                <td>
+                                    <input type="checkbox" class="form-check-input student-checkbox"
+                                           th:name="studentAttendances[__${iterStat.index}__].present">
+                                    <input type="hidden" th:name="studentAttendances[__${iterStat.index}__].studentId"
+                                           th:value="${student.id}">
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+
+                        <!-- Hidden Fields -->
+                        <input type="hidden" name="facultyId" th:value="${assignment.faculty.id}">
+                        <input type="hidden" name="subjectId" th:value="${assignment.subject.id}">
+                        <input type="hidden" name="semesterId" th:value="${assignment.semester.id}">
+                        <input type="hidden" name="divisionId" th:value="${assignment.division.id}">
+                        <input type="hidden" name="lectureNumber" id="addHiddenLectureNumber">
+                        <input type="hidden" name="selectedTime" id="addSelectedTime">
+
+                        <button type="submit" class="btn btn-primary mt-3">Submit Attendance</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Attendance Modal -->
+    <div id="editAttendanceModal" class="modal fade" tabindex="-1" aria-labelledby="editAttendanceModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header bg-primary text-white">
+                    <h5 class="modal-title">Edit Attendance for Lecture <span id="editModalLectureNumber"></span></h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <!-- Time Selection -->
+                    <h4>Select Time Slot:</h4>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="editTimeSlot" value="08:40 - 09:40">
+                        <label class="form-check-label">08:40 - 09:40</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="editTimeSlot" value="09:40 - 10:40">
+                        <label class="form-check-label">09:40 - 10:40</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="editTimeSlot" value="11:00 - 12:00">
+                        <label class="form-check-label">11:00 - 12:00</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="editTimeSlot" value="12:00 - 13:00">
+                        <label class="form-check-label">12:00 - 13:00</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="editTimeSlot" value="13:50 - 14:50">
+                        <label class="form-check-label">13:50 - 14:50</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="editTimeSlot" value="14:50 - 15:50">
+                        <label class="form-check-label">14:50 - 15:50</label>
+                    </div>
+                    <!-- Attendance Form -->
+                    <form th:action="@{/attendance/mark}" method="post" id="editAttendanceForm">
+                        <table class="table table-bordered text-center mt-3">
+                            <thead class="table-light">
+                            <tr>
+                                <th>Student ID</th>
+                                <th>Name</th>
+                                <th>
+                                    <input type="checkbox" id="selectAllEdit" onclick="toggleAll(this, 'edit')"> Select
+                                    All
+                                </th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:each="student, iterStat : ${students}">
+                                <td th:text="${student.id}"></td>
+                                <td th:text="${student.name}"></td>
+                                <td>
+                                    <input type="checkbox" class="form-check-input student-checkbox"
+                                           th:id="'studentCheckbox_' + ${student.id}"
+                                           th:name="'studentAttendances[' + ${iterStat.index} + '].present'"
+                                           th:checked="${attendanceMap[student.id] != null &&
+                                    attendanceMap[student.id].records != null &&
+                                    attendanceMap[student.id].records.?[studentId == student.id].![status] == 'Present'}">
+                                    <input type="hidden"
+                                           th:name="'studentAttendances[' + ${iterStat.index} + '].studentId'"
+                                           th:value="${student.id}">
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+
+                        <!-- Hidden Fields -->
+                        <input type="hidden" name="facultyId" th:value="${assignment.faculty.id}">
+                        <input type="hidden" name="subjectId" th:value="${assignment.subject.id}">
+                        <input type="hidden" name="semesterId" th:value="${assignment.semester.id}">
+                        <input type="hidden" name="divisionId" th:value="${assignment.division.id}">
+                        <input type="hidden" name="lectureNumber" id="editHiddenLectureNumber">
+                        <input type="hidden" name="selectedTime" id="editSelectedTime">
+
+                        <button type="submit" class="btn btn-primary mt-3">Update Attendance</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        // Your modal initialization code can go here if needed
+    });
+
+    // Function to open the Add Modal
+    function openAddModal(lectureNumber) {
+        document.getElementById("addModalLectureNumber").innerText = lectureNumber;
+        document.getElementById("addHiddenLectureNumber").value = lectureNumber;
+        var modal = new bootstrap.Modal(document.getElementById("addAttendanceModal"));
+        modal.show();
+    }
+
+    // Function to open the Edit Modal
+    function openEditModal(button) {
+        const lectureNumber = button.getAttribute("data-lecture");
+        const recordsData = button.getAttribute("data-records");
+        const selectedTime = button.getAttribute("data-time");
+
+        // Log the raw data for debugging
+        // console.log("Raw records data:", recordsData);
+
+        // Parse the records, providing a fallback to an empty array
+        let records = [];
+        try {
+            records = recordsData ? JSON.parse(recordsData) : [];
+        } catch (e) {
+            console.error("Failed to parse records data:", e);
+            return; // Exit if parsing fails
+        }
+
+        // Update the modal's lecture number display and hidden input
+        const lectureNumberElement = document.getElementById("editModalLectureNumber");
+        const hiddenLectureNumberInput = document.getElementById("editHiddenLectureNumber");
+
+        if (lectureNumberElement && hiddenLectureNumberInput) {
+            lectureNumberElement.innerText = lectureNumber;
+            hiddenLectureNumberInput.value = lectureNumber;
+        } else {
+            console.error("Lecture number elements not found in the modal.");
+            return; // Exit if elements are not found
+        }
+
+        // Pre-check checkboxes for students marked as "Present"
+        records.forEach(record => {
+            // console.log(record.studentId)
+            const studentCheckbox = document.getElementById(`studentCheckbox_${record.studentId}`);
+            // console.log(studentCheckbox)// Use ID to find checkbox
+            if (studentCheckbox) {
+                studentCheckbox.checked = record.status === "Present"; // Check if status is "Present"
+            } else {
+                console.warn(`Checkbox for student ID ${record.studentId} not found.`);
+            }
+        });
+
+        // Assuming selectedTime is in the format "HH:mm:ss"
+        const timeSlotInputs = document.getElementsByName("editTimeSlot");
+        console.log(timeSlotInputs); // Log the NodeList of radio buttons
+        console.log(selectedTime); // Log the selected time
+
+// Extract the hour and minute from selectedTime
+        const selectedHourMinute = selectedTime.substring(0, 5); // This will give you "09:40"
+
+// Loop through the radio buttons
+        for (let i = 0; i < timeSlotInputs.length; i++) {
+            // Get the value of the current radio button
+            const timeSlotValue = timeSlotInputs[i].value;
+
+            // Check if the time slot value starts with the selected hour and minute
+            if (timeSlotValue.startsWith(selectedHourMinute)) {
+                timeSlotInputs[i].checked = true; // Check the radio button
+                break; // Exit the loop once the matching time slot is found
+            }
+        }
+        // Show the modal
+        const modalElement = document.getElementById("editAttendanceModal");
+        if (!modalElement) {
+            console.error("Modal element not found.");
+            return; // Exit if modal element is not found
+        }
+
+        // Initialize and show the modal
+        try {
+            const modal = new bootstrap.Modal(modalElement);
+            modal.show();
+        } catch (error) {
+            console.error("Error initializing or showing the modal:", error);
+        }
+    }
+
+    // Function to toggle all checkboxes
+    function toggleAll(source, modalType) {
+        var checkboxes = document.querySelectorAll(`#${modalType}AttendanceForm .student-checkbox`);
+        checkboxes.forEach(checkbox => checkbox.checked = source.checked);
+    }
+
+    // Set selected time before submitting
+    document.getElementById("addAttendanceForm").onsubmit = function () {
+        var timeSlots = document.getElementsByName("timeSlot");
+        var selectedTimeInput = document.getElementById("addSelectedTime");
+        var timeSlotSelected = false; // Flag to check if a time slot is selected
+
+        for (var i = 0; i < timeSlots.length; i++) {
+            if (timeSlots[i].checked) {
+                selectedTimeInput.value = timeSlots[i].value; // Set the selected time
+                timeSlotSelected = true; // Mark that a time slot is selected
+                break; // Exit the loop once a checked time slot is found
+            }
+        }
+
+        if (!timeSlotSelected) {
+            alert("Please select a time slot."); // Alert if no time slot is selected
+            return false; // Prevent form submission
+        }
+
+        return true; // Allow form submission if a time slot is selected
+    };
+
+    document.getElementById("editAttendanceModal").onsubmit = function () {
+        var timeSlots = document.getElementsByName("editTimeSlot");
+        var selectedTimeInput = document.getElementById("editSelectedTime");
+        var timeSlotSelected = false; // Flag to check if a time slot is selected
+
+        for (var i = 0; i < timeSlots.length; i++) {
+            if (timeSlots[i].checked) {
+                selectedTimeInput.value = timeSlots[i].value; // Set the selected time
+                timeSlotSelected = true; // Mark that a time slot is selected
+                break; // Exit the loop once a checked time slot is found
+            }
+        }
+
+        if (!timeSlotSelected) {
+            alert("Please select a time slot."); // Alert if no time slot is selected
+            return false; // Prevent form submission
+        }
+
+        return true; // Allow form submission if a time slot is selected
+    };
+</script>
+<!--</script>-->
+
+<!-- Include Bootstrap CSS and JS -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>

@@ -13,7 +13,8 @@ import com.codershubham.cms.cms.repository.StudentManagementModules.DivisionRepo
 import com.codershubham.cms.cms.repository.StudentManagementModules.SemesterRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class FacultySubjectAssignmentService {
@@ -34,17 +35,13 @@ public class FacultySubjectAssignmentService {
     private FacultySubjectAssignmentRepository facultySubjectAssignmentRepository;
 
     public String assignSubjectToFaculty(FacultySubjectAssignmentRequestDto requestDto) {
-        FacultyModel faculty = facultyRepository.findById(requestDto.getFacultyId())
-                .orElseThrow(() -> new RuntimeException("Faculty not found"));
+        FacultyModel faculty = facultyRepository.findById(requestDto.getFacultyId()).orElseThrow(() -> new RuntimeException("Faculty not found"));
 
-        SemesterModel semester = semesterRepository.findById(requestDto.getSemesterId())
-                .orElseThrow(() -> new RuntimeException("Semester not found"));
+        SemesterModel semester = semesterRepository.findById(requestDto.getSemesterId()).orElseThrow(() -> new RuntimeException("Semester not found"));
 
-        SubjectsModel subject = subjectRepository.findById(requestDto.getSubjectId())
-                .orElseThrow(() -> new RuntimeException("Subject not found"));
+        SubjectsModel subject = subjectRepository.findById(requestDto.getSubjectId()).orElseThrow(() -> new RuntimeException("Subject not found"));
 
-        DivisionModel division = divisionRepository.findById(requestDto.getDivisionId())
-                .orElseThrow(() -> new RuntimeException("Division not found"));
+        DivisionModel division = divisionRepository.findById(requestDto.getDivisionId()).orElseThrow(() -> new RuntimeException("Division not found"));
 
         if (facultySubjectAssignmentRepository.existsBySubjectAndDivision(subject, division)) {
             return "Error: This subject is already assigned to another faculty in this division.";
@@ -59,5 +56,21 @@ public class FacultySubjectAssignmentService {
 
         facultySubjectAssignmentRepository.save(assignment);
         return "Subject assigned successfully!";
+    }
+
+    public FacultySubjectAssignmentModel findById(Long id) {
+        return facultySubjectAssignmentRepository.findById(id).orElseThrow(() -> new RuntimeException("Faculty Subject not found with ID: " + id));
+    }
+
+    // ✅ Ensure this method exists
+// Get subjects assigned to a faculty
+    public List<FacultySubjectAssignmentModel> getSubjectsByFaculty(Long facultyId) {
+        FacultyModel faculty = facultyRepository.findById(facultyId).orElseThrow(() -> new IllegalArgumentException("Faculty not found with ID: " + facultyId));
+
+        return facultySubjectAssignmentRepository.findByFaculty(faculty);
+    }
+
+    public FacultySubjectAssignmentModel getAssignmentById(Long assignmentId) {
+        return facultySubjectAssignmentRepository.findById(assignmentId).orElse(null); // Returns null if not found
     }
 }

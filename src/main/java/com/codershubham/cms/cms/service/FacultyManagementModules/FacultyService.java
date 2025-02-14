@@ -43,6 +43,7 @@ public class FacultyService {
         return facultyRepository.findById(id);
     }
 
+
     @Transactional
     public FacultyModel registerFaculty(String username, String password, String firstName, String lastName, String designation, String qualification,
                                         int experience, String phoneNumber, String email, DepartmentModel department, String status) {
@@ -91,10 +92,6 @@ public class FacultyService {
         faculty.setStatus(status);// Assign the department to the faculty
 
         return facultyRepository.save(faculty); // Save the faculty to the database
-    }
-
-    public FacultyModel addFaculty(FacultyModel faculty) {
-        return facultyRepository.save(faculty);
     }
 
     public FacultyModel updateFaculty(Long id, FacultyModel facultyDetails) {

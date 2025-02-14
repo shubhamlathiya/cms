@@ -11,7 +11,7 @@
 <div th:replace="layout/base.html">
     <div th:fragment="content">
         <main>
-            <form th:action="@{/semester/add}"  th:object="${semester}" method="post">
+            <form th:action="@{/semesters/add}"  th:object="${semester}" method="post">
                 <label for="course">Course:</label>
                 <select name="courseId" id="course">
                     <th:block th:each="course : ${courses}">

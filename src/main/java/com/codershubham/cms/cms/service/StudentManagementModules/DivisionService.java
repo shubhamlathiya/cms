@@ -26,6 +26,10 @@ public class DivisionService {
         return divisionRepository.findBySemesterId(semesterId);
     }
 
+    public DivisionModel getDivisionById(Long divisionId) {
+        return divisionRepository.findById(divisionId)
+                .orElseThrow(() -> new RuntimeException("Division not found with ID: " + divisionId));
+    }
 //    public List<DivisionModel> getAllDivisions() {
 //        return divisionRepository.findAll();
 //    }

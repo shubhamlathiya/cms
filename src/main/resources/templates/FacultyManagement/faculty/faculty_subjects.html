@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Faculty Assigned Subjects</title>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            border: 1px solid black;
+            padding: 10px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        .btn {
+            padding: 8px 12px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            cursor: pointer;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+        .btn:hover {
+            background-color: #218838;
+        }
+    </style>
+</head>
+<body>
+
+<h2>Faculty Assigned Subjects</h2>
+
+<table>
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Faculty Name</th>
+        <th>Designation</th>
+        <th>Department</th>
+        <th>Semester</th>
+        <th>Division</th>
+        <th>Subject Code</th>
+        <th>Subject Name</th>
+        <th>Course</th>
+        <th>Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="assignment : ${assignedSubjects}">
+        <td th:text="${assignment.id}"></td>
+        <td th:text="${assignment.faculty.user.username}"></td>
+        <td th:text="${assignment.faculty.designation}"></td>
+        <td th:text="${assignment.faculty.department.name}"></td>
+        <td th:text="${assignment.semester.name}"></td>
+        <td th:text="${assignment.division.name}"></td>
+        <td th:text="${assignment.subject.subjectCode}"></td>
+        <td th:text="${assignment.subject.subjectName}"></td>
+        <td th:text="${assignment.subject.course.courseName}"></td>
+        <td>
+            <a th:href="@{/attendance/take/{assignmentId}(assignmentId=${assignment.id})}" class="btn">Attendance</a>
+        </td>
+<!--        <td>-->
+<!--            <a th:href="@{/attendance/take/{assignmentId}(assignmentId=${assignment.id})}" class="btn">Take Attendance</a>-->
+<!--        </td>-->
+        <!-- Generate Lecture Columns -->
+<!--        <td th:each="lectureNum : ${#numbers.sequence(1, 15 * assignment.subject.credits)}">-->
+<!--            <a th:href="@{/attendance/take/{assignmentId}/{lectureNumber} (assignmentId=${assignment.id}, lectureNumber=${lectureNum})}"-->
+<!--               class="lecture-link">-->
+<!--                Take-->
+<!--            </a>-->
+<!--        </td>-->
+    </tr>
+    </tbody>
+</table>
+
+</body>
+</html>
