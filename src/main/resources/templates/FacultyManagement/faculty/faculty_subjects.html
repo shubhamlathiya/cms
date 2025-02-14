@@ -8,14 +8,17 @@
             border-collapse: collapse;
             margin-top: 20px;
         }
+
         th, td {
             border: 1px solid black;
             padding: 10px;
             text-align: left;
         }
+
         th {
             background-color: #f2f2f2;
         }
+
         .btn {
             padding: 8px 12px;
             background-color: #28a745;
@@ -25,6 +28,7 @@
             text-decoration: none;
             border-radius: 5px;
         }
+
         .btn:hover {
             background-color: #218838;
         }
@@ -63,16 +67,10 @@
         <td>
             <a th:href="@{/attendance/take/{assignmentId}(assignmentId=${assignment.id})}" class="btn">Attendance</a>
         </td>
-<!--        <td>-->
-<!--            <a th:href="@{/attendance/take/{assignmentId}(assignmentId=${assignment.id})}" class="btn">Take Attendance</a>-->
-<!--        </td>-->
-        <!-- Generate Lecture Columns -->
-<!--        <td th:each="lectureNum : ${#numbers.sequence(1, 15 * assignment.subject.credits)}">-->
-<!--            <a th:href="@{/attendance/take/{assignmentId}/{lectureNumber} (assignmentId=${assignment.id}, lectureNumber=${lectureNum})}"-->
-<!--               class="lecture-link">-->
-<!--                Take-->
-<!--            </a>-->
-<!--        </td>-->
+        <td>
+            <a th:href="@{/assignments/create/{assignmentId}(assignmentId=${assignment.id})}" class="btn">Create
+                Student Assignment</a>
+        </td>
     </tr>
     </tbody>
 </table>
