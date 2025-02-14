@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <title th:text="'Assign Students to Division'">Assign Students to Division</title>
-  <link rel="stylesheet" type="text/css" href="/css/styles.css">
+<!--  <link rel="stylesheet" type="text/css" href="/css/styles.css">-->
 </head>
 <body>
 
@@ -37,7 +37,7 @@
 
       <!-- Assign Button -->
       <button id="assignButton">Assign Selected Students</button>
-
+      <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
       <script>
         $(document).ready(function () {
           $("#assignButton").click(function () {
@@ -60,7 +60,7 @@
                   studentIds: selectedStudents
                 }),
                 success: function (response) {
-                  alert(response);
+                  // alert(response);
                   location.reload(); // Refresh page after assignment
                 }
               });
