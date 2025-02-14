@@ -101,7 +101,7 @@
                             $.get("/students/semesters/" + courseId, function (semesters) {
                                 $('#semester').empty().append('<option value="">--Select Semester--</option>');
                                 $.each(semesters, function (index, semester) {
-                                    $('#semester').append('<option value="' + semester.id + '">' + semester.name + '</option>');
+                                    $('#semester').append('<option value="' + semester.id + '">' + semester.name + " - "+ semester.academicYear + '</option>');
                                 });
                             });
                         } else {
