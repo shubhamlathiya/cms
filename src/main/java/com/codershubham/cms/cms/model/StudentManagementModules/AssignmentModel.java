@@ -1,13 +1,11 @@
 package com.codershubham.cms.cms.model.StudentManagementModules;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
 
 @Entity
+@Table(name = "Assignment")
 public class AssignmentModel {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

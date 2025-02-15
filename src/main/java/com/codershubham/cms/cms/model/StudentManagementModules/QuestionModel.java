@@ -8,6 +8,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.*;
 
 @Entity
+@Table(name = "questions")
 public class QuestionModel {
 
     @Id
