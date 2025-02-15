@@ -46,9 +46,6 @@ public class AttendanceController {
         String startTime = selectedTime.split(" - ")[0].trim();  // Extracts "08:40"
         LocalTime lectureTime = LocalTime.parse(startTime); // Parse only start time
 
-        // Convert selectedTime to LocalTime
-//        LocalTime lectureTime = LocalTime.parse(selectedTime);
-
         // Iterate over submitted student attendance data
         for (Map.Entry<String, String> entry : studentAttendances.entrySet()) {
             if (entry.getKey().contains(".studentId")) {
@@ -74,7 +71,7 @@ public class AttendanceController {
             FacultySubjectAssignmentModel assignment = facultySubjectAssignmentService.getAssignmentById(assignmentId);
             if (assignment == null) {
                 model.addAttribute("error", "Invalid Assignment ID!");
-                return "take-attendance";
+                return "FacultyManagement/faculty/take-attendance";
             }
 
             // Get students by division (minimal details)
