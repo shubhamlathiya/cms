@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Add Assignment</title>
+
+</head>
+<body>
+<h2>Add New Assignment</h2>
+<form th:action="@{/assignments/{divisionId}/{semesterId}/save(divisionId=${divisionId}, semesterId=${semesterId})}"
+      method="post" enctype="multipart/form-data">
+    <label for="questions">Add Questions (one per line):</label><br>
+    <textarea id="questions" name="questions" rows="10" cols="50" required></textarea><br><br>
+
+    <label for="randomAssignment">Assign Questions Randomly:</label>
+    <input type="checkbox" id="randomAssignment" name="randomAssignment" onchange="toggleMaxQuestions()"><br><br>
+
+    <div id="maxQuestionsField" style="display: none;">
+        <label for="maxQuestions">Max Questions per Student:</label>
+        <input type="number" id="maxQuestions" name="maxQuestions"><br><br>
+    </div>
+
+    <label for="file">Upload File:</label>
+    <input type="file" id="file" name="file"><br><br>
+
+    <button type="submit">Save Assignment</button>
+</form>
+<p th:if="${error}" th:text="${error}" style="color: red;"></p>
+<script>
+    function toggleMaxQuestions() {
+        const randomAssignmentCheckbox = document.getElementById("randomAssignment");
+        const maxQuestionsField = document.getElementById("maxQuestionsField");
+
+        if (randomAssignmentCheckbox.checked) {
+            maxQuestionsField.style.display = "block";
+        } else {
+            maxQuestionsField.style.display = "none";
+        }
+    }
+</script>
+
+</body>
+</html>

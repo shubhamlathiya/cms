@@ -68,8 +68,7 @@
             <a th:href="@{/attendance/take/{assignmentId}(assignmentId=${assignment.id})}" class="btn">Attendance</a>
         </td>
         <td>
-            <a th:href="@{/assignments/create/{assignmentId}(assignmentId=${assignment.id})}" class="btn">Create
-                Student Assignment</a>
+            <a th:href="@{/assignments/{divisionId}/{semesterId}(divisionId=${assignment.division.id}, semesterId=${assignment.semester.id})}" class="btn">Assignment</a>
         </td>
     </tr>
     </tbody>

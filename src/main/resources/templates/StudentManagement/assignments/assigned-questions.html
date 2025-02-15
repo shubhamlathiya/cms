@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Assigned Questions</title>
+</head>
+<body>
+<h2>Assigned Questions</h2>
+<table>
+    <thead>
+    <tr>
+        <th>Student ID</th>
+        <th>Student Name</th>
+        <th th:each="i : ${#numbers.sequence(1, maxQuestions)}" th:text="'Question ' + ${i}"></th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="sa : ${assignedQuestions}">
+        <td th:text="${sa.studentId}"></td>
+        <td th:text="${sa.studentName}"></td>
+        <td th:each="i : ${#numbers.sequence(1, maxQuestions)}">
+            <span th:if="${i <= sa.questions.size()}" th:text="${sa.questions[i-1]}"></span>
+            <span th:if="${i > sa.questions.size()}">No Question</span> <!-- Placeholder if no question -->
+        </td>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>
