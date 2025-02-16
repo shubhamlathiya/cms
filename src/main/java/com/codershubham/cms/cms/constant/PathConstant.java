@@ -15,6 +15,10 @@ public class PathConstant {
 
     public static final String FACULTY_PATH = "faculty";
     public static final String SEMESTER_PATH = "semesters";
+    public static final String ASSIGNMENTS_PATH = "assignments";
+    public static final String STUDENTS_PATH = "students";
+    public static final String ENROLLMENTS_PATH = "enrollments";
+    public static final String SUBJECT_ENROLLMENTS_PATH = "subject-enrollment";
 
     // comman url
     public static final String ADD_PATH = "add";

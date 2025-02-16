@@ -1,6 +1,7 @@
 package com.codershubham.cms.cms.controller.StudentManagementModules;
 
 
+import com.codershubham.cms.cms.constant.PathConstant;
 import com.codershubham.cms.cms.model.DTO.SubjectEnrollmentRequestDto;
 import com.codershubham.cms.cms.model.StudentManagementModules.SubjectEnrollmentModel;
 import com.codershubham.cms.cms.service.StudentManagementModules.SubjectEnrollmentService;
@@ -12,7 +13,7 @@ import java.util.List;
 
 
 @RestController
-@RequestMapping("/subject-enrollment")
+@RequestMapping(PathConstant.SUBJECT_ENROLLMENTS_PATH)
 public class SubjectEnrollmentController {
 
     @Autowired

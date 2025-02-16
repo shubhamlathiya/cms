@@ -1,5 +1,6 @@
 package com.codershubham.cms.cms.controller.StudentManagementModules;
 
+import com.codershubham.cms.cms.constant.PathConstant;
 import com.codershubham.cms.cms.model.DTO.StudentQuestionsDTO;
 import com.codershubham.cms.cms.model.StudentManagementModules.AssignmentModel;
 import com.codershubham.cms.cms.model.StudentManagementModules.StudentAssignmentModel;
@@ -13,7 +14,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.*;
 
 @Controller
-@RequestMapping("/assignments")
+@RequestMapping(PathConstant.ASSIGNMENTS_PATH)
 public class AssignmentController {
 
     @Autowired

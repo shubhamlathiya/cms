@@ -1,6 +1,7 @@
 package com.codershubham.cms.cms.controller.StudentManagementModules;
 
 
+import com.codershubham.cms.cms.constant.PathConstant;
 import com.codershubham.cms.cms.model.DTO.AssignStudentsRequestDto;
 import com.codershubham.cms.cms.model.StudentManagementModules.DivisionModel;
 import com.codershubham.cms.cms.model.StudentManagementModules.SemesterModel;
@@ -18,7 +19,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @Controller
-@RequestMapping("/enrollments")
+@RequestMapping(PathConstant.ENROLLMENTS_PATH)
 public class StudentEnrollmentController {
 
     @Autowired

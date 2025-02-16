@@ -1,5 +1,6 @@
 package com.codershubham.cms.cms.controller.StudentManagementModules;
 
+import com.codershubham.cms.cms.constant.PathConstant;
 import com.codershubham.cms.cms.model.CourseManagementModules.CourseModel;
 import com.codershubham.cms.cms.model.CourseManagementModules.DepartmentModel;
 import com.codershubham.cms.cms.model.CourseManagementModules.SubjectsModel;
@@ -25,7 +26,7 @@ import java.util.List;
 
 
 @Controller
-@RequestMapping("/students")
+@RequestMapping(PathConstant.STUDENTS_PATH)
 public class StudentController {
 
     @Autowired
