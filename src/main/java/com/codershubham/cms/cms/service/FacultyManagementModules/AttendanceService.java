@@ -108,4 +108,12 @@ public class AttendanceService {
         return attendanceRepository.findByDivisionIdAndFacultyIdAndSubjectIdAndLectureNumber(
                 divisionId, facultyId, subjectId, lectureNumber);
     }
+    public int countPresentLectures(Long studentId, Long subjectId) {
+        return attendanceRepository.countByStudentIdAndSubjectIdAndStatus(studentId, subjectId);
+    }
+
+    public int getTotalLecturesBySubjectAndDivision(Long divisionId, Long subjectId) {
+        return attendanceRepository.countTotalLecturesBySubjectAndDivision(divisionId, subjectId);
+    }
+
 }

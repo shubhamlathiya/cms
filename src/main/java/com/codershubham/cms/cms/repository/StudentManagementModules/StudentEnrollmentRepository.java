@@ -16,11 +16,11 @@ public interface StudentEnrollmentRepository extends JpaRepository<StudentEnroll
     List<StudentEnrollmentModel> findByDivisionId(Long divisionId);
 
 
-    @Query("SELECT se FROM StudentEnrollmentModel se " +
-            "WHERE se.division.id = :divisionId AND se.semester.id = :semesterId")
-    List<StudentEnrollmentModel> findByDivisionIdAndSemesterId(
-            @Param("divisionId") Long divisionId,
-            @Param("semesterId") Long semesterId);
+    @Query("SELECT se FROM StudentEnrollmentModel se " + "WHERE se.division.id = :divisionId AND se.semester.id = :semesterId")
+    List<StudentEnrollmentModel> findByDivisionIdAndSemesterId(@Param("divisionId") Long divisionId, @Param("semesterId") Long semesterId);
 
     List<StudentEnrollmentModel> findByStudentId(Long studentId);
+
+    @Query("SELECT se.semester FROM StudentEnrollmentModel se WHERE se.student.id = :studentId")
+    List<SemesterModel> findSemestersByStudentId(@Param("studentId") Long studentId);
 }

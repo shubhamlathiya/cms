@@ -4,12 +4,14 @@ import com.codershubham.cms.cms.constant.PathConstant;
 import com.codershubham.cms.cms.model.CourseManagementModules.CourseModel;
 import com.codershubham.cms.cms.model.CourseManagementModules.DepartmentModel;
 import com.codershubham.cms.cms.model.CourseManagementModules.SubjectsModel;
+import com.codershubham.cms.cms.model.CourseManagementModules.SyllabusModel;
 import com.codershubham.cms.cms.model.FacultyManagementModules.AttendanceModel;
 import com.codershubham.cms.cms.model.StudentManagementModules.*;
 import com.codershubham.cms.cms.model.UserManagementModules.UserModel;
 import com.codershubham.cms.cms.service.CourseManagementModules.CourseService;
 import com.codershubham.cms.cms.service.CourseManagementModules.DepartmentService;
 import com.codershubham.cms.cms.service.CourseManagementModules.SubjectService;
+import com.codershubham.cms.cms.service.CourseManagementModules.SyllabusService;
 import com.codershubham.cms.cms.service.FacultyManagementModules.AttendanceService;
 import com.codershubham.cms.cms.service.StudentManagementModules.AssignmentService;
 import com.codershubham.cms.cms.service.StudentManagementModules.DivisionService;
@@ -24,6 +26,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -51,7 +54,130 @@ public class StudentController {
     private SubjectService subjectService;
 
     @Autowired
+    private AttendanceService attendanceService;
+
+    @Autowired
+    private SyllabusService syllabusService;
+
+    @Autowired
     private EmailUtil emailUtil;
+
+
+    @GetMapping("/{id}/dashboard")
+    public String studentDashboard(@PathVariable Long id, Model model) {
+        // Fetch the student by ID
+        StudentModel student = studentService.findById(id);
+
+        // Check if the student exists
+        if (student == null) {
+            // Handle the case where the student is not found (e.g., redirect to an error page)
+            return "error/404"; // You can create a 404 error page
+        }
+
+        // Add the student to the model
+        model.addAttribute("student", student);
+
+        // Return the view name
+        return "StudentManagement/dashboard"; // Ensure this matches your Thymeleaf template name
+    }
+
+    @GetMapping("/attendance/{id}")
+    public String viewAttendance(@PathVariable Long id, Model model) {
+        // Fetch all enrollments for the student
+        List<StudentEnrollmentModel> enrollments = studentService.getEnrollmentsByStudentId(id);
+
+        // Map to store subject-wise attendance percentages per semester
+        Map<Long, Map<SubjectsModel, Double>> attendancePercentageBySemester = new HashMap<>();
+
+        for (StudentEnrollmentModel enrollment : enrollments) {
+            SemesterModel semester = enrollment.getSemester();
+            DivisionModel division = enrollment.getDivision();
+
+            // Ensure semester and division exist
+            if (semester == null || division == null) {
+                continue; // Skip invalid enrollments
+            }
+
+            Long semesterId = semester.getId();
+            Long divisionId = division.getId(); // Fetch division ID
+
+            // Get all subjects the student is enrolled in for this semester
+            List<SubjectEnrollmentModel> subjects = studentService.getSubjectsByStudentIdAndSemester(id, semesterId);
+
+            // Map to store subject-wise attendance percentage
+            Map<SubjectsModel, Double> subjectAttendanceMap = new HashMap<>();
+
+            for (SubjectEnrollmentModel subjectEnrollment : subjects) {
+                SubjectsModel subject = subjectEnrollment.getSubject();
+
+                if (subject == null) {
+                    continue; // Skip invalid subjects
+                }
+
+                Long subjectId = subject.getSubjectid();
+
+                // Fetch attendance data
+                int attendedLectures = attendanceService.countPresentLectures(id, subjectId);
+                int totalLectures = attendanceService.getTotalLecturesBySubjectAndDivision(divisionId, subjectId);
+
+                // Calculate attendance percentage safely
+                double attendancePercentage = (totalLectures > 0) ? ((double) attendedLectures / totalLectures) * 100.0 : 0.0;
+
+                // Store attendance percentage
+                subjectAttendanceMap.put(subject, attendancePercentage);
+            }
+
+            // Store subject attendance data per semester
+            attendancePercentageBySemester.put(semesterId, subjectAttendanceMap);
+        }
+
+        // Add the data to the model for Thymeleaf rendering
+        model.addAttribute("studentId", id);
+        model.addAttribute("attendancePercentageBySemester", attendancePercentageBySemester);
+
+        return "StudentManagement/attendance-view"; // Return view name
+    }
+
+
+    @GetMapping("/lesson-plan/{id}")
+    public String viewLessonPlan(@PathVariable Long id, Model model) {
+        // Fetch all semesters for the student
+        List<StudentEnrollmentModel> enrollments = studentService.getEnrollmentsByStudentId(id);
+
+        // Map to store subjects and syllabus list per semester
+        Map<Long, Map<SubjectsModel, List<SyllabusModel>>> subjectsBySemester = new HashMap<>();
+
+        for (StudentEnrollmentModel enrollment : enrollments) {
+            SemesterModel semester = enrollment.getSemester();
+            if (semester == null) continue; // Skip if semester is null
+
+            Long semesterId = semester.getId();
+            List<SubjectEnrollmentModel> subjects = studentService.getSubjectsByStudentIdAndSemester(id, semesterId);
+
+            // Map to store syllabus list per subject
+            Map<SubjectsModel, List<SyllabusModel>> subjectSyllabusMap = new HashMap<>();
+
+            for (SubjectEnrollmentModel subjectEnrollment : subjects) {
+                SubjectsModel subject = subjectEnrollment.getSubject();
+                if (subject == null) continue; // Skip if subject is null
+
+                // Fetch syllabus list for the subject
+                List<SyllabusModel> syllabusList = syllabusService.getSyllabusBySubject(subject.getSubjectid());
+
+                // Store subject with syllabus list
+                subjectSyllabusMap.put(subject, syllabusList);
+            }
+
+            // Store subjects and syllabus under the corresponding semester
+            subjectsBySemester.put(semesterId, subjectSyllabusMap);
+        }
+
+        model.addAttribute("studentId", id);
+        model.addAttribute("subjectsBySemester", subjectsBySemester); // Pass subjects & syllabus
+
+        return "StudentManagement/lesson-plan"; // Return updated view
+    }
+
 
     // Show the student registration form
     @GetMapping("/add")

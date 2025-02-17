@@ -1,18 +1,13 @@
 package com.codershubham.cms.cms.service.StudentManagementModules;
 
 import com.codershubham.cms.cms.model.CourseManagementModules.CourseModel;
-import com.codershubham.cms.cms.model.CourseManagementModules.SubjectsModel;
-import com.codershubham.cms.cms.model.FacultyManagementModules.AttendanceModel;
-import com.codershubham.cms.cms.model.StudentManagementModules.AssignmentModel;
-import com.codershubham.cms.cms.model.StudentManagementModules.StudentEnrollmentModel;
-import com.codershubham.cms.cms.model.StudentManagementModules.StudentModel;
+import com.codershubham.cms.cms.model.StudentManagementModules.*;
 import com.codershubham.cms.cms.model.UserManagementModules.RoleModel;
 import com.codershubham.cms.cms.model.UserManagementModules.UserModel;
 import com.codershubham.cms.cms.repository.CourseManagementModules.CourseRepository;
-import com.codershubham.cms.cms.repository.FacultyManagementModules.AttendanceRepository;
-import com.codershubham.cms.cms.repository.StudentManagementModules.AssignmentRepository;
 import com.codershubham.cms.cms.repository.StudentManagementModules.StudentEnrollmentRepository;
 import com.codershubham.cms.cms.repository.StudentManagementModules.StudentRepository;
+import com.codershubham.cms.cms.repository.StudentManagementModules.SubjectEnrollmentRepository;
 import com.codershubham.cms.cms.repository.UserManagementModules.RoleRepository;
 import com.codershubham.cms.cms.repository.UserManagementModules.UserRepository;
 import org.apache.poi.ss.usermodel.Row;
@@ -25,13 +20,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
-
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Optional;
 
 @Service
 public class StudentService {
@@ -40,15 +31,16 @@ public class StudentService {
     private final StudentRepository studentRepository;
     private final CourseRepository courseRepository;
     private final RoleRepository roleRepository;
-
+    private final SubjectEnrollmentRepository subjectEnrollmentRepository;
     private final StudentEnrollmentRepository studentEnrollmentRepository;
     private final PasswordEncoder passwordEncoder;
 
 
     @Autowired
-    public StudentService(UserRepository userRepository, RoleRepository roleRepository, CourseRepository courseRepository, StudentRepository studentRepository, StudentEnrollmentRepository studentEnrollmentRepository) {
+    public StudentService(UserRepository userRepository, RoleRepository roleRepository, CourseRepository courseRepository, StudentRepository studentRepository, SubjectEnrollmentRepository subjectEnrollmentRepository, StudentEnrollmentRepository studentEnrollmentRepository) {
         this.userRepository = userRepository;
         this.studentRepository = studentRepository;
+        this.subjectEnrollmentRepository = subjectEnrollmentRepository;
         this.studentEnrollmentRepository = studentEnrollmentRepository;
         this.passwordEncoder = new BCryptPasswordEncoder();
         this.roleRepository = roleRepository;
@@ -57,8 +49,7 @@ public class StudentService {
     }
 
     @Transactional
-    public StudentModel registerStudent(String username, String password, String firstName, String lastName,
-                                        String email, String phoneNumber, String address, CourseModel course) {
+    public StudentModel registerStudent(String username, String password, String firstName, String lastName, String email, String phoneNumber, String address, CourseModel course) {
         // Check if username or email already exists
         if (userRepository.existsByUsername(username)) {
             throw new RuntimeException("Username already exists");
@@ -68,8 +59,7 @@ public class StudentService {
         }
 
         // Find the Role by its name
-        RoleModel role = roleRepository.findByName("STUDENT")
-                .orElseThrow(() -> new RuntimeException("Role not found"));
+        RoleModel role = roleRepository.findByName("STUDENT").orElseThrow(() -> new RuntimeException("Role not found"));
         System.out.println("Assigned Role: " + role.getName());
 
         // Hash the password (Use BCryptPasswordEncoder)
@@ -83,8 +73,7 @@ public class StudentService {
         user = userRepository.save(user); // Save user to the database
 
         // Verify course exists before assigning
-        CourseModel assignedCourse = courseRepository.findById(course.getCourseID())
-                .orElseThrow(() -> new RuntimeException("Course not found"));
+        CourseModel assignedCourse = courseRepository.findById(course.getCourseID()).orElseThrow(() -> new RuntimeException("Course not found"));
 
         // Create Student object
         StudentModel student = new StudentModel();
@@ -100,8 +89,7 @@ public class StudentService {
     }
 
     public void saveStudentsFromExcel(MultipartFile file) {
-        try (InputStream inputStream = file.getInputStream();
-             Workbook workbook = new XSSFWorkbook(inputStream)) {
+        try (InputStream inputStream = file.getInputStream(); Workbook workbook = new XSSFWorkbook(inputStream)) {
 
             Sheet sheet = workbook.getSheetAt(0);
 
@@ -131,13 +119,11 @@ public class StudentService {
                 user.setUsername(username);
                 user.setPassword(passwordEncoder.encode(password));
 
-                RoleModel role = roleRepository.findByName(roleName)
-                        .orElseThrow(() -> new RuntimeException("Role not found"));
+                RoleModel role = roleRepository.findByName(roleName).orElseThrow(() -> new RuntimeException("Role not found"));
                 user.setRole(role);
                 userRepository.save(user);
 
-                CourseModel course = courseRepository.findById(courseId)
-                        .orElseThrow(() -> new RuntimeException("Course not found"));
+                CourseModel course = courseRepository.findById(courseId).orElseThrow(() -> new RuntimeException("Course not found"));
 
                 StudentModel student = new StudentModel();
                 student.setUser(user);
@@ -165,12 +151,18 @@ public class StudentService {
     }
 
     public StudentModel findById(Long studentId) {
-        return studentRepository.findById(studentId)
-                .orElseThrow(() -> new IllegalArgumentException("Student not found with ID: " + studentId));
+        return studentRepository.findById(studentId).orElseThrow(() -> new IllegalArgumentException("Student not found with ID: " + studentId));
     }
 
     public StudentModel getStudentByUserId(Long userId) {
-        return studentRepository.findByUserId(userId)
-                .orElse(null); // Return null if no student is found
+        return studentRepository.findByUserId(userId).orElse(null); // Return null if no student is found
+    }
+
+    public List<StudentEnrollmentModel> getEnrollmentsByStudentId(Long studentId) {
+        return studentEnrollmentRepository.findByStudentId(studentId);
+    }
+
+    public List<SubjectEnrollmentModel> getSubjectsByStudentIdAndSemester(Long studentId, Long semesterId) {
+        return subjectEnrollmentRepository.findByStudentIdAndSemesterId(studentId, semesterId);
     }
 }

@@ -25,4 +25,14 @@ public interface AttendanceRepository extends JpaRepository<AttendanceModel, Lon
     @Query("SELECT a FROM AttendanceModel a " + "WHERE a.division.id = :divisionId " + "AND a.faculty.facultyId = :facultyId " + "AND a.subject.subjectid = :subjectId " + "AND a.lectureNumber = :lectureNumber")
     List<AttendanceModel> findByDivisionIdAndFacultyIdAndSubjectIdAndLectureNumber(@Param("divisionId") Long divisionId, @Param("facultyId") Long facultyId, @Param("subjectId") Long subjectId, @Param("lectureNumber") int lectureNumber);
 
+
+    @Query("SELECT a FROM AttendanceModel a WHERE a.student.id = :studentId AND a.subject.subjectid = :subjectId")
+    List<AttendanceModel> findByStudentIdAndSubjectId(@Param("studentId") Long studentId, @Param("subjectId") Long subjectId);
+
+    @Query("SELECT COUNT(a) FROM AttendanceModel a WHERE a.student.id = :studentId AND a.subject.subjectid = :subjectId AND a.status = 'Present'")
+    int countByStudentIdAndSubjectIdAndStatus(@Param("studentId") Long studentId, @Param("subjectId") Long subjectId);
+
+    @Query("SELECT COUNT(DISTINCT a.lectureNumber) FROM AttendanceModel a WHERE a.division.id = :divisionId AND a.subject.subjectid = :subjectId")
+    int countTotalLecturesBySubjectAndDivision(@Param("divisionId") Long divisionId, @Param("subjectId") Long subjectId);
+
 }

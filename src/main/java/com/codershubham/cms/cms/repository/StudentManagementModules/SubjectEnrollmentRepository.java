@@ -11,6 +11,5 @@ import java.util.List;
 public interface SubjectEnrollmentRepository extends JpaRepository<SubjectEnrollmentModel, Long> {
 
     List<SubjectEnrollmentModel> findByStudentIdAndSemesterId(Long studentId, Long semesterId);
-
 }
 

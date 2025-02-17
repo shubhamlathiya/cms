@@ -4,18 +4,25 @@
     <title>Student Dashboard</title>
 </head>
 <body>
-<h1>Welcome, <span th:text="${student.firstName}"></span></h1>
-<h2>Options:</h2>
+<h1>Student Dashboard</h1>
+<h2>Details for <span th:text="${student.firstName} + ' ' + ${student.lastName}"></span></h2>
+
+<h3>Student Information:</h3>
 <ul>
-    <li><a th:href="@{/student/{id}/attendance/{subjectId}(id=${student.id}, subjectId=${subject.id})}">Attendance</a></li>
-    <li><a th:href="@{/student/{id}/lesson-plan(id=${student.id})}">Lesson Plan</a></li>
+    <li>ID: <span th:text="${student.id}"></span></li>
+    <li>First Name: <span th:text="${student.firstName}"></span></li>
+    <li>Last Name: <span th:text="${student.lastName}"></span></li>
+    <li>Email: <span th:text="${student.email}"></span></li>
+    <li>Phone Number: <span th:text="${student.phoneNumber}"></span></li>
+    <li>Address: <span th:text="${student.address}"></span></li>
 </ul>
-<h3>Enrolled Subjects:</h3>
+
+<h3>Options:</h3>
 <ul>
-    <li th:each="enrollment : ${enrollments}">
-        <span th:text="${enrollment.subject.subjectName}"></span>
-        <a th:href="@{/student/{id}/attendance/{subjectId}(id=${student.id}, subjectId=${enrollment.subject.id})}">View Attendance</a>
-    </li>
+    <li><a th:href="@{/students/attendance/{id}(id=${student.id})}">View Attendance</a></li>
+    <li><a th:href="@{/students/lesson-plan/{id}(id=${student.id})}">View Lesson Plan</a></li>
 </ul>
+
+<!--<a th:href="@{/}">Back to Home</a>-->
 </body>
 </html>

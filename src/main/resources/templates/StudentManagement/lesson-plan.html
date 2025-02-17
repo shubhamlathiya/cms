@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Lesson Plan</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+</head>
+<body>
+<div class="container mt-4">
+    <h1>Lesson Plan for Student ID: <span th:text="${studentId}"></span></h1>
+
+    <div th:each="entry : ${subjectsBySemester}" class="mb-4">
+        <h2>Semester ID: <span th:text="${entry.key}"></span></h2>
+        <ul class="list-group">
+            <li th:each="subjectEntry : ${entry.value}" class="list-group-item">
+                <!-- Subject name with clickable link -->
+                <a href="#" data-bs-toggle="modal"
+                   th:data-bs-target="'#syllabusModal' + ${subjectEntry.key.subjectid}"
+                   th:text="${subjectEntry.key.subjectName}">
+                </a>
+
+                <!-- Bootstrap Modal for Syllabus Details -->
+                <div class="modal fade"
+                     th:id="'syllabusModal' + ${subjectEntry.key.subjectid}"
+                     tabindex="-1"
+                     aria-hidden="true">
+                    <div class="modal-dialog modal-lg">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" th:text="${subjectEntry.key.subjectName}"></h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                            </div>
+                            <div class="modal-body">
+                                <table class="table table-bordered">
+                                    <thead>
+                                    <tr>
+                                        <th>Unit Name</th>
+                                        <th>Topics</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr th:each="syllabus : ${subjectEntry.value}">
+                                        <td th:text="${syllabus.unitName}"></td>
+                                        <td>
+                                            <ol>
+                                                <li th:each="topic, iterStat : ${syllabus.topics}"
+                                                    th:text="${topic}">
+                                                </li>
+                                            </ol>
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- End Modal -->
+            </li>
+        </ul>
+    </div>
+
+    <a th:href="@{/students/{id}/dashboard(id=${studentId})}" class="btn btn-primary">Back to Dashboard</a>
+</div>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

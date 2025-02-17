@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Attendance Details</title>
+</head>
+<body>
+<h1>Attendance Details for Student ID: <span th:text="${studentId}"></span> and Subject ID: <span th:text="${subjectId}"></span></h1>
+
+<table>
+    <tr>
+        <th>Date</th>
+        <th>Status</th>
+    </tr>
+    <tr th:each="record : ${attendanceRecords}">
+        <td th:text="${record.attendanceDate}"></td>
+        <td th:text="${record.status}"></td>
+    </tr>
+</table>
+
+<a th:href="@{/attendance/{id}(id=${studentId})}">Back to Attendance</a>
+</body>
+</html>
