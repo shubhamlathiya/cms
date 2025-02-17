@@ -21,6 +21,14 @@
     <input type="number" id="credits" th:field="*{credits}" required>
     <br><br>
 
+    <label for="subjectType">Subject Type:</label>
+    <select id="subjectType" th:field="*{subjectType}" required>
+        <option th:each="type : ${T(com.codershubham.cms.cms.model.CourseManagementModules.SubjectType).values()}"
+                th:value="${type}"
+                th:text="${type}"></option>
+    </select>
+    <br><br>
+
     <label for="courseModel">Course:</label>
     <select id="courseModel" th:field="*{course}" required>
         <option th:each="courseModel : ${courses}" th:value="${courseModel.courseID}"

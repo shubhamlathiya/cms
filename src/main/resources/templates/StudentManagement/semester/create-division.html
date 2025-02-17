@@ -1,13 +1,76 @@
+<!--<!DOCTYPE html>-->
+<!--<html xmlns:th="http://www.thymeleaf.org">-->
+<!--<head>-->
+<!--    <meta charset="UTF-8">-->
+<!--    <title th:text="'Custom Page Title'">Custom Page Title</title>-->
+<!--    <link rel="stylesheet" type="text/css" href="/css/styles.css">-->
+<!--</head>-->
+<!--<body>-->
+
+<!--&lt;!&ndash; Replace the content section &ndash;&gt;-->
+<!--<div th:replace="layout/base.html">-->
+<!--    <div th:fragment="content">-->
+<!--        <main>-->
+
+<!--            <h2>Create Divisions</h2>-->
+
+<!--            <form action="/create-divisions" method="post">-->
+<!--                <label for="semesterId">Semester ID:</label>-->
+<!--                <input type="number" name="semesterId" id="semesterId" th:value="${semesterId}" required>-->
+
+<!--                <h3>Existing Divisions:</h3>-->
+<!--                <div id="divisionContainer">-->
+<!--                    &lt;!&ndash; Display existing divisions if available &ndash;&gt;-->
+<!--                    <th:block th:if="${divisions != null and !divisions.isEmpty()}">-->
+<!--                        <div th:each="division : ${divisions}">-->
+<!--                            <input type="text" name="divisionNames" th:value="${division.name}" readonly>-->
+<!--                        </div>-->
+<!--                    </th:block>-->
+
+<!--                    &lt;!&ndash; If no existing divisions, allow adding new ones &ndash;&gt;-->
+<!--                    <th:block th:if="${divisions == null or divisions.isEmpty()}">-->
+<!--                        <div>-->
+<!--                            <input type="text" name="divisionNames" required placeholder="Enter Division Name">-->
+<!--                            <button type="button" onclick="removeDivisionField(this)">Remove</button>-->
+<!--                        </div>-->
+<!--                    </th:block>-->
+<!--                </div>-->
+
+<!--                <button type="button" onclick="addDivisionField()">Add More</button>-->
+<!--                <button type="submit">Create Divisions</button>-->
+<!--            </form>-->
+
+<!--            <script>-->
+<!--                function addDivisionField() {-->
+<!--                    let container = document.getElementById("divisionContainer");-->
+<!--                    let div = document.createElement("div");-->
+<!--                    div.innerHTML = `-->
+<!--            <input type="text" name="divisionNames" required placeholder="Enter Division Name">-->
+<!--            <button type="button" onclick="removeDivisionField(this)">Remove</button>-->
+<!--        `;-->
+<!--                    container.appendChild(div);-->
+<!--                }-->
+
+<!--                function removeDivisionField(button) {-->
+<!--                    button.parentElement.remove();-->
+<!--                }-->
+<!--            </script>-->
+
+<!--        </main>-->
+<!--    </div>-->
+<!--</div>-->
+
+<!--</body>-->
+<!--</html>-->
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title th:text="'Custom Page Title'">Custom Page Title</title>
-    <link rel="stylesheet" type="text/css" href="/css/styles.css">
+    <title>Create Divisions</title>
 </head>
 <body>
 
-<!-- Replace the content section -->
+<!-- Corrected content replacement -->
 <div th:replace="layout/base.html">
     <div th:fragment="content">
         <main>
@@ -20,18 +83,17 @@
 
                 <h3>Existing Divisions:</h3>
                 <div id="divisionContainer">
-                    <!-- Display existing divisions if available -->
-                    <th:block th:if="${divisions != null and !divisions.isEmpty()}">
-                        <div th:each="division : ${divisions}">
+                    <!-- Display existing divisions -->
+                    <th:block th:if="${divisions != null and not #lists.isEmpty(divisions)}">
+                        <div th:each="division : ${divisions}" class="division-entry">
                             <input type="text" name="divisionNames" th:value="${division.name}" readonly>
-                        </div>
-                    </th:block>
-
-                    <!-- If no existing divisions, allow adding new ones -->
-                    <th:block th:if="${divisions == null or divisions.isEmpty()}">
-                        <div>
-                            <input type="text" name="divisionNames" required placeholder="Enter Division Name">
-                            <button type="button" onclick="removeDivisionField(this)">Remove</button>
+                            <select name="facultyIds">
+                                <option th:each="faculty : ${departmentFaculties}"
+                                        th:value="${faculty.facultyId}"
+                                        th:text="${faculty.firstName + ' ' + faculty.lastName}"
+                                        th:selected="${division.faculty != null and division.faculty.facultyId == faculty.facultyId}">
+                                </option>
+                            </select>
                         </div>
                     </th:block>
                 </div>
@@ -40,18 +102,62 @@
                 <button type="submit">Create Divisions</button>
             </form>
 
+            <!-- Convert faculty list to JSON in JavaScript -->
+            <script th:inline="javascript">
+                let departmentFaculties = /*[[${departmentFaculties}]]*/ [];
+                console.log("Faculty Data:", departmentFaculties);
+            </script>
+
             <script>
                 function addDivisionField() {
+                    console.log("Adding new division field...");
                     let container = document.getElementById("divisionContainer");
                     let div = document.createElement("div");
-                    div.innerHTML = `
-            <input type="text" name="divisionNames" required placeholder="Enter Division Name">
-            <button type="button" onclick="removeDivisionField(this)">Remove</button>
-        `;
+                    div.classList.add("division-entry");
+
+                    // Create division name input
+                    let divisionNameInput = document.createElement("input");
+                    divisionNameInput.type = "text";
+                    divisionNameInput.name = "divisionNames";
+                    divisionNameInput.required = true;
+                    divisionNameInput.placeholder = "Enter Division Name";
+
+                    // Create faculty dropdown
+                    let facultySelect = document.createElement("select");
+                    facultySelect.name = "facultyIds";
+
+                    let defaultOption = document.createElement("option");
+                    defaultOption.value = "";
+                    defaultOption.textContent = "Select Faculty";
+                    facultySelect.appendChild(defaultOption);
+
+                    // Populate the dropdown with faculties
+                    departmentFaculties.forEach(faculty => {
+                        let option = document.createElement("option");
+                        option.value = faculty.facultyId;
+                        option.textContent = faculty.firstName + " " + faculty.lastName;
+                        facultySelect.appendChild(option);
+                    });
+
+                    // Create remove button
+                    let removeButton = document.createElement("button");
+                    removeButton.type = "button";
+                    removeButton.textContent = "Remove";
+                    removeButton.onclick = function () {
+                        removeDivisionField(this);
+                    };
+
+                    // Append all elements to the new division div
+                    div.appendChild(divisionNameInput);
+                    div.appendChild(facultySelect);
+                    div.appendChild(removeButton);
+
+                    // Append the new division div to the container
                     container.appendChild(div);
                 }
 
                 function removeDivisionField(button) {
+                    console.log("Removing division field...");
                     button.parentElement.remove();
                 }
             </script>

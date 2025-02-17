@@ -1,3 +1,41 @@
+<!--<!DOCTYPE html>-->
+<!--<html xmlns:th="http://www.thymeleaf.org">-->
+<!--<head>-->
+<!--    <title>Update Subject</title>-->
+<!--</head>-->
+<!--<body>-->
+
+<!--<h2>Update Subject</h2>-->
+
+<!--&lt;!&ndash; Form to update an existing subject &ndash;&gt;-->
+<!--<form th:action="@{/admin/subjects/update/{subjectID}(subjectID=${subject.subjectid})}" th:object="${subject}" method="post">-->
+<!--    <label for="subjectCode">Subject Code:</label>-->
+<!--    <input type="text" id="subjectCode" th:field="*{subjectCode}" required>-->
+<!--    <br><br>-->
+
+<!--    <label for="subjectName">Subject Name:</label>-->
+<!--    <input type="text" id="subjectName" th:field="*{subjectName}" required>-->
+<!--    <br><br>-->
+
+<!--    <label for="credits">Credits:</label>-->
+<!--    <input type="number" id="credits" th:field="*{credits}" required>-->
+<!--    <br><br>-->
+
+<!--    <label for="courseModel">Course:</label>-->
+<!--    <select id="courseModel" th:field="*{course}" required>-->
+<!--        <option th:each="courseModel : ${courses}" th:value="${courseModel.courseID}"-->
+<!--                th:text="${courseModel.courseName}"-->
+<!--                th:selected="${courseModel.courseID == subject.course.courseID}"></option>-->
+<!--    </select>-->
+<!--    <br><br>-->
+
+<!--    <button type="submit">Update Subject</button>-->
+<!--</form>-->
+
+<!--<br>-->
+<!--<a href="/admin/subjects">Back to Subjects List</a>-->
+<!--</body>-->
+<!--</html>-->
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
@@ -19,6 +57,15 @@
 
     <label for="credits">Credits:</label>
     <input type="number" id="credits" th:field="*{credits}" required>
+    <br><br>
+
+    <label for="subjectType">Subject Type:</label>
+    <select id="subjectType" th:field="*{subjectType}" required>
+        <option th:each="type : ${T(com.codershubham.cms.cms.model.CourseManagementModules.SubjectType).values()}"
+                th:value="${type}"
+                th:text="${type}"
+                th:selected="${type == subject.subjectType}"></option>
+    </select>
     <br><br>
 
     <label for="courseModel">Course:</label>

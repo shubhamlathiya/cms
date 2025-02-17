@@ -1,3 +1,58 @@
+<!--<!DOCTYPE html>-->
+<!--<html xmlns:th="http://www.thymeleaf.org">-->
+<!--<head>-->
+<!--    <meta charset="UTF-8">-->
+<!--    <title th:text="'Subjects List'">Subjects List</title>-->
+<!--    <link rel="stylesheet" type="text/css" href="/css/styles.css">-->
+<!--</head>-->
+<!--<body>-->
+
+<!--&lt;!&ndash; Replace the content section &ndash;&gt;-->
+<!--<div th:replace="layout/base.html">-->
+<!--    <div th:fragment="content">-->
+<!--        <main>-->
+
+<!--            <h2>Subjects List</h2>-->
+
+<!--            &lt;!&ndash; Table displaying all subjects &ndash;&gt;-->
+<!--            <table>-->
+<!--                <thead>-->
+<!--                <tr>-->
+<!--                    <th>Subject Code</th>-->
+<!--                    <th>Subject Name</th>-->
+<!--                    <th>Credits</th>-->
+<!--                    <th>Course</th>-->
+<!--                    <th>Actions</th>-->
+<!--                </tr>-->
+<!--                </thead>-->
+<!--                <tbody>-->
+<!--                <tr th:each="subject : ${subjects}">-->
+<!--                    <td th:text="${subject.subjectCode}"></td>-->
+<!--                    <td th:text="${subject.subjectName}"></td>-->
+<!--                    <td th:text="${subject.credits}"></td>-->
+<!--                    <td th:text="${subject.course.courseName}"></td>-->
+<!--                    <td>-->
+<!--                        &lt;!&ndash; Edit and Delete actions &ndash;&gt;-->
+<!--                        <a th:href="@{/admin/subjects/update/{subjectID}(subjectID=${subject.subjectid})}">Edit</a> |-->
+<!--                        <a th:href="@{/admin/subjects/delete/{subjectID}(subjectID=${subject.subjectid})}"-->
+<!--                           th:onclick="return confirm('Are you sure you want to delete?')">Delete</a>-->
+
+<!--                        &lt;!&ndash; View Syllabus for this Subject &ndash;&gt;-->
+<!--                        <a th:href="@{/admin/syllabus/subject/{subjectID}(subjectID=${subject.subjectid})}">View Syllabus</a>-->
+<!--                    </td>-->
+<!--                </tr>-->
+<!--                </tbody>-->
+<!--            </table>-->
+
+<!--            &lt;!&ndash; Link to add a new subject &ndash;&gt;-->
+<!--            <a href="/admin/subjects/add">Add New Subject</a>-->
+
+<!--        </main>-->
+<!--    </div>-->
+<!--</div>-->
+
+<!--</body>-->
+<!--</html>-->
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
@@ -21,6 +76,7 @@
                     <th>Subject Code</th>
                     <th>Subject Name</th>
                     <th>Credits</th>
+                    <th>Subject Type</th> <!-- New column for Subject Type -->
                     <th>Course</th>
                     <th>Actions</th>
                 </tr>
@@ -30,6 +86,7 @@
                     <td th:text="${subject.subjectCode}"></td>
                     <td th:text="${subject.subjectName}"></td>
                     <td th:text="${subject.credits}"></td>
+                    <td th:text="${subject.subjectType}"></td> <!-- Display Subject Type -->
                     <td th:text="${subject.course.courseName}"></td>
                     <td>
                         <!-- Edit and Delete actions -->

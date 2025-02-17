@@ -1,5 +1,6 @@
 package com.codershubham.cms.cms.model.StudentManagementModules;
 
+import com.codershubham.cms.cms.model.FacultyManagementModules.FacultyModel;
 import jakarta.persistence.*;
 
 @Entity
@@ -17,7 +18,19 @@ public class DivisionModel {
     @JoinColumn(name = "semester_id")
     private SemesterModel semester; // Division belongs to a specific semester
 
+    @ManyToOne
+    @JoinColumn(name = "faculty_id")
+    private FacultyModel faculty;
     // Constructors, getters, setters
+
+
+    public FacultyModel getFaculty() {
+        return faculty;
+    }
+
+    public void setFaculty(FacultyModel faculty) {
+        this.faculty = faculty;
+    }
 
     public Long getId() {
         return id;

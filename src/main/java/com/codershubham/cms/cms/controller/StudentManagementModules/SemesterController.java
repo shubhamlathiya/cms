@@ -2,9 +2,11 @@ package com.codershubham.cms.cms.controller.StudentManagementModules;
 
 import com.codershubham.cms.cms.constant.PathConstant;
 import com.codershubham.cms.cms.model.CourseManagementModules.CourseModel;
+import com.codershubham.cms.cms.model.FacultyManagementModules.FacultyModel;
 import com.codershubham.cms.cms.model.StudentManagementModules.DivisionModel;
 import com.codershubham.cms.cms.model.StudentManagementModules.SemesterModel;
 import com.codershubham.cms.cms.service.CourseManagementModules.CourseService;
+import com.codershubham.cms.cms.service.FacultyManagementModules.FacultyService;
 import com.codershubham.cms.cms.service.StudentManagementModules.DivisionService;
 import com.codershubham.cms.cms.service.StudentManagementModules.SemesterService;
 import com.codershubham.cms.cms.service.StudentManagementModules.StudentEnrollmentService;
@@ -31,6 +33,8 @@ public class SemesterController {
     @Autowired
     private CourseService courseService;
 
+    @Autowired
+    private FacultyService facultyService;
 
     // Show the form to create a semester for a course
     @GetMapping(PathConstant.ADD_PATH)
@@ -76,15 +80,35 @@ public class SemesterController {
 
 
 
+//    @GetMapping("/create-division-page")
+//    public String showCreateDivisionPage(@RequestParam Long semesterId, Model model) {
+//        // Fetch existing divisions for the given semester
+//        List<DivisionModel> divisions = divisionService.getDivisionsBySemester(semesterId);
+//
+//        model.addAttribute("semesterId", semesterId);
+//        model.addAttribute("divisions", divisions); // Pass divisions list to the view
+//
+//        return "StudentManagement/semester/create-division"; // Returns the division creation view
+//    }
+
     @GetMapping("/create-division-page")
     public String showCreateDivisionPage(@RequestParam Long semesterId, Model model) {
         // Fetch existing divisions for the given semester
         List<DivisionModel> divisions = divisionService.getDivisionsBySemester(semesterId);
 
+        // Fetch the semester object by semesterId
+        SemesterModel semester = semesterService.getSemesterById(semesterId);
+
+        // Fetch the course associated with the semester
+        CourseModel course = semester.getCourse();
+
+        // Fetch faculties belonging to the department of the course
+        List<FacultyModel> departmentFaculties = facultyService.getFacultyByDepartment(course.getDepartment().getId());
+
         model.addAttribute("semesterId", semesterId);
         model.addAttribute("divisions", divisions); // Pass divisions list to the view
+        model.addAttribute("departmentFaculties", departmentFaculties); // Pass department faculties to the view
 
         return "StudentManagement/semester/create-division"; // Returns the division creation view
     }
-
 }

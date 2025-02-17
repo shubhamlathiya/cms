@@ -5,6 +5,15 @@ import java.util.List;
 public class CreateDivisionsRequestDto {
     private Long semesterId;
     private List<String> divisionNames;
+    private List<Long> facultyIds;
+
+    public List<Long> getFacultyIds() {
+        return facultyIds;
+    }
+
+    public void setFacultyIds(List<Long> facultyIds) {
+        this.facultyIds = facultyIds;
+    }
 
     // Getters and Setters
     public Long getSemesterId() {

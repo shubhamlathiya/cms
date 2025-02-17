@@ -22,6 +22,10 @@ public class SubjectsModel {
     @Column(nullable = false)
     private int credits;
 
+    @Enumerated(EnumType.STRING) // Store enum values as strings in the database
+    @Column(nullable = false)
+    private SubjectType subjectType; // New field for subject type
+
     @Column(nullable = false)
     private LocalDateTime createdAt;
 
@@ -76,4 +80,24 @@ public class SubjectsModel {
     public void setCourse(CourseModel courseModel) {
         this.courseModel = courseModel;
     }
+
+    public SubjectType getSubjectType() {
+        return subjectType;
+    }
+
+    public void setSubjectType(SubjectType subjectType) {
+        this.subjectType = subjectType;
+    }
+
+    public CourseModel getCourseModel() {
+        return courseModel;
+    }
+
+    public void setCourseModel(CourseModel courseModel) {
+        this.courseModel = courseModel;
+    }
+}
+
+enum SubjectType {
+    LAB, THEORY
 }

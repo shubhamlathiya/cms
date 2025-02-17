@@ -117,4 +117,8 @@ public class FacultyService {
         return facultyRepository.findByUserId(userId)
                 .orElse(null); // Return null if no faculty member is found
     }
+
+//    public List<FacultyModel> getFacultiesByDepartmentId(Long departmentId) {
+//        return facultyRepository.findByDepartmentId(departmentId);
+//    }
 }

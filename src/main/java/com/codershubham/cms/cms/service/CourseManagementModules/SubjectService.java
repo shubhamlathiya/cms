@@ -52,7 +52,8 @@ public class SubjectService {
         subject.setSubjectCode(updatedSubject.getSubjectCode());
         subject.setSubjectName(updatedSubject.getSubjectName());
         subject.setCredits(updatedSubject.getCredits());
-        subject.setCourse(courseModel);  // Set the updated course
+        subject.setCourse(courseModel);
+        subject.setSubjectType(updatedSubject.getSubjectType());// Set the updated course
 
         return subjectRepository.save(subject);  // Save and return the updated subject
     }
