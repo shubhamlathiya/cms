@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Student Dashboard</title>
+</head>
+<body>
+<h1>Welcome, <span th:text="${student.firstName}"></span></h1>
+<h2>Options:</h2>
+<ul>
+    <li><a th:href="@{/student/{id}/attendance/{subjectId}(id=${student.id}, subjectId=${subject.id})}">Attendance</a></li>
+    <li><a th:href="@{/student/{id}/lesson-plan(id=${student.id})}">Lesson Plan</a></li>
+</ul>
+<h3>Enrolled Subjects:</h3>
+<ul>
+    <li th:each="enrollment : ${enrollments}">
+        <span th:text="${enrollment.subject.subjectName}"></span>
+        <a th:href="@{/student/{id}/attendance/{subjectId}(id=${student.id}, subjectId=${enrollment.subject.id})}">View Attendance</a>
+    </li>
+</ul>
+</body>
+</html>

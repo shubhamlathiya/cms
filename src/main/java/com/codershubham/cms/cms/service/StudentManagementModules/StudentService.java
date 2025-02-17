@@ -1,11 +1,16 @@
 package com.codershubham.cms.cms.service.StudentManagementModules;
 
 import com.codershubham.cms.cms.model.CourseManagementModules.CourseModel;
+import com.codershubham.cms.cms.model.CourseManagementModules.SubjectsModel;
+import com.codershubham.cms.cms.model.FacultyManagementModules.AttendanceModel;
+import com.codershubham.cms.cms.model.StudentManagementModules.AssignmentModel;
 import com.codershubham.cms.cms.model.StudentManagementModules.StudentEnrollmentModel;
 import com.codershubham.cms.cms.model.StudentManagementModules.StudentModel;
 import com.codershubham.cms.cms.model.UserManagementModules.RoleModel;
 import com.codershubham.cms.cms.model.UserManagementModules.UserModel;
 import com.codershubham.cms.cms.repository.CourseManagementModules.CourseRepository;
+import com.codershubham.cms.cms.repository.FacultyManagementModules.AttendanceRepository;
+import com.codershubham.cms.cms.repository.StudentManagementModules.AssignmentRepository;
 import com.codershubham.cms.cms.repository.StudentManagementModules.StudentEnrollmentRepository;
 import com.codershubham.cms.cms.repository.StudentManagementModules.StudentRepository;
 import com.codershubham.cms.cms.repository.UserManagementModules.RoleRepository;
@@ -23,7 +28,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -36,6 +43,7 @@ public class StudentService {
 
     private final StudentEnrollmentRepository studentEnrollmentRepository;
     private final PasswordEncoder passwordEncoder;
+
 
     @Autowired
     public StudentService(UserRepository userRepository, RoleRepository roleRepository, CourseRepository courseRepository, StudentRepository studentRepository, StudentEnrollmentRepository studentEnrollmentRepository) {
@@ -146,32 +154,11 @@ public class StudentService {
             throw new RuntimeException("Failed to process Excel file: " + e.getMessage());
         }
     }
-//    public List<StudentModel> getAllStudents() {
-//        return studentRepository.findAll();
-//    }
-//
-//    public List<StudentModel> findStudentsByCourse(Long courseId) {
-//        CourseModel course = courseRepository.findById(courseId)
-//                .orElseThrow(() -> new RuntimeException("Course not found"));
-//        return studentRepository.findByCourse(course);
 
-    /// /        return studentRepository.findByCourseId(courseId);
-//    }
-//
-//
-//    public List<StudentModel> getStudentsByCourseId(Long courseId) {
-//        CourseModel course = courseRepository.findById(courseId)
-//                .orElseThrow(() -> new RuntimeException("Course not found"));
-//        return studentRepository.findByCourse(course);  // Pass Course object
-//    }
     public List<StudentModel> getStudentsByDivision(Long divisionId) {
         List<StudentEnrollmentModel> enrollments = studentEnrollmentRepository.findByDivisionId(divisionId);
         return enrollments.stream().map(StudentEnrollmentModel::getStudent).toList();
     }
-
-//    public List<StudentModel> getUnassignedStudents() {
-//        return studentRepository.findUnassignedStudents();
-//    }
 
     public List<StudentModel> getUnassignedStudentsBySemester(Long semesterId) {
         return studentRepository.findUnassignedStudentsBySemester(semesterId);

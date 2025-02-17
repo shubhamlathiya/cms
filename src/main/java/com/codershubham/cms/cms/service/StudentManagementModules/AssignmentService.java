@@ -87,13 +87,7 @@ public class AssignmentService {
         }
     }
 
-
-    // Fetch list of students and their assigned questions for a specific assignment
-//    public List<StudentAssignmentModel> getAssignedQuestions(Long assignmentId) {
-//        return studentAssignmentRepository.findByAssignmentId(assignmentId);
-//    }
     public List<StudentAssignmentModel> getAssignedQuestions(Long assignmentId) {
         return studentAssignmentRepository.findByAssignmentId(assignmentId);
     }
-
 }

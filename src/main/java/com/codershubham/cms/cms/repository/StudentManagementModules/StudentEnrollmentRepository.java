@@ -13,14 +13,6 @@ import java.util.List;
 @Repository
 public interface StudentEnrollmentRepository extends JpaRepository<StudentEnrollmentModel, Long> {
 
-    // Get students by semester
-    List<StudentEnrollmentModel> findBySemester(SemesterModel semester);
-
-    // Get students by division
-    List<StudentEnrollmentModel> findByDivision(DivisionModel division);
-
-    // Get students by semester and division
-    List<StudentEnrollmentModel> findBySemesterAndDivision(SemesterModel semester, DivisionModel division);
     List<StudentEnrollmentModel> findByDivisionId(Long divisionId);
 
 
@@ -29,4 +21,6 @@ public interface StudentEnrollmentRepository extends JpaRepository<StudentEnroll
     List<StudentEnrollmentModel> findByDivisionIdAndSemesterId(
             @Param("divisionId") Long divisionId,
             @Param("semesterId") Long semesterId);
+
+    List<StudentEnrollmentModel> findByStudentId(Long studentId);
 }

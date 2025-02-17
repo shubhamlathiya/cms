@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Attendance View</title>
+</head>
+<body>
+<h1>Attendance Records</h1>
+<table>
+    <tr>
+        <th>Date</th>
+        <th>Status</th>
+    </tr>
+    <tr th:each="attendance : ${attendanceList}">
+        <td th:text="${attendance.attendanceDate}"></td>
+        <td th:text="${attendance.status}"></td>
+    </tr>
+</table>
+<a th:href="@{/student/{id}/dashboard(id=${student.id})}">Back to Dashboard</a>
+</body>
+</html>
