@@ -87,21 +87,4 @@ public class SemesterController {
         return "StudentManagement/semester/create-division"; // Returns the division creation view
     }
 
-    // Method to view all divisions for a specific semester
-//    @GetMapping("/semester/{semesterId}")
-//    public String viewSemesterDivisions(@RequestParam Long semesterId, Model model) {
-//
-//        // Fetch the semester object by semesterId
-//        SemesterModel semester = semesterService.findById(semesterId);
-//
-//        // Fetch all divisions for the semester
-//        List<DivisionModel> divisions = divisionService.findBySemesterId(semesterId);
-//        System.out.println(divisions);
-//        // Add the semester and divisions to the model
-//        model.addAttribute("semester", semester);
-//        model.addAttribute("divisions", divisions);
-//
-//        return "StudentManagement/semester/semester-view"; // Return the view that will display the semester and its divisions
-//    }
-
 }

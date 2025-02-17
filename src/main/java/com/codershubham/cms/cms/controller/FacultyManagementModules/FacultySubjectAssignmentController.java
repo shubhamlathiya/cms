@@ -1,5 +1,6 @@
 package com.codershubham.cms.cms.controller.FacultyManagementModules;
 
+import com.codershubham.cms.cms.constant.PathConstant;
 import com.codershubham.cms.cms.model.CourseManagementModules.CourseModel;
 import com.codershubham.cms.cms.model.CourseManagementModules.SubjectsModel;
 import com.codershubham.cms.cms.model.DTO.FacultySubjectAssignmentRequestDto;
@@ -25,7 +26,7 @@ import java.util.List;
 import java.util.Map;
 
 @Controller
-@RequestMapping("/faculty-subject")
+@RequestMapping(PathConstant.FACULTY_SUBJECT_PATH)
 public class FacultySubjectAssignmentController {
 
     @Autowired

@@ -1,5 +1,6 @@
 package com.codershubham.cms.cms.controller.FacultyManagementModules;
 
+import com.codershubham.cms.cms.constant.PathConstant;
 import com.codershubham.cms.cms.model.FacultyManagementModules.AttendanceModel;
 import com.codershubham.cms.cms.model.FacultyManagementModules.FacultySubjectAssignmentModel;
 import com.codershubham.cms.cms.service.FacultyManagementModules.AttendanceService;
@@ -22,7 +23,7 @@ import java.util.stream.Collectors;
 
 
 @Controller
-@RequestMapping("/attendance")
+@RequestMapping(PathConstant.ATTENDANCE_PATH)
 public class AttendanceController {
 
     @Autowired
