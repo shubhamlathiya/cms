@@ -32,6 +32,11 @@ public class FacultyController {
     @Autowired
     private EmailUtil emailUtil;
 
+    @GetMapping("/dashboard")
+    public String facultyDashboard(Model model) {
+        return "FacultyManagement/faculty-dashboard";
+    }
+
     // 1️⃣ Show all faculties
     @GetMapping
     public String getAllFaculties(Model model) {

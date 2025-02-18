@@ -38,6 +38,7 @@ public class CustomUserDetailsService implements UserDetailsService {
         System.out.println("User Found: ");
         System.out.println("Email: " + user.getUsername());
         System.out.println("Password: " + user.getPassword());
+        System.out.println("userId: " + user.getId());
         System.out.println(user.getRole().getName().toUpperCase());
         // Add user data to session
         httpSession.setAttribute("userId", user.getId());
