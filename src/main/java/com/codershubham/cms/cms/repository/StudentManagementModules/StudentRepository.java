@@ -16,16 +16,16 @@ public interface StudentRepository extends JpaRepository<StudentModel, Long> {
     //    List<StudentModel> findByCourseId(Long courseId);
     Optional<StudentModel> findByUserId(Long userId);
 
-    List<StudentModel> findByCourse(CourseModel course);
+//    List<StudentModel> findByCourse(CourseModel course);
 
-    //     Fetch students who are NOT assigned to any semester or division
-    @Query("SELECT s FROM StudentModel s WHERE s.id NOT IN (SELECT se.student.id FROM StudentEnrollmentModel se)")
-    List<StudentModel> findUnassignedStudents();
+//    //     Fetch students who are NOT assigned to any semester or division
+//    @Query("SELECT s FROM StudentModel s WHERE s.id NOT IN (SELECT se.student.id FROM StudentEnrollmentModel se)")
+//    List<StudentModel> findUnassignedStudents();
 
 //    List<StudentModel> findByDivisionId(Long divisionId);
 
-    @Query("SELECT s FROM StudentModel s WHERE s.course.id = " +
-            "(SELECT sem.course.id FROM SemesterModel sem WHERE sem.id = :semesterId) " +
+    @Query("SELECT s FROM StudentModel s WHERE s.course.courseID = " +
+            "(SELECT sem.course.courseID FROM SemesterModel sem WHERE sem.id = :semesterId) " +
             "AND s.id NOT IN (SELECT e.student.id FROM StudentEnrollmentModel e WHERE e.semester.id = :semesterId)")
     List<StudentModel> findUnassignedStudentsBySemester(@Param("semesterId") Long semesterId);
 }

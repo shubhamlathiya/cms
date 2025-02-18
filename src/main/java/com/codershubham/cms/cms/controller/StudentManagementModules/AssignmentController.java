@@ -1,7 +1,7 @@
 package com.codershubham.cms.cms.controller.StudentManagementModules;
 
 import com.codershubham.cms.cms.constant.PathConstant;
-import com.codershubham.cms.cms.model.DTO.StudentQuestionsDTO;
+import com.codershubham.cms.cms.model.DTO.StudentQuestionsDto;
 import com.codershubham.cms.cms.model.StudentManagementModules.AssignmentModel;
 import com.codershubham.cms.cms.model.StudentManagementModules.StudentAssignmentModel;
 import com.codershubham.cms.cms.service.StudentManagementModules.AssignmentService;
@@ -61,21 +61,21 @@ public class AssignmentController {
         List<StudentAssignmentModel> assignedQuestions = assignmentService.getAssignedQuestions(assignmentId);
 
         // Grouping questions by student ID
-        Map<Long, StudentQuestionsDTO> groupedQuestions = new HashMap<>();
+        Map<Long, StudentQuestionsDto> groupedQuestions = new HashMap<>();
 
         for (StudentAssignmentModel assignment : assignedQuestions) {
             Long studentId = assignment.getStudent().getId();
             String questionText = assignment.getQuestion().getQuestionText();
 
             // If student is not already in the map, add them
-            groupedQuestions.putIfAbsent(studentId, new StudentQuestionsDTO(studentId, assignment.getStudent().getFirstName()));
+            groupedQuestions.putIfAbsent(studentId, new StudentQuestionsDto(studentId, assignment.getStudent().getFirstName()));
 
             // Add the question to the student's list of questions
             groupedQuestions.get(studentId).getQuestions().add(questionText);
         }
 
         // Convert the map values into a list to pass to the view
-        List<StudentQuestionsDTO> studentQuestionsList = new ArrayList<>(groupedQuestions.values());
+        List<StudentQuestionsDto> studentQuestionsList = new ArrayList<>(groupedQuestions.values());
 
         // Finding the maximum number of questions assigned to any student
         int maxQuestions = studentQuestionsList.stream()

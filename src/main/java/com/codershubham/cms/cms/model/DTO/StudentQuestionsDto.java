@@ -3,13 +3,13 @@ package com.codershubham.cms.cms.model.DTO;
 import java.util.ArrayList;
 import java.util.List;
 
-public class StudentQuestionsDTO {
+public class StudentQuestionsDto {
     private Long studentId;
     private String studentName;
     private List<String> questions;
 
     // Constructor
-    public StudentQuestionsDTO(Long studentId, String studentName) {
+    public StudentQuestionsDto(Long studentId, String studentName) {
         this.studentId = studentId;
         this.studentName = studentName;
         this.questions = new ArrayList<>();
