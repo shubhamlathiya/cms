@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Assigned Questions</title>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+<h2>Assigned Questions</h2>
+
+<!-- Display Assigned Questions -->
+<table>
+    <thead>
+    <tr>
+        <th>Student ID</th>
+        <th>Student Name</th>
+        <th th:each="i : ${#numbers.sequence(1, maxQuestions)}">Question <span th:text="${i}"></span></th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="studentQuestions : ${assignedQuestions}">
+        <td th:text="${studentQuestions.studentId}"></td>
+        <td th:text="${studentQuestions.studentName}"></td>
+        <td th:each="question : ${studentQuestions.questions}" th:text="${question}"></td>
+    </tr>
+    </tbody>
+</table>
+
+<!-- File Upload Form -->
+<h3>Submit Assignment</h3>
+<form th:if="${!hasSubmitted}" th:action="@{/assignments/submit/{assignmentId}/{studentId}(assignmentId=${assignmentId}, studentId=${studentId})}"
+      method="post" enctype="multipart/form-data">
+    <label for="file">Choose Assignment File to Upload:</label>
+    <input type="file" id="file" name="submissionFile" required><br><br>
+
+    <button type="submit">Submit Assignment</button>
+</form>
+
+<!-- Show a message if the student has already submitted -->
+<div th:if="${hasSubmitted}">
+    <p>You have already submitted this assignment.</p>
+</div>
+
+<a th:href="@{/students/dashboard}">Back to Dashboard</a>
+</body>
+</html>

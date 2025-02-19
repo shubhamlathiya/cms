@@ -19,8 +19,7 @@ public interface StudentAssignmentRepository extends JpaRepository<StudentAssign
             "WHERE sa.student.id IN :studentIds")
     List<StudentAssignmentModel> findByStudents(@Param("studentIds") List<Long> studentIds);
 
-//    @Query("SELECT s FROM StudentAssignmentModel s " +
-//            "JOIN Assignment a ON s.assignmentId = a.id " +
-//            "WHERE a.division.id = :divisionId AND a.semester.id = :semesterId")
-//    List<StudentAssignmentModel> findAssignedQuestions(@Param("divisionId") Long divisionId, @Param("semesterId") Long semesterId);
+
+    @Query("SELECT sa FROM StudentAssignmentModel sa WHERE sa.student.id = :studentId AND sa.assignment.subjectId = :subjectId")
+    List<StudentAssignmentModel> findByStudentIdAndSubjectId(@Param("studentId") Long studentId, @Param("subjectId") Long subjectId);
 }

@@ -20,5 +20,10 @@
     <li>Qualification: <span th:text="${faculty.qualification}"></span></li>
 </ul>
 
+<h3>Options:</h3>
+<ul>
+    <li><a th:href="@{/faculty/subjects/{facultyId}(facultyId=${faculty.facultyId})}">Assign Subjects</a></li>
+    <!--    <li><a th:href="@{/students/lesson-plan/{id}(id=${student.id})}">View Lesson Plan</a></li>-->
+</ul>
 </body>
 </html>

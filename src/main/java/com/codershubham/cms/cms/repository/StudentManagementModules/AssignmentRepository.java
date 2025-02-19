@@ -12,5 +12,9 @@ import java.util.List;
 
 public interface AssignmentRepository extends JpaRepository<AssignmentModel, Long> {
 
-    List<AssignmentModel> findByDivisionIdAndSemesterId(Long divisionId, Long semesterId);
+    List<AssignmentModel> findByDivisionIdAndSemesterIdAndSubjectId(Long divisionId, Long semesterId, Long subjectId);
+
+    @Query("SELECT COUNT(a) > 0 FROM AssignmentModel a WHERE a.subjectId = :subjectId AND a.divisionId = :divisionId")
+    boolean existsBySubjectIdAndDivisionId(@Param("subjectId") Long subjectId, @Param("divisionId") Long divisionId);
+
 }

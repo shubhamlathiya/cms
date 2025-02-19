@@ -7,7 +7,8 @@ public class StudentQuestionsDto {
     private Long studentId;
     private String studentName;
     private List<String> questions;
-
+    private String filePath;
+    private boolean submitted;
     // Constructor
     public StudentQuestionsDto(Long studentId, String studentName) {
         this.studentId = studentId;
@@ -18,6 +19,22 @@ public class StudentQuestionsDto {
     // Getters and Setters
     public Long getStudentId() {
         return studentId;
+    }
+
+    public String getFilePath() {
+        return filePath;
+    }
+
+    public void setFilePath(String filePath) {
+        this.filePath = filePath;
+    }
+
+    public boolean isSubmitted() {
+        return submitted;
+    }
+
+    public void setSubmitted(boolean submitted) {
+        this.submitted = submitted;
     }
 
     public void setStudentId(Long studentId) {

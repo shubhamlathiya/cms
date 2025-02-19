@@ -5,6 +5,7 @@ import com.codershubham.cms.cms.model.CourseManagementModules.CourseModel;
 import com.codershubham.cms.cms.model.CourseManagementModules.DepartmentModel;
 import com.codershubham.cms.cms.model.CourseManagementModules.SubjectsModel;
 import com.codershubham.cms.cms.model.CourseManagementModules.SyllabusModel;
+import com.codershubham.cms.cms.model.DTO.StudentQuestionsDto;
 import com.codershubham.cms.cms.model.StudentManagementModules.*;
 import com.codershubham.cms.cms.model.UserManagementModules.UserModel;
 import com.codershubham.cms.cms.service.CourseManagementModules.CourseService;
@@ -12,6 +13,7 @@ import com.codershubham.cms.cms.service.CourseManagementModules.DepartmentServic
 import com.codershubham.cms.cms.service.CourseManagementModules.SubjectService;
 import com.codershubham.cms.cms.service.CourseManagementModules.SyllabusService;
 import com.codershubham.cms.cms.service.FacultyManagementModules.AttendanceService;
+import com.codershubham.cms.cms.service.StudentManagementModules.AssignmentService;
 import com.codershubham.cms.cms.service.StudentManagementModules.DivisionService;
 import com.codershubham.cms.cms.service.StudentManagementModules.SemesterService;
 import com.codershubham.cms.cms.service.StudentManagementModules.StudentService;
@@ -25,6 +27,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -54,6 +57,9 @@ public class StudentController {
 
     @Autowired
     private AttendanceService attendanceService;
+
+    @Autowired
+    private AssignmentService assignmentService;
 
     @Autowired
     private SyllabusService syllabusService;
@@ -181,6 +187,104 @@ public class StudentController {
         return "StudentManagement/lesson-plan"; // Return updated view
     }
 
+    @GetMapping("/assignments/{id}")
+    public String viewAssignments(@PathVariable Long id, Model model) {
+        // Fetch all enrollments for the student
+        List<StudentEnrollmentModel> enrollments = studentService.getEnrollmentsByStudentId(id);
+
+        // Map to store subjects and their assignments per semester
+        Map<Long, Map<SubjectsModel, Boolean>> subjectAssignmentMap = new HashMap<>();
+
+        for (StudentEnrollmentModel enrollment : enrollments) {
+            SemesterModel semester = enrollment.getSemester();
+            DivisionModel division = enrollment.getDivision();
+
+            if (semester == null || division == null) {
+                continue; // Skip invalid enrollments
+            }
+
+            Long semesterId = semester.getId();
+            Long divisionId = division.getId();
+
+            // Get subjects enrolled by the student for this semester
+            List<SubjectEnrollmentModel> subjects = studentService.getSubjectsByStudentIdAndSemester(id, semesterId);
+
+            // Map to store whether an assignment exists for each subject
+            Map<SubjectsModel, Boolean> subjectHasAssignmentMap = new HashMap<>();
+
+            for (SubjectEnrollmentModel subjectEnrollment : subjects) {
+                SubjectsModel subject = subjectEnrollment.getSubject();
+
+                if (subject == null) {
+                    continue; // Skip invalid subjects
+                }
+
+                Long subjectId = subject.getSubjectid();
+
+                // Check if assignments exist for this subject and division
+                boolean hasAssignments = assignmentService.hasAssignmentsForSubjectAndDivision(subjectId, divisionId);
+
+                // Store assignment availability
+                subjectHasAssignmentMap.put(subject, hasAssignments);
+            }
+
+            // Store subject assignments data per semester
+            subjectAssignmentMap.put(semesterId, subjectHasAssignmentMap);
+        }
+
+        // Add the data to the model for Thymeleaf rendering
+        model.addAttribute("studentId", id);
+        model.addAttribute("subjectAssignmentMap", subjectAssignmentMap);
+
+        return "StudentManagement/assignments/student-assignments-view"; // Return view name
+    }
+
+    @GetMapping("/assignments/{studentId}/{subjectId}/questions")
+    public String viewAssignedQuestions(@PathVariable Long studentId, @PathVariable Long subjectId, Model model) {
+        // Fetching the StudentAssignments for the student and subject
+        List<StudentAssignmentModel> studentAssignments = assignmentService.getAssignmentsByStudentAndSubject(studentId, subjectId);
+
+        // Grouping questions by student ID
+        Map<Long, StudentQuestionsDto> groupedQuestions = new HashMap<>();
+
+        Long assignmentId = studentAssignments.isEmpty() ? null : studentAssignments.get(0).getAssignment().getId();
+
+        // Fetch if the student has already submitted the assignment
+        boolean hasSubmitted = assignmentService.hasStudentSubmittedAssignment(assignmentId, studentId);
+
+        // Iterate over the studentAssignments and group questions by student
+        for (StudentAssignmentModel studentAssignment : studentAssignments) {
+            Long studentIdFromAssignment = studentAssignment.getStudent().getId();
+            String questionText = studentAssignment.getQuestion().getQuestionText();
+
+            // If the student is not already in the map, add them
+            groupedQuestions.putIfAbsent(studentIdFromAssignment, new StudentQuestionsDto(studentIdFromAssignment, studentAssignment.getStudent().getFirstName()));
+
+            // Add the question to the student's list of questions
+            groupedQuestions.get(studentIdFromAssignment).getQuestions().add(questionText);
+        }
+
+        // Convert the map values into a list to pass to the view
+        List<StudentQuestionsDto> studentQuestionsList = new ArrayList<>(groupedQuestions.values());
+
+        // Finding the maximum number of questions assigned to any student
+        int maxQuestions = studentQuestionsList.stream()
+                .mapToInt(sa -> sa.getQuestions().size())
+                .max()
+                .orElse(0);
+
+        // Add attributes to the model for rendering in the view
+        model.addAttribute("assignedQuestions", studentQuestionsList);
+        model.addAttribute("maxQuestions", maxQuestions);
+        model.addAttribute("studentId", studentId);
+        model.addAttribute("subjectId", subjectId);
+        model.addAttribute("assignmentId", assignmentId);
+
+        // Pass the status of submission to the view
+        model.addAttribute("hasSubmitted", hasSubmitted); // True or false depending on whether submission exists
+
+        return "StudentManagement/assignments/student-assigned-questions";
+    }
 
     // Show the student registration form
     @GetMapping("/add")

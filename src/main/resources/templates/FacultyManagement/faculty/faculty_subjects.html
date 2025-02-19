@@ -67,11 +67,14 @@
         <td>
             <a th:href="@{/attendance/take/{assignmentId}(assignmentId=${assignment.id})}" class="btn">Attendance</a>
 
-            <a th:href="@{/assignments/{divisionId}/{semesterId}(divisionId=${assignment.division.id}, semesterId=${assignment.semester.id})}" class="btn">Assignment</a>
+            <a th:href="@{/assignments/{divisionId}/{semesterId}/{subjectId}(divisionId=${assignment.division.id}, semesterId=${assignment.semester.id}, subjectId=${assignment.subject.subjectid})}"
+               class="btn">Assignment</a>
+
         </td>
     </tr>
     </tbody>
 </table>
 
+<a th:href="@{/faculty/dashboard}" class="btn btn-primary">Back to Dashboard</a>
 </body>
 </html>

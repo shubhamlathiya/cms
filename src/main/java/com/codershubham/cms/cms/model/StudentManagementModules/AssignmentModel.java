@@ -11,13 +11,50 @@ public class AssignmentModel {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    private String assignmentName;
     private Long divisionId;
     private Long semesterId;
+    private Long subjectId;
     private int maxQuestions;
     private String filePath;
+    private LocalDateTime deadLine;
+    private int maxMarks; // Added max marks
+    private String material; // Added material (could be URL to file or text)
     private LocalDateTime createdAt = LocalDateTime.now();
 
     // Getters and setters
+
+    public String getAssignmentName() {
+        return assignmentName;
+    }
+
+    public void setAssignmentName(String assignmentName) {
+        this.assignmentName = assignmentName;
+    }
+
+    public LocalDateTime getDeadLine() {
+        return deadLine;
+    }
+
+    public int getMaxMarks() {
+        return maxMarks;
+    }
+
+    public void setMaxMarks(int maxMarks) {
+        this.maxMarks = maxMarks;
+    }
+
+    public void setDeadLine(LocalDateTime deadLine) {
+        this.deadLine = deadLine;
+    }
+
+    public String getMaterial() {
+        return material;
+    }
+
+    public void setMaterial(String material) {
+        this.material = material;
+    }
 
     public Long getId() {
         return id;
@@ -65,5 +102,13 @@ public class AssignmentModel {
 
     public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
+    }
+
+    public Long getSubjectId() {
+        return subjectId;
+    }
+
+    public void setSubjectId(Long subjectId) {
+        this.subjectId = subjectId;
     }
 }

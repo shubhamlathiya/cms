@@ -2,12 +2,23 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>Add Assignment</title>
-
 </head>
 <body>
 <h2>Add New Assignment</h2>
-<form th:action="@{/assignments/{divisionId}/{semesterId}/save(divisionId=${divisionId}, semesterId=${semesterId})}"
+<form th:action="@{/assignments/{divisionId}/{semesterId}/{subjectId}/save(divisionId=${divisionId}, semesterId=${semesterId}, subjectId=${subjectId})}"
       method="post" enctype="multipart/form-data">
+    <label for="assignmentName">Assignment Name:</label>
+    <input type="text" id="assignmentName" name="assignmentName" required><br><br>
+
+    <label for="deadline">Deadline:</label>
+    <input type="datetime-local" id="deadline" name="deadline" required><br><br>
+
+    <label for="maxMarks">Max Marks:</label>
+    <input type="number" id="maxMarks" name="maxMarks" required><br><br>
+
+    <label for="material">Upload Material:</label>
+    <input type="file" id="material" name="material"><br><br>
+
     <label for="questions">Add Questions (one per line):</label><br>
     <textarea id="questions" name="questions" rows="10" cols="50" required></textarea><br><br>
 
@@ -38,5 +49,6 @@
     }
 </script>
 
+<a th:href="@{/faculty/dashboard}" class="btn btn-primary">Back to Dashboard</a>
 </body>
 </html>
