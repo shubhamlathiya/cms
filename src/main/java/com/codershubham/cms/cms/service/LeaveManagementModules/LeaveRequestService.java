@@ -1,10 +1,16 @@
 package com.codershubham.cms.cms.service.LeaveManagementModules;
 
 
+import com.codershubham.cms.cms.model.FacultyManagementModules.FacultyModel;
 import com.codershubham.cms.cms.model.LeaveManagementModules.LeaveRequestModel;
+import com.codershubham.cms.cms.model.StudentManagementModules.StudentModel;
 import com.codershubham.cms.cms.model.UserManagementModules.UserModel;
+import com.codershubham.cms.cms.repository.FacultyManagementModules.FacultyRepository;
 import com.codershubham.cms.cms.repository.LeaveManagementModules.LeaveRequestRepository;
+import com.codershubham.cms.cms.repository.StudentManagementModules.DivisionRepository;
+import com.codershubham.cms.cms.repository.StudentManagementModules.StudentEnrollmentRepository;
 import com.codershubham.cms.cms.repository.UserManagementModules.UserRepository;
+import com.codershubham.cms.cms.service.StudentManagementModules.StudentService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -15,20 +21,36 @@ public class LeaveRequestService {
 
     private final LeaveRequestRepository leaveRequestRepository;
     private final UserRepository userRepository;
+    private final FacultyRepository facultyRepository;
+    private final StudentEnrollmentRepository studentEnrollmentRepository;
+    private final DivisionRepository divisionRepository;
+    private final StudentService studentService;
 
-    public LeaveRequestService(LeaveRequestRepository leaveRequestRepository, UserRepository userRepository) {
+    public LeaveRequestService(LeaveRequestRepository leaveRequestRepository, UserRepository userRepository, FacultyRepository facultyRepository, StudentEnrollmentRepository studentEnrollmentRepository, DivisionRepository divisionRepository, StudentService studentService) {
         this.leaveRequestRepository = leaveRequestRepository;
         this.userRepository = userRepository;
+        this.facultyRepository = facultyRepository;
+
+        this.studentEnrollmentRepository = studentEnrollmentRepository;
+        this.divisionRepository = divisionRepository;
+        this.studentService = studentService;
     }
 
-    // Create Leave Request
     public LeaveRequestModel createLeaveRequest(Long userId, LeaveRequestModel leaveRequest) {
-        Optional<UserModel> userOptional = userRepository.findById(userId);
-        if (userOptional.isEmpty()) {
-            throw new RuntimeException("User not found");
+        UserModel user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
+        leaveRequest.setUser(user);
+        leaveRequest.setStatus("PENDING");
+
+        if (user.getRole().getName().equalsIgnoreCase("STUDENT")) {
+            StudentModel student = studentService.getStudentByUserId(userId);
+            Long divisionId = studentEnrollmentRepository.findDivisionIdByStudentId(student.getId());
+            Long facultyId = divisionRepository.findFacultyIdByDivisionId(divisionId);
+            FacultyModel faculty = facultyRepository.findById(facultyId)
+                    .orElseThrow(() -> new RuntimeException("Faculty not found"));
+
+            leaveRequest.setFaculty(faculty);
         }
-        leaveRequest.setUser(userOptional.get());
-        leaveRequest.setStatus("PENDING"); // Default status
+
         return leaveRequestRepository.save(leaveRequest);
     }
 

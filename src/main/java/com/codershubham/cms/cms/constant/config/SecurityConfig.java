@@ -40,8 +40,10 @@ public class SecurityConfig {
                 )
                 .csrf(csrf -> csrf.disable()) // Disable CSRF (not recommended for production unless justified)
                 .logout(logout -> logout
-                        .logoutUrl("/logout")
-                        .logoutSuccessUrl("/login?logout") // Redirect after logout
+                        .logoutUrl("/logout") // The URL that triggers logout
+                        .logoutSuccessUrl("/login?logout") // Redirect after successful logout
+                        .invalidateHttpSession(true) // Invalidate the HTTP session
+                        .deleteCookies("JSESSIONID", "other-cookie-name") // Delete specific cookies
                         .permitAll() // Allow logout for everyone
                 )
                 .rememberMe(rememberMe -> rememberMe

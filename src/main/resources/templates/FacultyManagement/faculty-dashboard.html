@@ -5,6 +5,20 @@
     <title>Faculty Dashboard</title>
 </head>
 <body>
+<h1>Faculty Dashboard</h1>
+<h2>Details for <span th:text="${faculty.firstName} + ' ' + ${faculty.lastName}"></span></h2>
+
+
+<h3>Student Information:</h3>
+<ul>
+    <li>ID: <span th:text="${faculty.facultyId}"></span></li>
+    <li>First Name: <span th:text="${faculty.firstName}"></span></li>
+    <li>Last Name: <span th:text="${faculty.lastName}"></span></li>
+    <li>Email: <span th:text="${faculty.email}"></span></li>
+    <li>Phone Number: <span th:text="${faculty.phoneNumber}"></span></li>
+    <li>Designation: <span th:text="${faculty.designation}"></span></li>
+    <li>Qualification: <span th:text="${faculty.qualification}"></span></li>
+</ul>
 
 </body>
 </html>

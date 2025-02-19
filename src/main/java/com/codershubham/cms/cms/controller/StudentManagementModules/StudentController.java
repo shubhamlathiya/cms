@@ -15,7 +15,9 @@ import com.codershubham.cms.cms.service.FacultyManagementModules.AttendanceServi
 import com.codershubham.cms.cms.service.StudentManagementModules.DivisionService;
 import com.codershubham.cms.cms.service.StudentManagementModules.SemesterService;
 import com.codershubham.cms.cms.service.StudentManagementModules.StudentService;
+import com.codershubham.cms.cms.service.UserManagementModules.UserService;
 import com.codershubham.cms.cms.util.EmailUtil;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -59,11 +61,15 @@ public class StudentController {
     @Autowired
     private EmailUtil emailUtil;
 
+    @GetMapping("/dashboard")
+    public String studentDashboard(Model model,HttpSession session) {
+        Long userId = (Long) session.getAttribute("userId");
 
-    @GetMapping("/{id}/dashboard")
-    public String studentDashboard(@PathVariable Long id, Model model) {
+        StudentModel studentId = studentService.getStudentByUserId(userId);
+
+        session.setAttribute("studentId", studentId.getId());
         // Fetch the student by ID
-        StudentModel student = studentService.findById(id);
+        StudentModel student = studentService.findById(studentId.getId());
 
         // Check if the student exists
         if (student == null) {

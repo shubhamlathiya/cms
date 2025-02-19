@@ -19,10 +19,10 @@ public class UserService {
     private PasswordEncoder passwordEncoder; // For secure password storage
 
     // Create a new user
-//    public UserModel createUser(UserModel user) {
-//        user.setPassword(passwordEncoder.encode(user.getPassword())); // Encrypt password
-//        return userRepository.save(user);
-//    }
+    public UserModel createUser(UserModel user) {
+        user.setPassword(passwordEncoder.encode(user.getPassword())); // Encrypt password
+        return userRepository.save(user);
+    }
 //
 //    // Get all users
 //    public List<UserModel> getAllUsers() {

@@ -1,5 +1,6 @@
 package com.codershubham.cms.cms.model.LeaveManagementModules;
 
+import com.codershubham.cms.cms.model.FacultyManagementModules.FacultyModel;
 import com.codershubham.cms.cms.model.UserManagementModules.UserModel;
 import jakarta.persistence.*;
 import java.time.LocalDate;
@@ -20,6 +21,10 @@ public class LeaveRequestModel {
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     private UserModel user; // Foreign key reference to Users table
+
+    @ManyToOne
+    @JoinColumn(name = "faculty_id")
+    private FacultyModel faculty;  // Assigned Faculty for approval
 
     public Long getId() {
         return id;
@@ -67,5 +72,13 @@ public class LeaveRequestModel {
 
     public void setUser(UserModel user) {
         this.user = user;
+    }
+
+    public FacultyModel getFaculty() {
+        return faculty;
+    }
+
+    public void setFaculty(FacultyModel faculty) {
+        this.faculty = faculty;
     }
 }

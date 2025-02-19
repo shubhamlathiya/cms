@@ -155,7 +155,7 @@ public class StudentService {
     }
 
     public StudentModel getStudentByUserId(Long userId) {
-        return studentRepository.findByUserId(userId).orElse(null); // Return null if no student is found
+        return studentRepository.findByUserId(userId).orElseThrow(() -> new IllegalArgumentException("User not found with ID " + userId)); // Return null if no student is found
     }
 
     public List<StudentEnrollmentModel> getEnrollmentsByStudentId(Long studentId) {

@@ -88,6 +88,7 @@ public class LeaveRequestController {
         return "redirect:/leave-requests/user/" + userId + "/view";
     }
 
+
     // ✅ Approve or Reject a Leave Request
     @PostMapping("/update")
     public String updateLeaveStatus(@RequestParam Long leaveId,

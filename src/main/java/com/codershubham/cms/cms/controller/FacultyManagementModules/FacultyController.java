@@ -4,11 +4,13 @@ import com.codershubham.cms.cms.constant.PathConstant;
 import com.codershubham.cms.cms.model.CourseManagementModules.DepartmentModel;
 import com.codershubham.cms.cms.model.FacultyManagementModules.FacultyModel;
 import com.codershubham.cms.cms.model.FacultyManagementModules.FacultySubjectAssignmentModel;
+import com.codershubham.cms.cms.model.StudentManagementModules.StudentModel;
 import com.codershubham.cms.cms.model.UserManagementModules.UserModel;
 import com.codershubham.cms.cms.service.CourseManagementModules.DepartmentService;
 import com.codershubham.cms.cms.service.FacultyManagementModules.FacultyService;
 import com.codershubham.cms.cms.service.FacultyManagementModules.FacultySubjectAssignmentService;
 import com.codershubham.cms.cms.util.EmailUtil;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -33,8 +35,24 @@ public class FacultyController {
     private EmailUtil emailUtil;
 
     @GetMapping("/dashboard")
-    public String facultyDashboard(Model model) {
-        return "FacultyManagement/faculty-dashboard";
+    public String studentDashboard(Model model, HttpSession session) {
+        Long userId = (Long) session.getAttribute("userId");
+
+        FacultyModel faculty = facultyService.getFacultyByUserId(userId);
+        // Fetch the student by ID
+//        StudentModel student = studentService.findById(studentId.getId());
+        session.setAttribute("facultyId", faculty.getFacultyId());
+        // Check if the student exists
+        if (faculty == null) {
+            // Handle the case where the student is not found (e.g., redirect to an error page)
+            return "error/404"; // You can create a 404 error page
+        }
+
+        // Add the student to the model
+        model.addAttribute("faculty", faculty);
+
+        // Return the view name
+        return "FacultyManagement/faculty-dashboard"; // Ensure this matches your Thymeleaf template name
     }
 
     // 1️⃣ Show all faculties

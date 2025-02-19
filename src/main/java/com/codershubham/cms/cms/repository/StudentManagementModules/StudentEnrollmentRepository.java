@@ -21,6 +21,8 @@ public interface StudentEnrollmentRepository extends JpaRepository<StudentEnroll
 
     List<StudentEnrollmentModel> findByStudentId(Long studentId);
 
+    @Query("SELECT se.division.id FROM StudentEnrollmentModel se WHERE se.student.id = :studentId")
+    Long findDivisionIdByStudentId(Long studentId);
 //    @Query("SELECT se.semester FROM StudentEnrollmentModel se WHERE se.student.id = :studentId")
 //    List<SemesterModel> findSemestersByStudentId(@Param("studentId") Long studentId);
 }
