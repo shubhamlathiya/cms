@@ -4,7 +4,6 @@ import com.codershubham.cms.cms.constant.PathConstant;
 import com.codershubham.cms.cms.model.CourseManagementModules.DepartmentModel;
 import com.codershubham.cms.cms.model.FacultyManagementModules.FacultyModel;
 import com.codershubham.cms.cms.model.FacultyManagementModules.FacultySubjectAssignmentModel;
-import com.codershubham.cms.cms.model.StudentManagementModules.StudentModel;
 import com.codershubham.cms.cms.model.UserManagementModules.UserModel;
 import com.codershubham.cms.cms.service.CourseManagementModules.DepartmentService;
 import com.codershubham.cms.cms.service.FacultyManagementModules.FacultyService;
@@ -160,7 +159,7 @@ public class FacultyController {
     public String getFacultySubjects(@PathVariable Long facultyId, Model model) {
         List<FacultySubjectAssignmentModel> assignedSubjects = facultySubjectAssignmentService.getSubjectsByFaculty(facultyId);
         model.addAttribute("assignedSubjects", assignedSubjects);
-        return "FacultyManagement/faculty/faculty_subjects"; // Renders faculty-subjects.html
+        return "FacultyManagement/faculty/faculty-subjects"; // Renders faculty-subjects.html
     }
 
 }

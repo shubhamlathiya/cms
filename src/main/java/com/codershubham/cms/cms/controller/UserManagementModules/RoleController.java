@@ -77,8 +77,8 @@ public class RoleController {
         model.addAttribute("allPermissions", allPermissions);
         model.addAttribute("rolePermissions", rolePermissions);
 
-        // Return the view name (Assumes you have a template named manage_permissions.html or manage_permissions.jsp)
-        return "UserManagement/roles/manage_permissions";
+        // Return the view name (Assumes you have a template named manage-permissions.html or manage_permissions.jsp)
+        return "UserManagement/roles/manage-permissions";
     }
 
 

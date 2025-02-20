@@ -29,7 +29,7 @@
             <td th:text="${leaveRequest.endDate}">End Date</td>
             <td th:text="${leaveRequest.status}">Status</td>
             <td th:text="${leaveRequest.remarks}">Remarks</td>
-            <td>
+            <td th:if="${leaveRequest.status == 'PENDING'}">
                 <form th:action="@{/leave-requests/faculty/update}" method="post">
                     <input type="hidden" name="leaveId" th:value="${leaveRequest.id}"/>
                     <input type="hidden" name="facultyId" th:value="${leaveRequest.faculty.facultyId}"/>

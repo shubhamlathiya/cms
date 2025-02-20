@@ -17,7 +17,6 @@ import com.codershubham.cms.cms.service.StudentManagementModules.AssignmentServi
 import com.codershubham.cms.cms.service.StudentManagementModules.DivisionService;
 import com.codershubham.cms.cms.service.StudentManagementModules.SemesterService;
 import com.codershubham.cms.cms.service.StudentManagementModules.StudentService;
-import com.codershubham.cms.cms.service.UserManagementModules.UserService;
 import com.codershubham.cms.cms.util.EmailUtil;
 import com.codershubham.cms.cms.util.UserRoleUtil;
 import jakarta.servlet.http.HttpSession;
@@ -94,7 +93,7 @@ public class StudentController {
         model.addAttribute("userRole", userRole);
         // Add the student to the model
         model.addAttribute("student", student);
-        model.addAttribute("userId" ,userId);
+        model.addAttribute("userId", userId);
         // Return the view name
         return "StudentManagement/dashboard"; // Ensure this matches your Thymeleaf template name
     }
@@ -276,10 +275,7 @@ public class StudentController {
         List<StudentQuestionsDto> studentQuestionsList = new ArrayList<>(groupedQuestions.values());
 
         // Finding the maximum number of questions assigned to any student
-        int maxQuestions = studentQuestionsList.stream()
-                .mapToInt(sa -> sa.getQuestions().size())
-                .max()
-                .orElse(0);
+        int maxQuestions = studentQuestionsList.stream().mapToInt(sa -> sa.getQuestions().size()).max().orElse(0);
 
         // Add attributes to the model for rendering in the view
         model.addAttribute("assignedQuestions", studentQuestionsList);
@@ -298,7 +294,7 @@ public class StudentController {
     @GetMapping("/add")
     public String showAddStudentPage(Model model) {
         model.addAttribute("courses", courseService.getAllCourses());
-        return "StudentManagement/students/student_register";
+        return "StudentManagement/students/student-register";
     }
 
     // Display departments, courses, and students
@@ -324,7 +320,7 @@ public class StudentController {
         List<DepartmentModel> departments = departmentService.getAllDepartments();
         model.addAttribute("departments", departments);
 
-        return "StudentManagement/students/student_subject_enrollment";
+        return "StudentManagement/students/student-subject-enrollment";
     }
 
     @PostMapping("/register")
@@ -410,6 +406,6 @@ public class StudentController {
     // Success page
     @GetMapping("/success")
     public String registrationSuccess() {
-        return "StudentManagement/students/registration_success";
+        return "StudentManagement/students/registration-success";
     }
 }

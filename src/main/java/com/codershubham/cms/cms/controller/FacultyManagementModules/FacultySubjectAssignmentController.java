@@ -14,16 +14,13 @@ import com.codershubham.cms.cms.service.FacultyManagementModules.FacultyService;
 import com.codershubham.cms.cms.service.FacultyManagementModules.FacultySubjectAssignmentService;
 import com.codershubham.cms.cms.service.StudentManagementModules.DivisionService;
 import com.codershubham.cms.cms.service.StudentManagementModules.SemesterService;
-import com.codershubham.cms.cms.service.StudentManagementModules.StudentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Controller
 @RequestMapping(PathConstant.FACULTY_SUBJECT_PATH)
@@ -54,7 +51,7 @@ public class FacultySubjectAssignmentController {
     public String showAssignmentPage(Model model) {
         model.addAttribute("faculties", facultyService.getAllFaculties());
         model.addAttribute("departments", departmentService.getAllDepartments());
-        return "FacultyManagement/faculty/assign_faculty_subjects"; // Loads faculty_assignment.html
+        return "FacultyManagement/faculty/assign-faculty-subjects"; // Loads faculty_assignment.html
     }
 
     @PostMapping("/assign-subject")
