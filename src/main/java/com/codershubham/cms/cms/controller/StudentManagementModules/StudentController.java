@@ -68,7 +68,7 @@ public class StudentController {
     private EmailUtil emailUtil;
 
     @GetMapping("/dashboard")
-    public String studentDashboard(Model model,HttpSession session) {
+    public String studentDashboard(Model model, HttpSession session) {
         Long userId = (Long) session.getAttribute("userId");
 
         StudentModel studentId = studentService.getStudentByUserId(userId);

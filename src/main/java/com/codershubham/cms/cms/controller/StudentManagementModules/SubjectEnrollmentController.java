@@ -26,7 +26,7 @@ public class SubjectEnrollmentController {
         return "redirect:/students";
     }
 
-//    // Get subjects for a student in a semester
+    //    // Get subjects for a student in a semester
     @GetMapping("/student/{studentId}/semester/{semesterId}")
     public List<SubjectEnrollmentModel> getStudentSubjects(@PathVariable Long studentId, @PathVariable Long semesterId) {
         return subjectEnrollmentService.getStudentSubjects(studentId, semesterId);

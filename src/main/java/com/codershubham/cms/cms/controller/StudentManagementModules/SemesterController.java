@@ -78,19 +78,6 @@ public class SemesterController {
         return "StudentManagement/semester/semester-list"; // Updated HTML page
     }
 
-
-
-//    @GetMapping("/create-division-page")
-//    public String showCreateDivisionPage(@RequestParam Long semesterId, Model model) {
-//        // Fetch existing divisions for the given semester
-//        List<DivisionModel> divisions = divisionService.getDivisionsBySemester(semesterId);
-//
-//        model.addAttribute("semesterId", semesterId);
-//        model.addAttribute("divisions", divisions); // Pass divisions list to the view
-//
-//        return "StudentManagement/semester/create-division"; // Returns the division creation view
-//    }
-
     @GetMapping("/create-division-page")
     public String showCreateDivisionPage(@RequestParam Long semesterId, Model model) {
         // Fetch existing divisions for the given semester
