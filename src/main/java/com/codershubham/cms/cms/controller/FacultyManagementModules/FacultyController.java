@@ -10,6 +10,7 @@ import com.codershubham.cms.cms.service.CourseManagementModules.DepartmentServic
 import com.codershubham.cms.cms.service.FacultyManagementModules.FacultyService;
 import com.codershubham.cms.cms.service.FacultyManagementModules.FacultySubjectAssignmentService;
 import com.codershubham.cms.cms.util.EmailUtil;
+import com.codershubham.cms.cms.util.UserRoleUtil;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -34,6 +35,10 @@ public class FacultyController {
     @Autowired
     private EmailUtil emailUtil;
 
+    @Autowired
+    private UserRoleUtil userRoleUtil;
+
+
     @GetMapping("/dashboard")
     public String studentDashboard(Model model, HttpSession session) {
         Long userId = (Long) session.getAttribute("userId");
@@ -51,6 +56,8 @@ public class FacultyController {
         // Add the student to the model
         model.addAttribute("faculty", faculty);
 
+        String userRole = userRoleUtil.getUserRole(session);
+        model.addAttribute("userRole", userRole);
         // Return the view name
         return "FacultyManagement/faculty-dashboard"; // Ensure this matches your Thymeleaf template name
     }

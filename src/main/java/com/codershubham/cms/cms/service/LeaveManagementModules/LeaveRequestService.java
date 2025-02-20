@@ -45,8 +45,7 @@ public class LeaveRequestService {
             StudentModel student = studentService.getStudentByUserId(userId);
             Long divisionId = studentEnrollmentRepository.findDivisionIdByStudentId(student.getId());
             Long facultyId = divisionRepository.findFacultyIdByDivisionId(divisionId);
-            FacultyModel faculty = facultyRepository.findById(facultyId)
-                    .orElseThrow(() -> new RuntimeException("Faculty not found"));
+            FacultyModel faculty = facultyRepository.findById(facultyId).orElseThrow(() -> new RuntimeException("Faculty not found"));
 
             leaveRequest.setFaculty(faculty);
         }
@@ -61,9 +60,25 @@ public class LeaveRequestService {
 
     // Approve or Reject Leave Request
     public LeaveRequestModel updateLeaveStatus(Long leaveId, String status) {
-        LeaveRequestModel leaveRequest = leaveRequestRepository.findById(leaveId)
-                .orElseThrow(() -> new RuntimeException("Leave request not found"));
+        LeaveRequestModel leaveRequest = leaveRequestRepository.findById(leaveId).orElseThrow(() -> new RuntimeException("Leave request not found"));
         leaveRequest.setStatus(status);
         return leaveRequestRepository.save(leaveRequest);
+    }
+
+    public List<LeaveRequestModel> getLeaveRequestsByFacultyId(Long facultyId) {
+        // Retrieve all leave requests where the facultyId matches
+        return leaveRequestRepository.findLeaveRequestsByFacultyId(facultyId);
+    }
+
+    public void updateLeaveRequest(LeaveRequestModel leaveRequest) {
+        leaveRequestRepository.save(leaveRequest);
+    }
+
+    // ✅ Method to get Leave Request by ID
+    public LeaveRequestModel getLeaveRequestById(Long leaveId) {
+        Optional<LeaveRequestModel> leaveRequestOptional = leaveRequestRepository.findById(leaveId);
+
+        // Return the LeaveRequest if found, or throw an exception if not found
+        return leaveRequestOptional.orElseThrow(() -> new RuntimeException("Leave request not found with ID: " + leaveId));
     }
 }

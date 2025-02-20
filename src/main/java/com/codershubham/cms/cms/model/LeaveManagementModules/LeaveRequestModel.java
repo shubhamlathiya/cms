@@ -26,6 +26,16 @@ public class LeaveRequestModel {
     @JoinColumn(name = "faculty_id")
     private FacultyModel faculty;  // Assigned Faculty for approval
 
+    private String remarks;
+
+    public String getRemarks() {
+        return remarks;
+    }
+
+    public void setRemarks(String remarks) {
+        this.remarks = remarks;
+    }
+
     public Long getId() {
         return id;
     }

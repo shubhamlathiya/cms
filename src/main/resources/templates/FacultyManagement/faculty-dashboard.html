@@ -1,29 +1,34 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Faculty Dashboard</title>
+    <title th:text="'Faculty Dashboard'">Faculty Dashboard</title>
+    <link rel="stylesheet" type="text/css" href="/css/styles.css">
 </head>
 <body>
-<h1>Faculty Dashboard</h1>
-<h2>Details for <span th:text="${faculty.firstName} + ' ' + ${faculty.lastName}"></span></h2>
+
+<!-- Replace the content section -->
+<div th:replace="layout/base.html">
+    <div th:fragment="content">
+        <main>
+            <h1>Faculty Dashboard</h1>
+            <h2>Details for <span th:text="${faculty.firstName} + ' ' + ${faculty.lastName}"></span></h2>
 
 
-<h3>Student Information:</h3>
-<ul>
-    <li>ID: <span th:text="${faculty.facultyId}"></span></li>
-    <li>First Name: <span th:text="${faculty.firstName}"></span></li>
-    <li>Last Name: <span th:text="${faculty.lastName}"></span></li>
-    <li>Email: <span th:text="${faculty.email}"></span></li>
-    <li>Phone Number: <span th:text="${faculty.phoneNumber}"></span></li>
-    <li>Designation: <span th:text="${faculty.designation}"></span></li>
-    <li>Qualification: <span th:text="${faculty.qualification}"></span></li>
-</ul>
+            <h3>Student Information:</h3>
+            <ul>
+                <li>ID: <span th:text="${faculty.facultyId}"></span></li>
+                <li>First Name: <span th:text="${faculty.firstName}"></span></li>
+                <li>Last Name: <span th:text="${faculty.lastName}"></span></li>
+                <li>Email: <span th:text="${faculty.email}"></span></li>
+                <li>Phone Number: <span th:text="${faculty.phoneNumber}"></span></li>
+                <li>Designation: <span th:text="${faculty.designation}"></span></li>
+                <li>Qualification: <span th:text="${faculty.qualification}"></span></li>
+            </ul>
 
-<h3>Options:</h3>
-<ul>
-    <li><a th:href="@{/faculty/subjects/{facultyId}(facultyId=${faculty.facultyId})}">Assign Subjects</a></li>
-    <!--    <li><a th:href="@{/students/lesson-plan/{id}(id=${student.id})}">View Lesson Plan</a></li>-->
-</ul>
+        </main>
+    </div>
+</div>
+
 </body>
 </html>

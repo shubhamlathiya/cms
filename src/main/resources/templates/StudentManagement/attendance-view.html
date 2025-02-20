@@ -1,25 +1,36 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Attendance Records</title>
+    <meta charset="UTF-8">
+    <title th:text="'Attendance Records'">Attendance Records</title>
+    <link rel="stylesheet" type="text/css" href="/css/styles.css">
 </head>
 <body>
-<h1>Attendance Records for Student ID: <span th:text="${studentId}"></span></h1>
 
-<div th:each="entry : ${attendancePercentageBySemester}">
-    <h2>Semester ID: <span th:text="${entry.key}"></span></h2>
-    <table border="1">
-        <tr>
-            <th>Subject Name</th>
-            <th>Attendance Percentage</th>
-        </tr>
-        <tr th:each="subjectEntry : ${entry.value}">
-            <td th:text="${subjectEntry.key.subjectName}"></td>
-            <td th:text="${#numbers.formatDecimal(subjectEntry.value, 1, 2)} + '%' "></td>
-        </tr>
-    </table>
+<!-- Replace the content section -->
+<div th:replace="layout/base.html">
+    <div th:fragment="content">
+        <main>
+            <h1>Attendance Records for Student ID: <span th:text="${studentId}"></span></h1>
+
+            <div th:each="entry : ${attendancePercentageBySemester}">
+                <h2>Semester ID: <span th:text="${entry.key}"></span></h2>
+                <table border="1">
+                    <tr>
+                        <th>Subject Name</th>
+                        <th>Attendance Percentage</th>
+                    </tr>
+                    <tr th:each="subjectEntry : ${entry.value}">
+                        <td th:text="${subjectEntry.key.subjectName}"></td>
+                        <td th:text="${#numbers.formatDecimal(subjectEntry.value, 1, 2)} + '%' "></td>
+                    </tr>
+                </table>
+            </div>
+
+            <a th:href="@{/students/dashboard}">Back to Dashboard</a>
+        </main>
+    </div>
 </div>
 
-<a th:href="@{/students/dashboard}">Back to Dashboard</a>
 </body>
 </html>

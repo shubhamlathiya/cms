@@ -1,28 +1,32 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Student Dashboard</title>
+    <meta charset="UTF-8">
+    <title th:text="'Custom Page Title'">Student Dashboard</title>
+    <link rel="stylesheet" type="text/css" href="/css/styles.css">
 </head>
 <body>
-<h1>Student Dashboard</h1>
-<h2>Details for <span th:text="${student.firstName} + ' ' + ${student.lastName}"></span></h2>
 
-<h3>Student Information:</h3>
-<ul>
-    <li>ID: <span th:text="${student.id}"></span></li>
-    <li>First Name: <span th:text="${student.firstName}"></span></li>
-    <li>Last Name: <span th:text="${student.lastName}"></span></li>
-    <li>Email: <span th:text="${student.email}"></span></li>
-    <li>Phone Number: <span th:text="${student.phoneNumber}"></span></li>
-    <li>Address: <span th:text="${student.address}"></span></li>
-</ul>
+<!-- Replace the content section -->
+<div th:replace="layout/base.html">
+    <div th:fragment="content">
+        <main>
+            <h1>Student Dashboard</h1>
+            <h2>Details for <span th:text="${student.firstName} + ' ' + ${student.lastName}"></span></h2>
 
-<h3>Options:</h3>
-<ul>
-    <li><a th:href="@{/students/attendance/{id}(id=${student.id})}">View Attendance</a></li>
-    <li><a th:href="@{/students/lesson-plan/{id}(id=${student.id})}">View Lesson Plan</a></li>
-    <li><a th:href="@{/students/assignments/{id}(id=${student.id})}">View Assignments</a></li>
-</ul>
+            <h3>Student Information:</h3>
+            <ul>
+                <li>ID: <span th:text="${student.id}"></span></li>
+                <li>First Name: <span th:text="${student.firstName}"></span></li>
+                <li>Last Name: <span th:text="${student.lastName}"></span></li>
+                <li>Email: <span th:text="${student.email}"></span></li>
+                <li>Phone Number: <span th:text="${student.phoneNumber}"></span></li>
+                <li>Address: <span th:text="${student.address}"></span></li>
+            </ul>
+
+        </main>
+    </div>
+</div>
 
 </body>
 </html>

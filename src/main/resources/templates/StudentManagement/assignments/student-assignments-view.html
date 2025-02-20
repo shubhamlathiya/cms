@@ -1,32 +1,46 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Student Assignments</title>
+    <meta charset="UTF-8">
+    <title th:text="'Student Assignments'">Student Assignments</title>
+    <link rel="stylesheet" type="text/css" href="/css/styles.css">
 </head>
 <body>
-<h2>Your Assignments</h2>
 
-<div th:each="semesterEntry : ${subjectAssignmentMap}">
-    <h3>Semester <span th:text="${semesterEntry.key}"></span></h3>
-    <table border="1">
-        <thead>
-        <tr>
-            <th>Subject</th>
-            <th>Assignments</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr th:each="subjectEntry : ${semesterEntry.value}">
-            <td th:text="${subjectEntry.key.subjectName}"></td>
-            <td>
-                <a th:if="${subjectEntry.value}"
-                   th:href="@{/students/assignments/{studentId}/{subjectId}/questions(studentId=${studentId}, subjectId=${subjectEntry.key.subjectid})}"
-                   class="btn">View Questions</a>
-                <span th:unless="${subjectEntry.value}">No Assignments</span>
-            </td>
-        </tr>
-        </tbody>
-    </table>
+<!-- Replace the content section -->
+<div th:replace="layout/base.html">
+    <div th:fragment="content">
+        <main>
+            <h2>Your Assignments</h2>
+
+            <div th:each="semesterEntry : ${subjectAssignmentMap}">
+                <h3>Semester <span th:text="${semesterEntry.key}"></span></h3>
+                <table border="1">
+                    <thead>
+                    <tr>
+                        <th>Subject</th>
+                        <th>Assignments</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="subjectEntry : ${semesterEntry.value}">
+                        <td th:text="${subjectEntry.key.subjectName}"></td>
+                        <td>
+                            <a th:if="${subjectEntry.value}"
+                               th:href="@{/students/assignments/{studentId}/{subjectId}/questions(studentId=${studentId}, subjectId=${subjectEntry.key.subjectid})}"
+                               class="btn">View Questions</a>
+                            <span th:unless="${subjectEntry.value}">No Assignments</span>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+
+
+            <a th:href="@{/students/dashboard}">Back to Dashboard</a>
+        </main>
+    </div>
 </div>
+
 </body>
 </html>

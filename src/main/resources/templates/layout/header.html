@@ -1,20 +1,59 @@
-<header th:fragment="header">
+<header th:fragment="header" xmlns:sec="http://www.w3.org/1999/xhtml">
     <h1>My Website</h1>
     <nav>
         <ul>
+            <li th:if="${userRole == 'ADMIN'}">
+                <a th:href="@{/admin/departments}">Manage Departments</a>
+            </li>
+            <li th:if="${userRole == 'ADMIN'}">
+                <a th:href="@{/admin/courses}">Manage Courses</a>
+            </li>
+            <li th:if="${userRole == 'ADMIN'}">
+                <a th:href="@{/admin/subjects}">Manage Subjects</a>
+            </li>
+            <li th:if="${userRole == 'ADMIN'}">
+                <a th:href="@{/admin/roles}">Manage Roles</a>
+            </li>
+            <li th:if="${userRole == 'ADMIN'}">
+                <a th:href="@{/students/add}">Student Register</a>
+            </li>
+            <li th:if="${userRole == 'ADMIN'}">
+                <a th:href="@{/students/subject-enrollment}">Student Subject Enrollment</a>
+            </li>
+            <li th:if="${userRole == 'ADMIN'}">
+                <a th:href="@{/faculty/add}">Faculty Register</a>
+            </li>
+            <li th:if="${userRole == 'ADMIN'}">
+                <a th:href="@{/faculty-subject/assign-subject}">Faculty Subject Assign</a>
+            </li>
+            <li th:if="${userRole == 'ADMIN'}">
+                <a th:href="@{/semesters}">Manage Semesters</a>
+            </li>
+            <li th:if="${userRole == 'ADMIN'}">
+                <a th:href="@{/admin/users}">Manage Users</a>
+            </li>
+            <li th:if="${userRole == 'ADMIN'}">
+                <a th:href="@{/leave-requests/user/3/view}">Manage leave-requests</a>
+            </li>
+            <li th:if="${userRole == 'ADMIN'}">
+                <a th:href="@{/admin/settings}">Settings</a>
+            </li>
 
-            <li><a th:href="@{/admin/departments}">Manage Departments</a></li>
-            <li><a th:href="@{/admin/courses}">Manage Courses</a></li>
-            <li><a th:href="@{/admin/subjects}">Manage Subjects</a></li>
-            <li><a th:href="@{/admin/roles}">Manage Roles</a></li>
-            <li><a th:href="@{/students/add}">Student Register</a></li>
-            <li><a th:href="@{/students/subject-enrollment}">Student Subject Enrollment</a></li>
-            <li><a th:href="@{/faculty/add}">Faculty Register</a></li>
-            <li><a th:href="@{/faculty-subject/assign-subject}">Faculty Subject Assign</a></li>
-            <li><a th:href="@{/semesters}">Manage Semesters</a></li>
-            <li><a th:href="@{/admin/users}">Manage Users</a></li>
-            <li><a th:href="@{/leave-requests/user/3/view}">Manage leave-requests</a></li>
-            <li><a th:href="@{/admin/settings}">Settings</a></li>
+            <li th:if="${userRole == 'FACULTY'}">
+                <a th:href="@{/faculty/subjects/{facultyId}(facultyId=${faculty.facultyId})}">Assign Subjects</a>
+            </li>
+            <li th:if="${userRole == 'FACULTY'}">
+                <a th:href="@{/leave-requests/faculty/{facultyId}/view(facultyId=${faculty.facultyId})}">leave-requests</a>
+            </li>
+            <li th:if="${userRole == 'STUDENT'}">
+                <a th:href="@{/students/attendance/{id}(id=${student.id})}">View Attendance</a>
+            </li>
+            <li th:if="${userRole == 'STUDENT'}">
+                <a th:href="@{/students/lesson-plan/{id}(id=${student.id})}">View Lesson Plan</a>
+            </li>
+            <li th:if="${userRole == 'STUDENT'}">
+                <a th:href="@{/students/assignments/{id}(id=${student.id})}">View Assignments</a>
+            </li>
         </ul>
     </nav>
 </header>

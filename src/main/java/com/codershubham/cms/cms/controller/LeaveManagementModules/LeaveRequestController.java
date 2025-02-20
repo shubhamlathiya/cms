@@ -15,6 +15,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 @RequestMapping("/leave-requests")
@@ -71,11 +72,7 @@ public class LeaveRequestController {
 
     // ✅ Submit a Leave Request (Student or Faculty)
     @PostMapping("/submit")
-    public String submitLeaveRequest(@RequestParam Long userId,
-                                     @RequestParam String reason,
-                                     @RequestParam String startDate,
-                                     @RequestParam String endDate,
-                                     Model model) {
+    public String submitLeaveRequest(@RequestParam Long userId, @RequestParam String reason, @RequestParam String startDate, @RequestParam String endDate, Model model) {
         LeaveRequestModel leaveRequest = new LeaveRequestModel();
         leaveRequest.setUser(userService.getUserById(userId));
         leaveRequest.setReason(reason);
@@ -91,9 +88,7 @@ public class LeaveRequestController {
 
     // ✅ Approve or Reject a Leave Request
     @PostMapping("/update")
-    public String updateLeaveStatus(@RequestParam Long leaveId,
-                                    @RequestParam String status,
-                                    @RequestParam Long userId) {
+    public String updateLeaveStatus(@RequestParam Long leaveId, @RequestParam String status, @RequestParam Long userId) {
         if (!status.equalsIgnoreCase("APPROVED") && !status.equalsIgnoreCase("REJECTED")) {
             return "redirect:/leave-requests/user/" + userId + "/view?error=Invalid Status";
         }
@@ -102,4 +97,51 @@ public class LeaveRequestController {
 
         return "redirect:/leave-requests/user/" + userId + "/view";
     }
+
+    // ✅ Display All Leave Requests for a Specific Faculty
+    @GetMapping("/faculty/{facultyId}/view")
+    public String showFacultyLeaveRequests(@PathVariable Long facultyId, Model model) {
+        // Fetch faculty details
+        Optional<FacultyModel> faculty = facultyService.getFacultyById(facultyId);
+
+        if (faculty.isEmpty()) {
+            throw new RuntimeException("Faculty not found with ID: " + facultyId);
+        }
+
+        // Fetch leave requests for this faculty
+        List<LeaveRequestModel> leaveRequests = leaveRequestService.getLeaveRequestsByFacultyId(facultyId);
+
+        // Add data to model
+        model.addAttribute("leaveRequests", leaveRequests);
+        model.addAttribute("faculty", faculty);
+
+        return "LeaveManagement/faculty-leave-requests"; // HTML page for faculty to view leave requests
+    }
+
+    // ✅ Approve or Reject a Leave Request with Remarks
+    @PostMapping("/faculty/update")
+    public String updateLeaveRequestStatusWithRemarks(@RequestParam Long leaveId,
+                                                      @RequestParam String status,
+                                                      @RequestParam String remarks,
+                                                      @RequestParam Long facultyId,
+                                                      Model model) {
+        // Validate status
+        if (!status.equalsIgnoreCase("APPROVED") && !status.equalsIgnoreCase("REJECTED")) {
+            return "redirect:/leave-requests/faculty/" + facultyId + "/view?error=Invalid Status";
+        }
+
+        // Fetch the leave request by ID using the service method
+        LeaveRequestModel leaveRequest = leaveRequestService.getLeaveRequestById(leaveId);
+
+        // Update the status and add remarks
+        leaveRequest.setStatus(status);
+        leaveRequest.setRemarks(remarks);
+
+        // Save the updated leave request
+        leaveRequestService.updateLeaveRequest(leaveRequest);
+
+        return "redirect:/leave-requests/faculty/" + facultyId + "/view";
+    }
+
+
 }

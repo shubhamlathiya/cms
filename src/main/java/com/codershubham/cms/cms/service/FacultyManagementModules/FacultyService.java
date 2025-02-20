@@ -2,10 +2,12 @@ package com.codershubham.cms.cms.service.FacultyManagementModules;
 
 import com.codershubham.cms.cms.model.CourseManagementModules.DepartmentModel;
 import com.codershubham.cms.cms.model.FacultyManagementModules.FacultyModel;
+import com.codershubham.cms.cms.model.LeaveManagementModules.LeaveRequestModel;
 import com.codershubham.cms.cms.model.UserManagementModules.RoleModel;
 import com.codershubham.cms.cms.model.UserManagementModules.UserModel;
 import com.codershubham.cms.cms.repository.CourseManagementModules.DepartmentRepository;
 import com.codershubham.cms.cms.repository.FacultyManagementModules.FacultyRepository;
+import com.codershubham.cms.cms.repository.LeaveManagementModules.LeaveRequestRepository;
 import com.codershubham.cms.cms.repository.UserManagementModules.RoleRepository;
 import com.codershubham.cms.cms.repository.UserManagementModules.UserRepository;
 import jakarta.transaction.Transactional;
@@ -35,6 +37,9 @@ public class FacultyService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    @Autowired
+    private LeaveRequestRepository leaveRequestRepository;
+
     public List<FacultyModel> getAllFaculties() {
         return facultyRepository.findAll();
     }
@@ -42,7 +47,6 @@ public class FacultyService {
     public Optional<FacultyModel> getFacultyById(Long id) {
         return facultyRepository.findById(id);
     }
-
 
     @Transactional
     public FacultyModel registerFaculty(String username, String password, String firstName, String lastName, String designation, String qualification,

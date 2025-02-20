@@ -19,6 +19,7 @@ import com.codershubham.cms.cms.service.StudentManagementModules.SemesterService
 import com.codershubham.cms.cms.service.StudentManagementModules.StudentService;
 import com.codershubham.cms.cms.service.UserManagementModules.UserService;
 import com.codershubham.cms.cms.util.EmailUtil;
+import com.codershubham.cms.cms.util.UserRoleUtil;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -67,8 +68,14 @@ public class StudentController {
     @Autowired
     private EmailUtil emailUtil;
 
+    @Autowired
+    private UserRoleUtil userRoleUtil;
+
+    @Autowired
+    private HttpSession session;
+
     @GetMapping("/dashboard")
-    public String studentDashboard(Model model, HttpSession session) {
+    public String studentDashboard(Model model) {
         Long userId = (Long) session.getAttribute("userId");
 
         StudentModel studentId = studentService.getStudentByUserId(userId);
@@ -83,6 +90,8 @@ public class StudentController {
             return "error/404"; // You can create a 404 error page
         }
 
+        String userRole = userRoleUtil.getUserRole(session);
+        model.addAttribute("userRole", userRole);
         // Add the student to the model
         model.addAttribute("student", student);
 
@@ -235,7 +244,6 @@ public class StudentController {
         // Add the data to the model for Thymeleaf rendering
         model.addAttribute("studentId", id);
         model.addAttribute("subjectAssignmentMap", subjectAssignmentMap);
-
         return "StudentManagement/assignments/student-assignments-view"; // Return view name
     }
 
