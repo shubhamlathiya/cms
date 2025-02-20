@@ -3,17 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <title th:text="'Admin Dashboard'">Admin Dashboard</title>
-    <link rel="stylesheet" type="text/css" href="/css/styles.css">
+    <!--    <link rel="stylesheet" type="text/css" href="/css/styles.css">-->
 </head>
 <body>
 
 <!-- Replace the content section -->
 <div th:replace="layout/base.html">
     <div th:fragment="content">
-        <main>
-            <h2>Custom Content</h2>
-            <p>This replaces the default content in base.html.</p>
-        </main>
+        <h2>Custom Content</h2>
+        <p>This replaces the default content in base.html.</p>
     </div>
 </div>
 

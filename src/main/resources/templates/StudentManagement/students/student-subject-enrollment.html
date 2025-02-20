@@ -1,21 +1,8 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Student Subject Enrollment</title>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-</head>
-<body>
-
-</body>
-</html>
-<!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title th:text="'Student Subject Enrollment'">Student Subject Enrollment</title>
-    <link rel="stylesheet" type="text/css" href="/css/styles.css">
 </head>
 <body>
 
@@ -76,13 +63,15 @@
             <!-- Submit Button -->
             <button id="assignSubjects" disabled>Assign Subject to Selected Students</button>
 
+            <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
             <script>
                 $(document).ready(function () {
                     // Fetch courses when a department is selected
                     $('#department').change(function () {
                         var departmentId = $(this).val();
+                        console.log(departmentId)
                         if (departmentId) {
-                            $.get("/students/courses/" + departmentId, function (courses) {
+                            $.get("/admin/students/courses/" + departmentId, function (courses) {
                                 $('#course').empty().append('<option value="">--Select Course--</option>');
                                 $.each(courses, function (index, course) {
                                     $('#course').append('<option value="' + course.courseID + '">' + course.courseName + '</option>');
@@ -98,7 +87,7 @@
                     $('#course').change(function () {
                         var courseId = $(this).val();
                         if (courseId) {
-                            $.get("/students/semesters/" + courseId, function (semesters) {
+                            $.get("/admin/students/semesters/" + courseId, function (semesters) {
                                 $('#semester').empty().append('<option value="">--Select Semester--</option>');
                                 $.each(semesters, function (index, semester) {
                                     $('#semester').append('<option value="' + semester.id + '">' + semester.name + " - "+ semester.academicYear + '</option>');
@@ -114,7 +103,7 @@
                     $('#semester').change(function () {
                         var semesterId = $(this).val();
                         if (semesterId) {
-                            $.get("/students/subjects/" + semesterId, function (subjects) {
+                            $.get("/admin/students/subjects/" + semesterId, function (subjects) {
                                 $('#subject').empty().append('<option value="">--Select Subject--</option>');
                                 $.each(subjects, function (index, subject) {
                                     $('#subject').append('<option value="' + subject.subjectid + '">' + subject.subjectName + '</option>');
@@ -129,7 +118,7 @@
                     $('#semester').change(function () {
                         var semesterId = $(this).val();
                         if (semesterId) {
-                            $.get("/students/divisions/" + semesterId, function (divisions) {
+                            $.get("/admin/students/divisions/" + semesterId, function (divisions) {
                                 $('#division').empty().append('<option value="">--Select Division--</option>');
                                 $.each(divisions, function (index, division) {
                                     $('#division').append('<option value="' + division.id + '">' + division.name + '</option>');
@@ -145,7 +134,7 @@
                     $('#division').change(function () {
                         var divisionId = $(this).val();
                         if (divisionId) {
-                            $.get("/students/list/" + divisionId, function (students) {
+                            $.get("/admin/students/list/" + divisionId, function (students) {
                                 var tableBody = $('#studentTable tbody');
                                 tableBody.empty();
                                 $.each(students, function (index, student) {

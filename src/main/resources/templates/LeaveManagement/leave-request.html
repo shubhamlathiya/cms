@@ -14,7 +14,7 @@
 
             <div th:if="${student != null}">
                 <p>Student Name: <span th:text="${student.firstName} + ' ' + ${student.lastName}"></span></p>
-                <a th:href="@{/students/dashboard}" class="btn btn-primary">Back to Dashboard</a>
+<!--                <a th:href="@{/students/dashboard}" class="btn btn-primary">Back to Dashboard</a>-->
             </div>
             <div th:unless="${student != null}">
                 <p>This user is not a student.</p>

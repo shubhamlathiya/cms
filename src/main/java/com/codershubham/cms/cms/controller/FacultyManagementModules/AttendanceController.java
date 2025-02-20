@@ -6,8 +6,10 @@ import com.codershubham.cms.cms.model.FacultyManagementModules.FacultySubjectAss
 import com.codershubham.cms.cms.service.FacultyManagementModules.AttendanceService;
 import com.codershubham.cms.cms.service.FacultyManagementModules.FacultySubjectAssignmentService;
 import com.codershubham.cms.cms.service.StudentManagementModules.StudentService;
+import com.codershubham.cms.cms.util.UserRoleUtil;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -39,6 +41,11 @@ public class AttendanceController {
     @Autowired
     private ObjectMapper objectMapper;
 
+    @Autowired
+    HttpSession session;
+
+    @Autowired
+    private UserRoleUtil userRoleUtil;
 
     // ✅ Mark Attendance via Form Submission
     @PostMapping("/mark")
@@ -158,6 +165,9 @@ public class AttendanceController {
             model.addAttribute("students", students);
             model.addAttribute("totalLectures", totalLectures);
             model.addAttribute("attendanceMap", attendanceMap);
+
+            String userRole = userRoleUtil.getUserRole(session);
+            model.addAttribute("userRole", userRole);
 
             return "FacultyManagement/faculty/take-attendance";  // Return Thymeleaf template
         } catch (Exception e) {

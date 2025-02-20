@@ -3,17 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <title th:text="'Custom Page Title'">Custom Page Title</title>
-    <link rel="stylesheet" type="text/css" href="/css/styles.css">
 </head>
 <body>
 
 <!-- Replace the content section -->
 <div th:replace="layout/base.html">
     <div th:fragment="content">
-        <main>
-            <h2>Custom Content</h2>
-            <p>This replaces the default content in base.html.</p>
-        </main>
+        <h1 class="page-title">Dashboard Overview</h1>
+        <p>Welcome to the Dashboard. Here you can manage your data.</p>
     </div>
 </div>
 

@@ -10,6 +10,8 @@ import com.codershubham.cms.cms.service.FacultyManagementModules.FacultyService;
 import com.codershubham.cms.cms.service.LeaveManagementModules.LeaveRequestService;
 import com.codershubham.cms.cms.service.StudentManagementModules.StudentService;
 import com.codershubham.cms.cms.service.UserManagementModules.UserService;
+import com.codershubham.cms.cms.util.UserRoleUtil;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -25,17 +27,23 @@ public class LeaveRequestController {
     private final UserService userService;
     private final FacultyService facultyService;
     private final StudentService studentService;
+    private final UserRoleUtil userRoleUtil;
+    private final HttpSession session;
 
-    public LeaveRequestController(LeaveRequestService leaveRequestService, UserService userService, FacultyService facultyService, StudentService studentService) {
+    public LeaveRequestController(LeaveRequestService leaveRequestService, UserService userService, FacultyService facultyService, StudentService studentService, UserRoleUtil userRoleUtil, HttpSession session) {
         this.leaveRequestService = leaveRequestService;
         this.userService = userService;
         this.facultyService = facultyService;
         this.studentService = studentService;
+        this.userRoleUtil = userRoleUtil;
+        this.session = session;
     }
 
     // ✅ Display Leave Request Page for a Specific User
-    @GetMapping("/user/{userId}/view")
-    public String showUserLeaveRequests(@PathVariable Long userId, Model model) {
+    @GetMapping("/user/view")
+    public String showUserLeaveRequests(Model model) {
+        Long userId = (Long) session.getAttribute("userId");
+
         // Fetch user details
         UserModel user = userService.getUserById(userId);
 
@@ -66,6 +74,9 @@ public class LeaveRequestController {
         model.addAttribute("role", role);
         model.addAttribute("student", student); // Will be null if not a student
         model.addAttribute("faculty", faculty); // Will be null if not a faculty member
+
+        String userRole = userRoleUtil.getUserRole(session);
+        model.addAttribute("userRole", userRole);
 
         return "LeaveManagement/leave-request"; // Returns the HTML page
     }
@@ -102,9 +113,10 @@ public class LeaveRequestController {
     @GetMapping("/faculty/{facultyId}/view")
     public String showFacultyLeaveRequests(@PathVariable Long facultyId, Model model) {
         // Fetch faculty details
-        Optional<FacultyModel> faculty = facultyService.getFacultyById(facultyId);
+        Long userId = (Long) session.getAttribute("userId");
+        FacultyModel faculty = facultyService.getFacultyByUserId(userId);
 
-        if (faculty.isEmpty()) {
+        if (faculty == null) {
             throw new RuntimeException("Faculty not found with ID: " + facultyId);
         }
 
@@ -115,16 +127,15 @@ public class LeaveRequestController {
         model.addAttribute("leaveRequests", leaveRequests);
         model.addAttribute("faculty", faculty);
 
+        String userRole = userRoleUtil.getUserRole(session);
+        model.addAttribute("userRole", userRole);
+
         return "LeaveManagement/faculty-leave-requests"; // HTML page for faculty to view leave requests
     }
 
     // ✅ Approve or Reject a Leave Request with Remarks
     @PostMapping("/faculty/update")
-    public String updateLeaveRequestStatusWithRemarks(@RequestParam Long leaveId,
-                                                      @RequestParam String status,
-                                                      @RequestParam String remarks,
-                                                      @RequestParam Long facultyId,
-                                                      Model model) {
+    public String updateLeaveRequestStatusWithRemarks(@RequestParam Long leaveId, @RequestParam String status, @RequestParam String remarks, @RequestParam Long facultyId, Model model) {
         // Validate status
         if (!status.equalsIgnoreCase("APPROVED") && !status.equalsIgnoreCase("REJECTED")) {
             return "redirect:/leave-requests/faculty/" + facultyId + "/view?error=Invalid Status";

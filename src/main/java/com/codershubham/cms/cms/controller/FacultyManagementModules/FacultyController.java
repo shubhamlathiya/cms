@@ -31,12 +31,12 @@ public class FacultyController {
 
     @Autowired
     private FacultySubjectAssignmentService facultySubjectAssignmentService;
-    @Autowired
-    private EmailUtil emailUtil;
 
     @Autowired
     private UserRoleUtil userRoleUtil;
 
+    @Autowired
+    HttpSession session;
 
     @GetMapping("/dashboard")
     public String studentDashboard(Model model, HttpSession session) {
@@ -66,67 +66,12 @@ public class FacultyController {
     public String getAllFaculties(Model model) {
         List<FacultyModel> faculties = facultyService.getAllFaculties();
         model.addAttribute("faculties", faculties);
+
+        String userRole = userRoleUtil.getUserRole(session);
+        model.addAttribute("userRole", userRole);
+
         return "FacultyManagement/faculty/faculty-list";
     }
-
-
-    // 2️⃣ Show add faculty form
-    @GetMapping(PathConstant.ADD_PATH)
-    public String showAddFacultyForm(Model model) {
-        model.addAttribute("faculty", new FacultyModel());
-        model.addAttribute("departments", departmentService.getAllDepartments()); // Add departments
-        return "FacultyManagement/faculty/faculty-form"; // Returns faculty-form.html
-    }
-
-    // 3️⃣ Save new faculty
-    @PostMapping("/register")
-    public String registerFaculty(@ModelAttribute FacultyModel faculty,        // Faculty object
-                                  @ModelAttribute UserModel user) {            // User object for username, password, and role
-
-        try {
-            // Accessing values directly from faculty and user objects
-            String username = user.getUsername();
-            String password = user.getPassword();
-            String firstName = faculty.getFirstName();
-            String lastName = faculty.getLastName();
-            String designation = faculty.getDesignation();
-            String qualification = faculty.getQualification();
-            int experience = faculty.getExperience();
-            String phoneNumber = faculty.getPhoneNumber();
-            String email = faculty.getEmail();
-            String status = faculty.getStatus();  // e.g., Active or Inactive
-
-            DepartmentModel department = faculty.getDepartment(); // Get the department
-
-            // Send a welcome email (or any other email logic you need)
-            emailUtil.sendSimpleEmail(email, "Welcome to the Faculty System", "Hello " + designation + ", welcome to the faculty!");
-
-            // Log all the values to check that they are correctly mapped
-            System.out.println("Username: " + username);
-            System.out.println("Password: " + password);
-            System.out.println("First Name: " + firstName);
-            System.out.println("Last Name: " + lastName);
-            System.out.println("Designation: " + designation);
-            System.out.println("Qualification: " + qualification);
-            System.out.println("Experience: " + experience);
-            System.out.println("Phone Number: " + phoneNumber);
-            System.out.println("Email: " + email);
-            System.out.println("Status: " + status);
-            System.out.println("Department: " + department.getName());
-
-            // Call the service to register the faculty
-            facultyService.registerFaculty(username, password, firstName, lastName, designation, qualification, experience, phoneNumber, email, department, status);
-
-            // Redirect to success page
-            return "redirect:/faculty";  // Success page after registration
-
-        } catch (Exception ex) {
-            // Log the error details and redirect to error page
-            ex.printStackTrace();
-            return "redirect:/faculty/error";  // Error page in case of failure
-        }
-    }
-
 
     // 4️⃣ Show update faculty form
     @GetMapping("/edit/{id}")
@@ -135,6 +80,10 @@ public class FacultyController {
         if (faculty.isPresent()) {
             model.addAttribute("faculty", faculty.get());
             model.addAttribute("departments", departmentService.getAllDepartments()); // Load departments for selection
+
+            String userRole = userRoleUtil.getUserRole(session);
+            model.addAttribute("userRole", userRole);
+
             return "FacultyManagement/faculty/edit-faculty";
         } else {
             return "redirect:/faculty/list"; // Redirect if faculty not found
@@ -159,6 +108,15 @@ public class FacultyController {
     public String getFacultySubjects(@PathVariable Long facultyId, Model model) {
         List<FacultySubjectAssignmentModel> assignedSubjects = facultySubjectAssignmentService.getSubjectsByFaculty(facultyId);
         model.addAttribute("assignedSubjects", assignedSubjects);
+
+        String userRole = userRoleUtil.getUserRole(session);
+        model.addAttribute("userRole", userRole);
+
+        Long userId = (Long) session.getAttribute("userId");
+
+        FacultyModel faculty = facultyService.getFacultyByUserId(userId);
+        // Add the student to the model
+        model.addAttribute("faculty", faculty);
         return "FacultyManagement/faculty/faculty-subjects"; // Renders faculty-subjects.html
     }
 

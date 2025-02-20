@@ -10,6 +10,8 @@ import com.codershubham.cms.cms.service.FacultyManagementModules.FacultyService;
 import com.codershubham.cms.cms.service.StudentManagementModules.DivisionService;
 import com.codershubham.cms.cms.service.StudentManagementModules.SemesterService;
 import com.codershubham.cms.cms.service.StudentManagementModules.StudentEnrollmentService;
+import com.codershubham.cms.cms.util.UserRoleUtil;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -36,11 +38,21 @@ public class SemesterController {
     @Autowired
     private FacultyService facultyService;
 
+    @Autowired
+    private UserRoleUtil userRoleUtil;
+
+    @Autowired
+    private HttpSession session;
+
     // Show the form to create a semester for a course
     @GetMapping(PathConstant.ADD_PATH)
     public String showCreateSemesterForm(Model model) {
         model.addAttribute("semester", new SemesterModel());
         model.addAttribute("courses", courseService.getAllCourses()); // All available courses
+
+        String userRole = userRoleUtil.getUserRole(session);
+        model.addAttribute("userRole", userRole);
+
         return "StudentManagement/semester/create-semester"; // A view to create a semester
     }
 
@@ -75,6 +87,10 @@ public class SemesterController {
         }).collect(Collectors.toList());
 
         model.addAttribute("semesterDetails", semesterDetails);
+
+        String userRole = userRoleUtil.getUserRole(session);
+        model.addAttribute("userRole", userRole);
+
         return "StudentManagement/semester/semester-list"; // Updated HTML page
     }
 
@@ -95,6 +111,9 @@ public class SemesterController {
         model.addAttribute("semesterId", semesterId);
         model.addAttribute("divisions", divisions); // Pass divisions list to the view
         model.addAttribute("departmentFaculties", departmentFaculties); // Pass department faculties to the view
+
+        String userRole = userRoleUtil.getUserRole(session);
+        model.addAttribute("userRole", userRole);
 
         return "StudentManagement/semester/create-division"; // Returns the division creation view
     }

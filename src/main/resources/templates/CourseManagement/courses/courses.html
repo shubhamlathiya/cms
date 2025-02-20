@@ -3,15 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <title th:text="'Admin Dashboard'">Courses</title>
-    <link rel="stylesheet" type="text/css" href="/css/styles.css">
 </head>
 <body>
 
 <!-- Replace the content section -->
 <div th:replace="layout/base.html">
     <div th:fragment="content">
-        <main>
-
             <!-- Button to go to Add Course form -->
             <a href="/admin/courses/add">Add Course</a>
 
@@ -39,7 +36,6 @@
                 </tr>
                 </tbody>
             </table>
-        </main>
     </div>
 </div>
 

@@ -14,6 +14,8 @@ import com.codershubham.cms.cms.service.FacultyManagementModules.FacultyService;
 import com.codershubham.cms.cms.service.FacultyManagementModules.FacultySubjectAssignmentService;
 import com.codershubham.cms.cms.service.StudentManagementModules.DivisionService;
 import com.codershubham.cms.cms.service.StudentManagementModules.SemesterService;
+import com.codershubham.cms.cms.util.UserRoleUtil;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -47,12 +49,13 @@ public class FacultySubjectAssignmentController {
     @Autowired
     private SubjectService subjectService;
 
-    @GetMapping("/assign-subject")
-    public String showAssignmentPage(Model model) {
-        model.addAttribute("faculties", facultyService.getAllFaculties());
-        model.addAttribute("departments", departmentService.getAllDepartments());
-        return "FacultyManagement/faculty/assign-faculty-subjects"; // Loads faculty_assignment.html
-    }
+    @Autowired
+    HttpSession session;
+
+    @Autowired
+    private UserRoleUtil userRoleUtil;
+
+
 
     @PostMapping("/assign-subject")
     @ResponseBody

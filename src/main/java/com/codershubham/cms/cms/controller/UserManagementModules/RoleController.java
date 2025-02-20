@@ -6,6 +6,8 @@ import com.codershubham.cms.cms.model.UserManagementModules.RoleModel;
 import com.codershubham.cms.cms.repository.UserManagementModules.RolePermissionRepository;
 import com.codershubham.cms.cms.service.UserManagementModules.PermissionService;
 import com.codershubham.cms.cms.service.UserManagementModules.RoleService;
+import com.codershubham.cms.cms.util.UserRoleUtil;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -26,10 +28,20 @@ public class RoleController {
     @Autowired
     private RolePermissionRepository rolePermissionRepository;
 
+    @Autowired
+    HttpSession session;
+
+    @Autowired
+    private UserRoleUtil userRoleUtil;
+
     // Show all roles
     @GetMapping
     public String getAllRoles(Model model) {
         model.addAttribute("roles", roleService.getAllRoles());
+
+        String userRole = userRoleUtil.getUserRole(session);
+        model.addAttribute("userRole", userRole);
+
         return "UserManagement/roles/roles";
     }
 
@@ -77,6 +89,8 @@ public class RoleController {
         model.addAttribute("allPermissions", allPermissions);
         model.addAttribute("rolePermissions", rolePermissions);
 
+        String userRole = userRoleUtil.getUserRole(session);
+        model.addAttribute("userRole", userRole);
         // Return the view name (Assumes you have a template named manage-permissions.html or manage_permissions.jsp)
         return "UserManagement/roles/manage-permissions";
     }
@@ -86,6 +100,7 @@ public class RoleController {
     @PostMapping("/{roleId}/permissions/add")
     public String addPermissionToRole(@PathVariable Long roleId, @RequestParam Long permissionId) {
         roleService.addPermissionToRole(roleId, permissionId);
+
         return "redirect:/roles/{roleId}/permissions"; // Redirect back to the role's permissions page
     }
 

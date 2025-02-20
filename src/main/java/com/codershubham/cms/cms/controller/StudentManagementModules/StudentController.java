@@ -46,14 +46,7 @@ public class StudentController {
     @Autowired
     private DepartmentService departmentService;
 
-    @Autowired
-    private DivisionService divisionService;
 
-    @Autowired
-    private SemesterService semesterService;
-
-    @Autowired
-    private SubjectService subjectService;
 
     @Autowired
     private AttendanceService attendanceService;
@@ -82,6 +75,7 @@ public class StudentController {
         session.setAttribute("studentId", studentId.getId());
         // Fetch the student by ID
         StudentModel student = studentService.findById(studentId.getId());
+        model.addAttribute("student", student);
 
         // Check if the student exists
         if (student == null) {
@@ -92,7 +86,6 @@ public class StudentController {
         String userRole = userRoleUtil.getUserRole(session);
         model.addAttribute("userRole", userRole);
         // Add the student to the model
-        model.addAttribute("student", student);
         model.addAttribute("userId", userId);
         // Return the view name
         return "StudentManagement/dashboard"; // Ensure this matches your Thymeleaf template name
@@ -152,6 +145,12 @@ public class StudentController {
         model.addAttribute("studentId", id);
         model.addAttribute("attendancePercentageBySemester", attendancePercentageBySemester);
 
+        String userRole = userRoleUtil.getUserRole(session);
+        model.addAttribute("userRole", userRole);
+
+        Long studentId = (Long) session.getAttribute("studentId");
+        StudentModel student = studentService.findById(studentId);
+        model.addAttribute("student", student);
         return "StudentManagement/attendance-view"; // Return view name
     }
 
@@ -191,6 +190,13 @@ public class StudentController {
 
         model.addAttribute("studentId", id);
         model.addAttribute("subjectsBySemester", subjectsBySemester); // Pass subjects & syllabus
+
+        String userRole = userRoleUtil.getUserRole(session);
+        model.addAttribute("userRole", userRole);
+
+        Long studentId = (Long) session.getAttribute("studentId");
+        StudentModel student = studentService.findById(studentId);
+        model.addAttribute("student", student);
 
         return "StudentManagement/lesson-plan"; // Return updated view
     }
@@ -243,6 +249,14 @@ public class StudentController {
         // Add the data to the model for Thymeleaf rendering
         model.addAttribute("studentId", id);
         model.addAttribute("subjectAssignmentMap", subjectAssignmentMap);
+
+        String userRole = userRoleUtil.getUserRole(session);
+        model.addAttribute("userRole", userRole);
+
+        Long studentId = (Long) session.getAttribute("studentId");
+        StudentModel student = studentService.findById(studentId);
+        model.addAttribute("student", student);
+
         return "StudentManagement/assignments/student-assignments-view"; // Return view name
     }
 
@@ -287,15 +301,12 @@ public class StudentController {
         // Pass the status of submission to the view
         model.addAttribute("hasSubmitted", hasSubmitted); // True or false depending on whether submission exists
 
+        String userRole = userRoleUtil.getUserRole(session);
+        model.addAttribute("userRole", userRole);
+
         return "StudentManagement/assignments/student-assigned-questions";
     }
 
-    // Show the student registration form
-    @GetMapping("/add")
-    public String showAddStudentPage(Model model) {
-        model.addAttribute("courses", courseService.getAllCourses());
-        return "StudentManagement/students/student-register";
-    }
 
     // Display departments, courses, and students
     @GetMapping("/select")
@@ -307,105 +318,4 @@ public class StudentController {
         return "StudentManagement/students/list-students";
     }
 
-    // Fetch courses based on selected department
-    @GetMapping("/courses/{departmentId}")
-    @ResponseBody
-    public List<CourseModel> getCoursesByDepartment(@PathVariable Long departmentId) {
-        return courseService.getCoursesByDepartmentId(departmentId);
-    }
-
-    @GetMapping("/subject-enrollment")
-    public String showStudentSubjectEnrollment(Model model) {
-        // Fetch all departments
-        List<DepartmentModel> departments = departmentService.getAllDepartments();
-        model.addAttribute("departments", departments);
-
-        return "StudentManagement/students/student-subject-enrollment";
-    }
-
-    @PostMapping("/register")
-    public String registerStudent(@ModelAttribute StudentModel student, @ModelAttribute UserModel user) {
-
-        try {
-            // Accessing values directly from student and user objects
-            String username = user.getUsername();
-            String password = user.getPassword();
-            String firstName = student.getFirstName();
-            String lastName = student.getLastName();
-            String email = student.getEmail();
-
-            // Construct email subject and body
-            String subject = "Welcome to Our System, " + firstName + "!";
-            String body = "Dear " + firstName + " " + lastName + ",\n\n" + "Welcome to our system. Here are your account details:\n\n" + "Username: " + username + "\n" + "Password: " + password + "\n\n" + "Please keep these credentials safe and do not share them with anyone.\n\n" + "Best Regards,\nYour Team";
-
-            // Send email
-            emailUtil.sendSimpleEmail(email, subject, body);
-
-            String phoneNumber = student.getPhoneNumber();
-            String address = student.getAddress();
-            // Fetch the courseId from the request
-            CourseModel course = student.getCourse();  // Ensure getCourse() returns a Course object
-
-            // Log all the values to check that they are correctly mapped
-            System.out.println(username);
-            System.out.println(password);
-            System.out.println(firstName);
-            System.out.println(lastName);
-            System.out.println(email);
-            System.out.println(phoneNumber);
-            System.out.println(address);
-            System.out.println("Course ID: " + course.getCourseID());
-
-            // Call the service to register the student
-            studentService.registerStudent(username, password, firstName, lastName, email, phoneNumber, address, course);
-
-            // Redirect to success page
-            return "redirect:/students/success";
-
-        } catch (Exception ex) {
-            // Log the error details and redirect to error page
-            ex.printStackTrace();
-            return "redirect:/students/error";
-        }
-    }
-
-    @PostMapping("/upload")
-    public ResponseEntity<String> uploadFile(@RequestParam("file") MultipartFile file) {
-        if (file.isEmpty()) {
-            return ResponseEntity.badRequest().body("Please upload a valid Excel file.");
-        }
-        studentService.saveStudentsFromExcel(file);
-        return ResponseEntity.ok("Students successfully uploaded!");
-    }
-
-
-    @GetMapping("/semesters/{courseId}")
-    public ResponseEntity<List<SemesterModel>> getSemestersByCourse(@PathVariable Long courseId) {
-        List<SemesterModel> semesters = semesterService.getSemestersByCourse(courseId);
-        return ResponseEntity.ok(semesters);
-    }
-
-    @GetMapping("/divisions/{semesterId}")
-    public ResponseEntity<List<DivisionModel>> getDivisionsBySemester(@PathVariable Long semesterId) {
-        List<DivisionModel> divisions = divisionService.getDivisionsBySemester(semesterId);
-        return ResponseEntity.ok(divisions);
-    }
-
-    @GetMapping("/subjects/{courseId}")
-    public ResponseEntity<List<SubjectsModel>> getSubjectsByCourse(@PathVariable Long courseId) {
-        List<SubjectsModel> subjects = subjectService.getSubjectsByCourseId(courseId);
-        return ResponseEntity.ok(subjects);
-    }
-
-    @GetMapping("/list/{divisionId}")
-    public ResponseEntity<List<StudentModel>> getStudentsByDivision(@PathVariable Long divisionId) {
-        List<StudentModel> students = studentService.getStudentsByDivision(divisionId);
-        return ResponseEntity.ok(students);
-    }
-
-    // Success page
-    @GetMapping("/success")
-    public String registrationSuccess() {
-        return "StudentManagement/students/registration-success";
-    }
 }

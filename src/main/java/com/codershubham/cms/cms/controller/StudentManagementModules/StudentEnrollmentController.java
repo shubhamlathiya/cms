@@ -11,6 +11,8 @@ import com.codershubham.cms.cms.service.StudentManagementModules.DivisionService
 import com.codershubham.cms.cms.service.StudentManagementModules.SemesterService;
 import com.codershubham.cms.cms.service.StudentManagementModules.StudentEnrollmentService;
 import com.codershubham.cms.cms.service.StudentManagementModules.StudentService;
+import com.codershubham.cms.cms.util.UserRoleUtil;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -34,6 +36,11 @@ public class StudentEnrollmentController {
     @Autowired
     private SemesterService semesterService;
 
+    @Autowired
+    private UserRoleUtil userRoleUtil;
+
+    @Autowired
+    private HttpSession session;
 
     @GetMapping("/assign-students-to-division/{semesterId}")
     public String showAssignStudentsPage(@PathVariable Long semesterId, Model model) {
@@ -68,6 +75,9 @@ public class StudentEnrollmentController {
         model.addAttribute("semesterId", semesterId);
         model.addAttribute("divisions", divisions);
         model.addAttribute("unassignedStudents", unassignedStudents);
+
+        String userRole = userRoleUtil.getUserRole(session);
+        model.addAttribute("userRole", userRole);
 
         return "StudentManagement/students/assign-students-to-division"; // Thymeleaf template
     }

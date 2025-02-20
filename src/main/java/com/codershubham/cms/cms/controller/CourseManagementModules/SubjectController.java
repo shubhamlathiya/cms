@@ -4,6 +4,8 @@ import com.codershubham.cms.cms.constant.PathConstant;
 import com.codershubham.cms.cms.model.CourseManagementModules.SubjectsModel;
 import com.codershubham.cms.cms.service.CourseManagementModules.CourseService;
 import com.codershubham.cms.cms.service.CourseManagementModules.SubjectService;
+import com.codershubham.cms.cms.util.UserRoleUtil;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -20,11 +22,21 @@ public class SubjectController {
     @Autowired
     private SubjectService subjectService;  // Service to handle subject-related operations
 
+    @Autowired
+    HttpSession session;
+
+    @Autowired
+    private UserRoleUtil userRoleUtil;
+
     // Get all subjects and display the subject list page
     @GetMapping
     public String getAllSubjects(Model model) {
         // Fetch all subjects
         model.addAttribute("subjects", subjectService.getAllSubjects());
+
+        String userRole = userRoleUtil.getUserRole(session);
+        model.addAttribute("userRole", userRole);
+
         return "CourseManagement/subjects/subjects";  // Thymeleaf template for listing subjects
     }
 
@@ -33,7 +45,11 @@ public class SubjectController {
     public String addSubjectForm(Model model) {
         // Fetch all courses for the dropdown
         model.addAttribute("courses", courseService.getAllCourses());
-        model.addAttribute("subject", new SubjectsModel());  // Empty subject object for binding
+        model.addAttribute("subject", new SubjectsModel());// Empty subject object for binding
+
+        String userRole = userRoleUtil.getUserRole(session);
+        model.addAttribute("userRole", userRole);
+
         return "CourseManagement/subjects/add-subject";  // Form to add a new subject
     }
 
@@ -55,6 +71,10 @@ public class SubjectController {
         // Fetch all courses for the dropdown
         model.addAttribute("courses", courseService.getAllCourses());
         model.addAttribute("subject", subject);  // Add the subject to the model for editing
+
+        String userRole = userRoleUtil.getUserRole(session);
+        model.addAttribute("userRole", userRole);
+
         return "CourseManagement/subjects/update-subject";  // Form to update an existing subject
     }
 

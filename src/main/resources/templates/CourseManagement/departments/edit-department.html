@@ -1,32 +1,37 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-  <meta charset="UTF-8">
-  <title>Update Department</title>
+    <meta charset="UTF-8">
+    <title th:text="'Update Department'">Custom Page Title</title>
 </head>
 <body>
-<h1>Update Department</h1>
 
-<!-- Form for updating departmentModel -->
-<form th:action="@{/admin/departments/update/{id}(id=${department.id})}"
-      th:object="${department}" method="post">
+<!-- Replace the content section -->
+<div th:replace="layout/base.html">
+    <div th:fragment="content">
+        <h1>Update Department</h1>
 
-  <div>
-    <label for="name">Department Name:</label>
-    <input type="text" id="name" th:field="*{name}" placeholder="Enter departmentModel name"/>
-  </div>
+        <!-- Form for updating departmentModel -->
+        <form th:action="@{/admin/departments/update/{id}(id=${department.id})}"
+              th:object="${department}" method="post">
 
-  <div>
-    <label for="departmentHead">Department Head:</label>
-    <input type="text" id="departmentHead" th:field="*{departmentHead}" placeholder="Enter departmentModel head"/>
-  </div>
+            <div>
+                <label for="name">Department Name:</label>
+                <input type="text" id="name" th:field="*{name}" placeholder="Enter departmentModel name"/>
+            </div>
 
-  <div>
-    <button type="submit">Update Department</button>
-  </div>
-</form>
+            <div>
+                <label for="departmentHead">Department Head:</label>
+                <input type="text" id="departmentHead" th:field="*{departmentHead}"
+                       placeholder="Enter departmentModel head"/>
+            </div>
 
-<br>
-<a href="/admin/departments">Back to Departments</a>
+            <div>
+                <button type="submit">Update Department</button>
+            </div>
+        </form>
+    </div>
+</div>
+
 </body>
 </html>

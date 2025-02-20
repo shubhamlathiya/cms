@@ -4,6 +4,8 @@ import com.codershubham.cms.cms.constant.PathConstant;
 import com.codershubham.cms.cms.model.CourseManagementModules.CourseModel;
 import com.codershubham.cms.cms.service.CourseManagementModules.CourseService;
 import com.codershubham.cms.cms.service.CourseManagementModules.DepartmentService;
+import com.codershubham.cms.cms.util.UserRoleUtil;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -19,9 +21,19 @@ public class CourseController {
     @Autowired
     private DepartmentService departmentService;
 
+    @Autowired
+    HttpSession session;
+
+    @Autowired
+    private UserRoleUtil userRoleUtil;
+
     @GetMapping
     public String getAllCourses(Model model) {
         model.addAttribute("courses", courseService.getAllCourses());
+
+        String userRole = userRoleUtil.getUserRole(session);
+        model.addAttribute("userRole", userRole);
+
         return "CourseManagement/courses/courses";  // Thymeleaf template 'courses.html'
     }
 
@@ -29,6 +41,8 @@ public class CourseController {
     public String addCourseForm(Model model) {
         model.addAttribute("departments", departmentService.getAllDepartments());  // List of departments for dropdown
         model.addAttribute("course", new CourseModel());  // Empty Course object for binding
+        String userRole = userRoleUtil.getUserRole(session);
+        model.addAttribute("userRole", userRole);
         return "CourseManagement/courses/add-course";  // Form to add a new course
     }
 
@@ -43,6 +57,8 @@ public class CourseController {
         CourseModel courseModel = courseService.getCourseById(courseID);
         model.addAttribute("departments", departmentService.getAllDepartments());  // List of departments for dropdown
         model.addAttribute("course", courseModel);  // Add the course to be updated
+        String userRole = userRoleUtil.getUserRole(session);
+        model.addAttribute("userRole", userRole);
         return "CourseManagement/courses/update-course";  // Form to update a course
     }
 

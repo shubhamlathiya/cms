@@ -5,6 +5,8 @@ import com.codershubham.cms.cms.constant.PathConstant;
 import com.codershubham.cms.cms.model.CourseManagementModules.SubjectsModel;
 import com.codershubham.cms.cms.model.CourseManagementModules.SyllabusModel;
 import com.codershubham.cms.cms.service.CourseManagementModules.SyllabusService;
+import com.codershubham.cms.cms.util.UserRoleUtil;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -20,11 +22,21 @@ public class SyllabusController {
     @Autowired
     private SyllabusService syllabusService;
 
+    @Autowired
+    HttpSession session;
+
+    @Autowired
+    private UserRoleUtil userRoleUtil;
+
     @GetMapping("/subject/{subjectId}")
     public String getSyllabusBySubject(@PathVariable Long subjectId, Model model) {
         List<SyllabusModel> syllabusList = syllabusService.getSyllabusBySubject(subjectId);
         model.addAttribute("syllabusList", syllabusList);
         model.addAttribute("subjectId", subjectId);
+
+        String userRole = userRoleUtil.getUserRole(session);
+        model.addAttribute("userRole", userRole);
+
         return "CourseManagement/syllabus/syllabus-by-subject"; // Returns syllabus-by-subject.html
     }
 
@@ -38,6 +50,10 @@ public class SyllabusController {
 
         model.addAttribute("syllabus", syllabus);
         model.addAttribute("subjectId", subjectId);
+
+        String userRole = userRoleUtil.getUserRole(session);
+        model.addAttribute("userRole", userRole);
+
         return "CourseManagement/syllabus/syllabus-form"; // Navigate to syllabus form
     }
 
@@ -45,6 +61,10 @@ public class SyllabusController {
     @GetMapping(PathConstant.ADD_PATH)
     public String showAddSyllabusForm(Model model) {
         model.addAttribute("syllabus", new SyllabusModel());
+
+        String userRole = userRoleUtil.getUserRole(session);
+        model.addAttribute("userRole", userRole);
+
         return "CourseManagement/syllabus/syllabus-form";  // Returns syllabus-form.html
     }
 
@@ -63,6 +83,10 @@ public class SyllabusController {
         if (syllabus.isPresent()) {
             model.addAttribute("syllabus", syllabus.get());
             model.addAttribute("subjectId", syllabus.get().getSubject().getSubjectid());
+
+            String userRole = userRoleUtil.getUserRole(session);
+            model.addAttribute("userRole", userRole);
+
             return "CourseManagement/syllabus/syllabus-form"; // Navigate to syllabus form
         } else {
             return "redirect:/" + PathConstant.SYLLABUS_PATH;  // Redirect to main syllabus list if not found

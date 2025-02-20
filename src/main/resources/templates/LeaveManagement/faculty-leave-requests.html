@@ -1,52 +1,58 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title th:text="'Custom Page Title'">Custom Page Title</title>
 </head>
 <body>
 
-<div>
-    <h2>Leave Requests for Faculty</h2>
+<!-- Replace the content section -->
+<div th:replace="layout/base.html">
+    <div th:fragment="content">
+        <h2>Leave Requests for Faculty</h2>
+        <div>
 
-    <table>
-        <thead>
-        <tr>
-            <th>Student Name</th>
-            <th>Reason</th>
-            <th>Start Date</th>
-            <th>End Date</th>
-            <th>Status</th>
-            <th>Remarks</th>
-            <th>Action</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr th:each="leaveRequest : ${leaveRequests}">
-            <td th:text="${leaveRequest.user.username}">Student Name</td>
-            <td th:text="${leaveRequest.reason}">Reason</td>
-            <td th:text="${leaveRequest.startDate}">Start Date</td>
-            <td th:text="${leaveRequest.endDate}">End Date</td>
-            <td th:text="${leaveRequest.status}">Status</td>
-            <td th:text="${leaveRequest.remarks}">Remarks</td>
-            <td th:if="${leaveRequest.status == 'PENDING'}">
-                <form th:action="@{/leave-requests/faculty/update}" method="post">
-                    <input type="hidden" name="leaveId" th:value="${leaveRequest.id}"/>
-                    <input type="hidden" name="facultyId" th:value="${leaveRequest.faculty.facultyId}"/>
+            <table>
+                <thead>
+                <tr>
+                    <th>Student Name</th>
+                    <th>Reason</th>
+                    <th>Start Date</th>
+                    <th>End Date</th>
+                    <th>Status</th>
+                    <th>Remarks</th>
+                    <th>Action</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="leaveRequest : ${leaveRequests}">
+                    <td th:text="${leaveRequest.user.username}">Student Name</td>
+                    <td th:text="${leaveRequest.reason}">Reason</td>
+                    <td th:text="${leaveRequest.startDate}">Start Date</td>
+                    <td th:text="${leaveRequest.endDate}">End Date</td>
+                    <td th:text="${leaveRequest.status}">Status</td>
+                    <td th:text="${leaveRequest.remarks}">Remarks</td>
+                    <td th:if="${leaveRequest.status == 'PENDING'}">
+                        <form th:action="@{/leave-requests/faculty/update}" method="post">
+                            <input type="hidden" name="leaveId" th:value="${leaveRequest.id}"/>
+                            <input type="hidden" name="facultyId" th:value="${leaveRequest.faculty.facultyId}"/>
 
-                    <select name="status">
-                        <option value="APPROVED">Approve</option>
-                        <option value="REJECTED">Reject</option>
-                    </select>
+                            <select name="status">
+                                <option value="APPROVED">Approve</option>
+                                <option value="REJECTED">Reject</option>
+                            </select>
 
-                    <input type="text" name="remarks" placeholder="Add remarks..."/>
+                            <input type="text" name="remarks" placeholder="Add remarks..."/>
 
-                    <button type="submit">Update Status</button>
-                </form>
-            </td>
-        </tr>
-        </tbody>
-    </table>
+                            <button type="submit">Update Status</button>
+                        </form>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+    </div>
 </div>
 
 </body>
