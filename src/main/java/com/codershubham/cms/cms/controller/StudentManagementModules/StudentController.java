@@ -94,7 +94,7 @@ public class StudentController {
         model.addAttribute("userRole", userRole);
         // Add the student to the model
         model.addAttribute("student", student);
-
+        model.addAttribute("userId" ,userId);
         // Return the view name
         return "StudentManagement/dashboard"; // Ensure this matches your Thymeleaf template name
     }

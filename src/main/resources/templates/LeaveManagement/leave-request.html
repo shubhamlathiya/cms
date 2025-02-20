@@ -49,7 +49,7 @@
                     <th>Status</th>
                     <th>Start Date</th>
                     <th>End Date</th>
-                    <th>Actions</th>
+                    <th>Remarks</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -60,14 +60,7 @@
                         <td th:text="${leave.status}"></td>
                         <td th:text="${leave.startDate}"></td>
                         <td th:text="${leave.endDate}"></td>
-                        <td>
-                            <form action="/leave-requests/update" method="post">
-                                <input type="hidden" name="leaveId" th:value="${leave.id}">
-                                <input type="hidden" name="userId" th:value="${user.id}">
-                                <button type="submit" name="status" value="APPROVED">Approve</button>
-                                <button type="submit" name="status" value="REJECTED">Reject</button>
-                            </form>
-                        </td>
+                        <td th:text="${leave.remarks}"></td>
                     </tr>
                 </th:block>
                 </tbody>

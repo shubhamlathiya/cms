@@ -54,6 +54,9 @@
             <li th:if="${userRole == 'STUDENT'}">
                 <a th:href="@{/students/assignments/{id}(id=${student.id})}">View Assignments</a>
             </li>
+            <li th:if="${userRole == 'STUDENT'}">
+                <a th:href="@{/leave-requests/user/{userId}/view(userId=${userId})}">leave-requests</a>
+            </li>
         </ul>
     </nav>
 </header>
