@@ -9,46 +9,69 @@
 <!-- Replace the content section -->
 <div th:replace="layout/base.html">
     <div th:fragment="content">
+        <h2 class="mb-2 page-title">Subjects List</h2>
+        <!-- Button to go to Add Department form -->
+        <a href="/admin/subjects/add">Add New Subject</a>
 
-            <h2>Subjects List</h2>
+        <p class="card-text">DataTables is a plug-in for the jQuery Javascript library. It is a highly flexible tool,
+            built upon the foundations of progressive enhancement, that adds all of these advanced features to any HTML
+            table. </p>
+        <div class="row my-4">
+            <!-- Small table -->
+            <div class="col-md-12">
+                <div class="card shadow">
+                    <div class="card-body">
+                        <!-- table -->
+                        <table class="table datatables" id="dataTable-1">
+                            <thead>
+                            <tr>
+                                <th></th>
+                                <th>#</th>
+                                <th>Subject Code</th>
+                                <th>Subject Name</th>
+                                <th>Credits</th>
+                                <th>Subject Type</th> <!-- New column for Subject Type -->
+                                <th>Course</th>
+                                <th>Actions</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:each="subject : ${subjects}">
+                                <td>
+                                    <div class="custom-control custom-checkbox">
+                                        <input type="checkbox" class="custom-control-input">
+                                        <label class="custom-control-label"></label>
+                                    </div>
+                                </td>
+                                <td th:text="${subject.subjectid}"></td>
+                                <td th:text="${subject.subjectCode}"></td>
+                                <td th:text="${subject.subjectName}"></td>
+                                <td th:text="${subject.credits}"></td>
+                                <td th:text="${subject.subjectType}"></td> <!-- Display Subject Type -->
+                                <td th:text="${subject.course.courseName}"></td>
+                                <td>
+                                    <!-- Edit and Delete actions -->
+                                    <a th:href="@{/admin/subjects/update/{subjectID}(subjectID=${subject.subjectid})}">Edit</a> |
+                                    <a th:href="@{/admin/subjects/delete/{subjectID}(subjectID=${subject.subjectid})}"
+                                       th:onclick="return confirm('Are you sure you want to delete?')">Delete</a> |
 
-            <!-- Table displaying all subjects -->
-            <table>
-                <thead>
-                <tr>
-                    <th>Subject Code</th>
-                    <th>Subject Name</th>
-                    <th>Credits</th>
-                    <th>Subject Type</th> <!-- New column for Subject Type -->
-                    <th>Course</th>
-                    <th>Actions</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr th:each="subject : ${subjects}">
-                    <td th:text="${subject.subjectCode}"></td>
-                    <td th:text="${subject.subjectName}"></td>
-                    <td th:text="${subject.credits}"></td>
-                    <td th:text="${subject.subjectType}"></td> <!-- Display Subject Type -->
-                    <td th:text="${subject.course.courseName}"></td>
-                    <td>
-                        <!-- Edit and Delete actions -->
-                        <a th:href="@{/admin/subjects/update/{subjectID}(subjectID=${subject.subjectid})}">Edit</a> |
-                        <a th:href="@{/admin/subjects/delete/{subjectID}(subjectID=${subject.subjectid})}"
-                           th:onclick="return confirm('Are you sure you want to delete?')">Delete</a>
-
-                        <!-- View Syllabus for this Subject -->
-                        <a th:href="@{/admin/syllabus/subject/{subjectID}(subjectID=${subject.subjectid})}">View Syllabus</a>
-                    </td>
-                </tr>
-                </tbody>
-            </table>
-
-            <!-- Link to add a new subject -->
-            <a href="/admin/subjects/add">Add New Subject</a>
-
+                                    <!-- View Syllabus for this Subject -->
+                                    <a th:href="@{/admin/syllabus/subject/{subjectID}(subjectID=${subject.subjectid})}">View Syllabus</a>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
-
+<script>
+    $('#dataTable-1').DataTable(
+        {
+            autoWidth: true,
+        });
+</script>
 </body>
 </html>

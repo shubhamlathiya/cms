@@ -3,14 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <title th:text="'Leave Requests'">Leave Requests</title>
-    <link rel="stylesheet" type="text/css" href="/css/styles.css">
 </head>
 <body>
 
 <!-- Replace the content section -->
 <div th:replace="layout/base.html">
     <div th:fragment="content">
-        <main>
+<!--        <main>-->
 
             <div th:if="${student != null}">
                 <p>Student Name: <span th:text="${student.firstName} + ' ' + ${student.lastName}"></span></p>
@@ -66,7 +65,7 @@
                 </tbody>
             </table>
 
-        </main>
+<!--        </main>-->
     </div>
 </div>
 

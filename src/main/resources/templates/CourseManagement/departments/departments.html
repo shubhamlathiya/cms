@@ -1,45 +1,71 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-  <meta charset="UTF-8">
-  <title th:text="'Admin Dashboard'">Departments</title>
-  <link rel="stylesheet" type="text/css" href="/css/styles.css">
+    <meta charset="UTF-8">
+    <title th:text="'Admin Dashboard'">Departments</title>
+    <link rel="stylesheet" type="text/css" href="/css/styles.css">
 </head>
 <body>
 
 <!-- Replace the content section -->
 <div th:replace="layout/base.html">
-  <div th:fragment="content">
-<!--    <main>-->
-      <h1>Departments</h1>
+    <div th:fragment="content">
+        <h2 class="mb-2 page-title">Departments</h2>
+        <!-- Button to go to Add Department form -->
+        <a href="/admin/departments/add">Add Department</a>
 
-      <!-- Button to go to Add Department form -->
-      <a href="/admin/departments/add">Add Department</a>
-
-      <table>
-        <thead>
-        <tr>
-          <th>Department Name</th>
-          <th>Head of Department</th> <!-- New column for Head of Department -->
-          <th>Actions</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr th:each="departmentModel : ${departments}">
-          <td th:text="${departmentModel.name}"></td>
-          <td th:text="${departmentModel.departmentHead}"></td> <!-- Display the Head of Department -->
-          <td>
-            <!-- Edit link for each departmentModel -->
-            <a th:href="@{/admin/departments/update/{id}(id=${departmentModel.id})}">Edit</a> |
-            <!-- Delete link for each departmentModel -->
-            <a th:href="@{/admin/departments/delete/{id}(id=${departmentModel.id})}" th:onclick="return confirm('Are you sure you want to delete?')">Delete</a>
-          </td>
-        </tr>
-        </tbody>
-      </table>
-<!--    </main>-->
-  </div>
+        <p class="card-text">DataTables is a plug-in for the jQuery Javascript library. It is a highly flexible tool,
+            built upon the foundations of progressive enhancement, that adds all of these advanced features to any HTML
+            table. </p>
+        <div class="row my-4">
+            <!-- Small table -->
+            <div class="col-md-12">
+                <div class="card shadow">
+                    <div class="card-body">
+                        <!-- table -->
+                        <table class="table datatables" id="dataTable-1">
+                            <thead>
+                            <tr>
+                                <th></th>
+                                <th>#</th>
+                                <th>Department Name</th>
+                                <th>Head of Department</th> <!-- New column for Head of Department -->
+                                <th>Actions</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:each="departmentModel : ${departments}">
+                                <td>
+                                    <div class="custom-control custom-checkbox">
+                                        <input type="checkbox" class="custom-control-input">
+                                        <label class="custom-control-label"></label>
+                                    </div>
+                                </td>
+                                <td th:text="${departmentModel.id}">
+                                <td th:text="${departmentModel.name}"></td>
+                                <td th:text="${departmentModel.departmentHead}"></td>
+                                <!-- Display the Head of Department -->
+                                <td>
+                                    <!-- Edit link for each departmentModel -->
+                                    <a th:href="@{/admin/departments/update/{id}(id=${departmentModel.id})}">Edit</a> |
+                                    <!-- Delete link for each departmentModel -->
+                                    <a th:href="@{/admin/departments/delete/{id}(id=${departmentModel.id})}"
+                                       th:onclick="return confirm('Are you sure you want to delete?')">Delete</a>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
-
+<script>
+    $('#dataTable-1').DataTable(
+        {
+            autoWidth: true,
+        });
+</script>
 </body>
 </html>

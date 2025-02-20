@@ -1,8 +1,6 @@
-<!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<!doctype html>
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title th:text="'${pageTitle}'">Custom Page Title</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="">
@@ -22,25 +20,16 @@
     <link rel="stylesheet" th:href="@{/assets/css/app-light.css}" id="lightTheme">
     <link rel="stylesheet" th:href="@{/assets/css/app-dark.css}" id="darkTheme" disabled>
 </head>
-<body class="vertical  light  ">
-<div class="wrapper">
-
-    <div th:replace="layout/nav.html :: navbar"></div>
-    <!-- Include header -->
-    <div th:replace="layout/header.html :: header"></div>
-
-    <!-- Dynamic Content Section -->
-    <main role="main" class="main-content">
-        <div class="container-fluid">
-            <div class="row justify-content-center">
-                <div class="col-12">
-                    <div th:insert="~{::content}"></div>
-                </div> <!-- .col-12 -->
-            </div> <!-- .row -->
-        </div> <!-- .container-fluid -->
-    </main> <!-- main -->
-    <!-- Include footer -->
-    <div th:replace="layout/footer.html :: footer"></div>
+<body class="light ">
+<div class="wrapper vh-100">
+    <div class="align-items-center h-100 d-flex w-50 mx-auto">
+        <div class="mx-auto text-center">
+            <h1 class="display-1 m-0 font-weight-bolder text-muted" style="font-size:80px;">500</h1>
+            <h1 class="mb-1 text-muted font-weight-bold">OOPS!</h1>
+            <h6 class="mb-3 text-muted">Something went wrong here.</h6>
+            <a href="./index.html" class="btn btn-lg btn-primary px-5">Back to Dashboard</a>
+        </div>
+    </div>
 </div>
 <script th:src="@{/assets/js/jquery.min.js}"></script>
 <script th:src="@{/assets/js/popper.min.js}"></script>
