@@ -20,40 +20,115 @@
 <!-- Replace the content section -->
 <div th:replace="layout/base.html">
     <div th:fragment="content">
-        <!--        <main>-->
 
-        <h2>Register New Student</h2>
-        <form action="/admin/students/register" method="post">
-            <label>Username:</label>
-            <input type="text" name="username" required><br>
+        <div class="col-md-12">
+            <div class="card shadow mb-4">
+                <div class="card-header">
+                    <strong class="card-title">Register New Student</strong>
+                </div>
+                <div class="card-body">
+                    <form class="needs-validation" action="/admin/students/register" method="post"
+                          novalidate>
+                        <div class="form-row">
+                            <div class="col-md-8">
+                                <label for="validationCustom01">Username:</label>
+                                <input type="text" class="form-control" id="validationCustom01" name="username"
+                                       required>
+                                <div class="valid-feedback"> Looks good!</div>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="col-md-8">
+                                <label for="validationCustom02">Password:</label>
+                                <input type="number" class="form-control" id="validationCustom02" name="password"
+                                       required>
+                                <div class="invalid-feedback"> Please provide a valid Password.</div>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="col-md-6 mb-3">
+                                <label for="validationCustom3">First name</label>
+                                <input type="text" class="form-control" id="validationCustom3" value="Mark"
+                                       name="firstName" required>
+                                <div class="valid-feedback"> Looks good!</div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="validationCustom4">Last name</label>
+                                <input type="text" class="form-control" id="validationCustom4" value="Otto"
+                                       name="lastName" required>
+                                <div class="valid-feedback"> Looks good!</div>
+                            </div>
+                        </div> <!-- /.form-row -->
+                        <div class="form-row">
+                            <div class="col-md-8 mb-3">
+                                <label for="exampleInputEmail2">Email address</label>
+                                <input type="email" class="form-control" id="exampleInputEmail2"
+                                       aria-describedby="emailHelp1" name="email" required>
+                                <div class="invalid-feedback"> Please use a valid email</div>
+                                <small id="emailHelp1" class="form-text text-muted">We'll never share your email with
+                                    anyone else.</small>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label for="custom-phone">Phone Number</label>
+                                <input class="form-control input-phoneus" id="custom-phone" maxlength="10"
+                                       name="phoneNumber" required>
+                                <div class="invalid-feedback"> Please enter a correct phone</div>
+                            </div>
+                        </div> <!-- /.form-row -->
+                        <div class="form-group mb-3">
+                            <label for="address-wpalaceholder">Address</label>
+                            <input type="text" id="address-wpalaceholder" class="form-control" name="address"
+                                   placeholder="Enter your address">
+                            <div class="valid-feedback"> Looks good!</div>
+                            <div class="invalid-feedback"> Badd address</div>
+                        </div>
+                        <div class="form-row">
+                            <div class="col-md-8">
+                                <label for="inputState">Course:</label>
+                                <select id="inputState" class="form-control" name="course">
+                                    <option th:each="course : ${courses}" th:value="${course.courseID}"
+                                            th:text="${course.courseName}"></option>
+                                </select>
+                            </div>
+                        </div>
+                        <button class="btn btn-primary" type="submit">Register Student</button>
+                    </form>
+                </div> <!-- /.card-body -->
+            </div> <!-- /.card -->
+        </div> <!-- /.col -->
 
-            <label>Password:</label>
-            <input type="password" name="password" required><br>
+        <!--        <h2>Register New Student</h2>-->
+        <!--        <form action="/admin/students/register" method="post">-->
+        <!--            <label>Username:</label>-->
+        <!--            <input type="text" name="username" required><br>-->
 
-            <label>First Name:</label>
-            <input type="text" name="firstName" required><br>
+        <!--            <label>Password:</label>-->
+        <!--            <input type="password" name="password" required><br>-->
 
-            <label>Last Name:</label>
-            <input type="text" name="lastName" required><br>
+        <!--            <label>First Name:</label>-->
+        <!--            <input type="text" name="firstName" required><br>-->
 
-            <label>Email:</label>
-            <input type="email" name="email" required><br>
+        <!--            <label>Last Name:</label>-->
+        <!--            <input type="text" name="lastName" required><br>-->
 
-            <label>Phone Number:</label>
-            <input type="text" name="phoneNumber" required><br>
+        <!--            <label>Email:</label>-->
+        <!--            <input type="email" name="email" required><br>-->
 
-            <label>Address:</label>
-            <input type="text" name="address" required><br>
+        <!--            <label>Phone Number:</label>-->
+        <!--            <input type="text" name="phoneNumber" required><br>-->
 
-            <label>Course:</label>
-            <select name="course" required>
-                <option th:each="course : ${courses}" th:value="${course.courseID}"
-                        th:text="${course.courseName}"></option>
-            </select><br>
+        <!--            <label>Address:</label>-->
+        <!--            <input type="text" name="address" required><br>-->
+
+        <!--            <label>Course:</label>-->
+        <!--            <select name="course" required>-->
+        <!--                <option th:each="course : ${courses}" th:value="${course.courseID}"-->
+        <!--                        th:text="${course.courseName}"></option>-->
+        <!--            </select><br>-->
 
 
-            <button type="submit">Register Student</button>
-        </form>
+        <!--            <button type="submit">Register Student</button>-->
+        <!--        </form>-->
 
         <hr>
 
@@ -111,5 +186,7 @@
 
     <!--        </main>-->
 </div>
+
+<script th:src='@{/asses/js/dropzone.min.js}'></script>
 </body>
 </html>

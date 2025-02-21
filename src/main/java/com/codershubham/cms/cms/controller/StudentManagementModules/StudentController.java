@@ -304,6 +304,11 @@ public class StudentController {
         String userRole = userRoleUtil.getUserRole(session);
         model.addAttribute("userRole", userRole);
 
+
+        // Fetch the student by ID
+        StudentModel student = studentService.findById(studentId);
+        model.addAttribute("student", student);
+
         return "StudentManagement/assignments/student-assigned-questions";
     }
 

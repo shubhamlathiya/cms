@@ -1,21 +1,70 @@
+<!--<!DOCTYPE html>-->
+<!--<html xmlns:th="http://www.thymeleaf.org">-->
+<!--<head>-->
+<!--    <meta charset="UTF-8">-->
+<!--    <title th:text="'Student Assignments'">Student Assignments</title>-->
+<!--    <link rel="stylesheet" type="text/css" href="/css/styles.css">-->
+<!--</head>-->
+<!--<body>-->
+
+<!--&lt;!&ndash; Replace the content section &ndash;&gt;-->
+<!--<div th:replace="layout/base.html">-->
+<!--    <div th:fragment="content">-->
+<!--        <main>-->
+<!--            <h2>Your Assignments</h2>-->
+
+<!--            <div th:each="semesterEntry : ${subjectAssignmentMap}">-->
+<!--                <h3>Semester <span th:text="${semesterEntry.key}"></span></h3>-->
+<!--                <table border="1">-->
+<!--                    <thead>-->
+<!--                    <tr>-->
+<!--                        <th>Subject</th>-->
+<!--                        <th>Assignments</th>-->
+<!--                    </tr>-->
+<!--                    </thead>-->
+<!--                    <tbody>-->
+<!--                    <tr th:each="subjectEntry : ${semesterEntry.value}">-->
+<!--                        <td th:text="${subjectEntry.key.subjectName}"></td>-->
+<!--                        <td>-->
+<!--                            <a th:if="${subjectEntry.value}"-->
+<!--                               th:href="@{/students/assignments/{studentId}/{subjectId}/questions(studentId=${studentId}, subjectId=${subjectEntry.key.subjectid})}"-->
+<!--                               class="btn">View Questions</a>-->
+<!--                            <span th:unless="${subjectEntry.value}">No Assignments</span>-->
+<!--                        </td>-->
+<!--                    </tr>-->
+<!--                    </tbody>-->
+<!--                </table>-->
+<!--            </div>-->
+
+
+<!--            <a th:href="@{/students/dashboard}">Back to Dashboard</a>-->
+<!--        </main>-->
+<!--    </div>-->
+<!--</div>-->
+
+<!--</body>-->
+<!--</html>-->
+
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title th:text="'Student Assignments'">Student Assignments</title>
-    <link rel="stylesheet" type="text/css" href="/css/styles.css">
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 </head>
 <body>
 
 <!-- Replace the content section -->
 <div th:replace="layout/base.html">
     <div th:fragment="content">
-        <main>
-            <h2>Your Assignments</h2>
+        <main class="container mt-4">
+            <h2 class="mb-4">Your Assignments</h2>
 
+            <!-- Loop through semesters and assignments -->
             <div th:each="semesterEntry : ${subjectAssignmentMap}">
-                <h3>Semester <span th:text="${semesterEntry.key}"></span></h3>
-                <table border="1">
+                <h3 class="mb-3">Semester <span th:text="${semesterEntry.key}"></span></h3>
+                <table class="table table-bordered table-striped">
                     <thead>
                     <tr>
                         <th>Subject</th>
@@ -23,24 +72,28 @@
                     </tr>
                     </thead>
                     <tbody>
+                    <!-- Loop through subjects -->
                     <tr th:each="subjectEntry : ${semesterEntry.value}">
                         <td th:text="${subjectEntry.key.subjectName}"></td>
                         <td>
                             <a th:if="${subjectEntry.value}"
                                th:href="@{/students/assignments/{studentId}/{subjectId}/questions(studentId=${studentId}, subjectId=${subjectEntry.key.subjectid})}"
-                               class="btn">View Questions</a>
-                            <span th:unless="${subjectEntry.value}">No Assignments</span>
+                               class="btn btn-primary">View Questions</a>
+                            <span th:unless="${subjectEntry.value}" class="text-muted">No Assignments</span>
                         </td>
                     </tr>
                     </tbody>
                 </table>
             </div>
 
-
-            <a th:href="@{/students/dashboard}">Back to Dashboard</a>
+            <a th:href="@{/students/dashboard}" class="btn btn-secondary mt-3">Back to Dashboard</a>
         </main>
     </div>
 </div>
+
+<!-- Bootstrap JS -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
 
 </body>
 </html>

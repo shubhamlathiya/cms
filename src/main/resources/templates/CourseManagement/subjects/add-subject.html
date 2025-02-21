@@ -9,43 +9,87 @@
 <!-- Replace the content section -->
 <div th:replace="layout/base.html">
     <div th:fragment="content">
-
-        <h2>Add New Subject</h2>
-
-        <!-- Form to add a new subject -->
-        <form th:action="@{/admin/subjects/add}" th:object="${subject}" method="post">
-            <label for="subjectCode">Subject Code:</label>
-            <input type="text" id="subjectCode" th:field="*{subjectCode}" required>
-            <br><br>
-
-            <label for="subjectName">Subject Name:</label>
-            <input type="text" id="subjectName" th:field="*{subjectName}" required>
-            <br><br>
-
-            <label for="credits">Credits:</label>
-            <input type="number" id="credits" th:field="*{credits}" required>
-            <br><br>
-
-            <label for="subjectType">Subject Type:</label>
-            <select id="subjectType" th:field="*{subjectType}" required>
-                <option th:each="type : ${T(com.codershubham.cms.cms.model.CourseManagementModules.SubjectType).values()}"
-                        th:value="${type}"
-                        th:text="${type}"></option>
-            </select>
-            <br><br>
-
-            <label for="courseModel">Course:</label>
-            <select id="courseModel" th:field="*{course}" required>
-                <option th:each="courseModel : ${courses}" th:value="${courseModel.courseID}"
-                        th:text="${courseModel.courseName}"></option>
-            </select>
-            <br><br>
-
-            <button type="submit">Add Subject</button>
-        </form>
-
+        <div class="col-md-12">
+            <div class="card shadow mb-4">
+                <div class="card-header">
+                    <strong class="card-title">Add New Subject</strong>
+                </div>
+                <div class="card-body">
+                    <form class="needs-validation"
+                          th:action="@{/admin/subjects/add}" th:object="${subject}" method="post"
+                          novalidate>
+                        <div class="form-row">
+                            <div class="col-md-8">
+                                <label for="validationCustom04">Subject Code:</label>
+                                <input type="text" class="form-control" id="validationCustom04"
+                                       th:field="*{subjectCode}"
+                                       required>
+                                <div class="valid-feedback"> Looks good!</div>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="col-md-8">
+                                <label for="validationCustom01">Subject Name:</label>
+                                <input type="text" class="form-control" id="validationCustom01"
+                                       th:field="*{subjectName}"
+                                       required>
+                                <div class="valid-feedback"> Looks good!</div>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="col-md-8">
+                                <label for="validationCustom03">Credits:</label>
+                                <input type="number" class="form-control" id="validationCustom03"
+                                       th:field="*{credits}"
+                                       required>
+                                <div class="invalid-feedback"> Please provide a valid Credits.</div>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="col-md-8">
+                                <label for="inputState1">Subject Type:</label>
+                                <select id="inputState1" class="form-control" th:field="*{subjectType}">
+                                    <option th:each="type : ${T(com.codershubham.cms.cms.model.CourseManagementModules.SubjectType).values()}"
+                                            th:value="${type}"
+                                            th:text="${type}"></option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="col-md-8">
+                                <label for="inputState">Course:</label>
+                                <select id="inputState" class="form-control" th:field="*{course}">
+                                    <option th:each="courseModel : ${courses}" th:value="${courseModel.courseID}"
+                                            th:text="${courseModel.courseName}"></option>
+                                </select>
+                            </div>
+                        </div>
+                        <button class="btn btn-primary" type="submit">Add Subject</button>
+                    </form>
+                </div> <!-- /.card-body -->
+            </div> <!-- /.card -->
+        </div> <!-- /.col -->
     </div>
 </div>
 
+<script>
+    (function () {
+        'use strict';
+        window.addEventListener('load', function () {
+            // Fetch all the forms we want to apply custom Bootstrap validation styles to
+            var forms = document.getElementsByClassName('needs-validation');
+            // Loop over them and prevent submission
+            var validation = Array.prototype.filter.call(forms, function (form) {
+                form.addEventListener('submit', function (event) {
+                    if (form.checkValidity() === false) {
+                        event.preventDefault();
+                        event.stopPropagation();
+                    }
+                    form.classList.add('was-validated');
+                }, false);
+            });
+        }, false);
+    })();
+</script>
 </body>
 </html>

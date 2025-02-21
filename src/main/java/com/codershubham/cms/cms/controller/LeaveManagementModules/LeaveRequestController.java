@@ -93,21 +93,21 @@ public class LeaveRequestController {
 
         leaveRequestService.createLeaveRequest(userId, leaveRequest);
 
-        return "redirect:/leave-requests/user/" + userId + "/view";
+        return "redirect:/leave-requests/user/view";
     }
 
 
     // ✅ Approve or Reject a Leave Request
-    @PostMapping("/update")
-    public String updateLeaveStatus(@RequestParam Long leaveId, @RequestParam String status, @RequestParam Long userId) {
-        if (!status.equalsIgnoreCase("APPROVED") && !status.equalsIgnoreCase("REJECTED")) {
-            return "redirect:/leave-requests/user/" + userId + "/view?error=Invalid Status";
-        }
-
-        leaveRequestService.updateLeaveStatus(leaveId, status);
-
-        return "redirect:/leave-requests/user/" + userId + "/view";
-    }
+//    @PostMapping("/update")
+//    public String updateLeaveStatus(@RequestParam Long leaveId, @RequestParam String status, @RequestParam Long userId) {
+//        if (!status.equalsIgnoreCase("APPROVED") && !status.equalsIgnoreCase("REJECTED")) {
+//            return "redirect:/leave-requests/user/" + userId + "/view?error=Invalid Status";
+//        }
+//
+//        leaveRequestService.updateLeaveStatus(leaveId, status);
+//
+//        return "redirect:/leave-requests/user/" + userId + "/view";
+//    }
 
     // ✅ Display All Leave Requests for a Specific Faculty
     @GetMapping("/faculty/{facultyId}/view")

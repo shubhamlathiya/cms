@@ -1,46 +1,125 @@
+<!--<!DOCTYPE html>-->
+<!--<html xmlns:th="http://www.thymeleaf.org">-->
+<!--<head>-->
+<!--    <meta charset="UTF-8">-->
+<!--    <title th:text="'Leave Requests'">Leave Requests</title>-->
+<!--</head>-->
+<!--<body>-->
+
+<!--&lt;!&ndash; Replace the content section &ndash;&gt;-->
+<!--<div th:replace="layout/base.html">-->
+<!--    <div th:fragment="content">-->
+<!--&lt;!&ndash;        <main>&ndash;&gt;-->
+
+<!--            <div th:if="${student != null}">-->
+<!--                <p>Student Name: <span th:text="${student.firstName} + ' ' + ${student.lastName}"></span></p>-->
+<!--&lt;!&ndash;                <a th:href="@{/students/dashboard}" class="btn btn-primary">Back to Dashboard</a>&ndash;&gt;-->
+<!--            </div>-->
+<!--            <div th:unless="${student != null}">-->
+<!--                <p>This user is not a student.</p>-->
+<!--            </div>-->
+
+<!--            &lt;!&ndash;<h2>Leave Requests for <span th:text="${user.firstName} + ' ' + ${user.lastName}"></span></h2>&ndash;&gt;-->
+
+<!--            &lt;!&ndash; Form to Submit Leave Request &ndash;&gt;-->
+<!--            <h3>Submit Leave Request</h3>-->
+<!--            <form action="/leave-requests/submit" method="post">-->
+<!--                <input type="hidden" name="userId" th:value="${user.id}">-->
+
+<!--                <label for="reason">Reason:</label>-->
+<!--                <input type="text" id="reason" name="reason" required><br>-->
+
+<!--                <label for="startDate">Start Date:</label>-->
+<!--                <input type="date" id="startDate" name="startDate" required><br>-->
+
+<!--                <label for="endDate">End Date:</label>-->
+<!--                <input type="date" id="endDate" name="endDate" required><br>-->
+
+<!--                <button type="submit">Submit Leave Request</button>-->
+<!--            </form>-->
+
+<!--            &lt;!&ndash; Table to Display Leave Requests &ndash;&gt;-->
+<!--            <h3>Your Leave Requests</h3>-->
+<!--            <table border="1">-->
+<!--                <thead>-->
+<!--                <tr>-->
+<!--                    <th>Leave ID</th>-->
+<!--                    <th>Reason</th>-->
+<!--                    <th>Status</th>-->
+<!--                    <th>Start Date</th>-->
+<!--                    <th>End Date</th>-->
+<!--                    <th>Remarks</th>-->
+<!--                </tr>-->
+<!--                </thead>-->
+<!--                <tbody>-->
+<!--                <th:block th:each="leave : ${leaveRequests}">-->
+<!--                    <tr>-->
+<!--                        <td th:text="${leave.id}"></td>-->
+<!--                        <td th:text="${leave.reason}"></td>-->
+<!--                        <td th:text="${leave.status}"></td>-->
+<!--                        <td th:text="${leave.startDate}"></td>-->
+<!--                        <td th:text="${leave.endDate}"></td>-->
+<!--                        <td th:text="${leave.remarks}"></td>-->
+<!--                    </tr>-->
+<!--                </th:block>-->
+<!--                </tbody>-->
+<!--            </table>-->
+
+<!--&lt;!&ndash;        </main>&ndash;&gt;-->
+<!--    </div>-->
+<!--</div>-->
+
+<!--</body>-->
+<!--</html>-->
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title th:text="'Leave Requests'">Leave Requests</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 </head>
 <body>
 
 <!-- Replace the content section -->
 <div th:replace="layout/base.html">
     <div th:fragment="content">
-<!--        <main>-->
-
+        <div class="container mt-4">
+            <!-- Student Information -->
             <div th:if="${student != null}">
-                <p>Student Name: <span th:text="${student.firstName} + ' ' + ${student.lastName}"></span></p>
-<!--                <a th:href="@{/students/dashboard}" class="btn btn-primary">Back to Dashboard</a>-->
+                <h4>Student Information</h4>
+                <p><strong>Student Name:</strong> <span th:text="${student.firstName} + ' ' + ${student.lastName}"></span></p>
             </div>
             <div th:unless="${student != null}">
                 <p>This user is not a student.</p>
             </div>
 
-            <!--<h2>Leave Requests for <span th:text="${user.firstName} + ' ' + ${user.lastName}"></span></h2>-->
-
-            <!-- Form to Submit Leave Request -->
-            <h3>Submit Leave Request</h3>
+            <!-- Leave Request Form -->
+            <h3 class="mt-4">Submit Leave Request</h3>
             <form action="/leave-requests/submit" method="post">
                 <input type="hidden" name="userId" th:value="${user.id}">
 
-                <label for="reason">Reason:</label>
-                <input type="text" id="reason" name="reason" required><br>
+                <div class="form-group">
+                    <label for="reason">Reason:</label>
+                    <input type="text" id="reason" name="reason" class="form-control" required>
+                </div>
 
-                <label for="startDate">Start Date:</label>
-                <input type="date" id="startDate" name="startDate" required><br>
+                <div class="form-group">
+                    <label for="startDate">Start Date:</label>
+                    <input type="date" id="startDate" name="startDate" class="form-control" required>
+                </div>
 
-                <label for="endDate">End Date:</label>
-                <input type="date" id="endDate" name="endDate" required><br>
+                <div class="form-group">
+                    <label for="endDate">End Date:</label>
+                    <input type="date" id="endDate" name="endDate" class="form-control" required>
+                </div>
 
-                <button type="submit">Submit Leave Request</button>
+                <button type="submit" class="btn btn-primary">Submit Leave Request</button>
             </form>
 
-            <!-- Table to Display Leave Requests -->
-            <h3>Your Leave Requests</h3>
-            <table border="1">
+            <!-- Leave Requests Table -->
+            <h3 class="mt-4">Your Leave Requests</h3>
+            <table class="table table-bordered">
                 <thead>
                 <tr>
                     <th>Leave ID</th>
@@ -64,10 +143,13 @@
                 </th:block>
                 </tbody>
             </table>
-
-<!--        </main>-->
+        </div>
     </div>
 </div>
+
+<!-- Bootstrap JS -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
 
 </body>
 </html>

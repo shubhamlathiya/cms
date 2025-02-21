@@ -6,6 +6,8 @@ import com.codershubham.cms.cms.model.StudentManagementModules.AssignmentModel;
 import com.codershubham.cms.cms.model.StudentManagementModules.AssignmentSubmissionModel;
 import com.codershubham.cms.cms.model.StudentManagementModules.StudentAssignmentModel;
 import com.codershubham.cms.cms.service.StudentManagementModules.AssignmentService;
+import com.codershubham.cms.cms.util.UserRoleUtil;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
@@ -28,6 +30,12 @@ public class AssignmentController {
 
     @Autowired
     private AssignmentService assignmentService;
+
+    @Autowired
+    private UserRoleUtil userRoleUtil;
+
+    @Autowired
+    private HttpSession session;
 
     @GetMapping("/{divisionId}/{semesterId}/{subjectId}")
     public String getAssignments(@PathVariable Long divisionId, @PathVariable Long semesterId, @PathVariable Long subjectId, Model model) {

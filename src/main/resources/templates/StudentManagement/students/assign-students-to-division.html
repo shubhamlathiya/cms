@@ -1,76 +1,161 @@
+<!--<!DOCTYPE html>-->
+<!--<html xmlns:th="http://www.thymeleaf.org">-->
+<!--<head>-->
+<!--  <meta charset="UTF-8">-->
+<!--  <title th:text="'Assign Students to Division'">Assign Students to Division</title>-->
+<!--&lt;!&ndash;  <link rel="stylesheet" type="text/css" href="/css/styles.css">&ndash;&gt;-->
+<!--</head>-->
+<!--<body>-->
+
+<!--&lt;!&ndash; Replace the content section &ndash;&gt;-->
+<!--<div th:replace="layout/base.html">-->
+<!--  <div th:fragment="content">-->
+<!--    <main>-->
+
+<!--      <h1>Assign Students to Division</h1>-->
+
+<!--      &lt;!&ndash; Semester Info &ndash;&gt;-->
+<!--      <h3>Semester ID: <span th:text="${semesterId}"></span></h3>-->
+
+<!--      &lt;!&ndash; Division Selection &ndash;&gt;-->
+<!--      <label for="division">Select Division:</label>-->
+<!--      <select id="division" required>-->
+<!--        <option value="">&#45;&#45;Select Division&#45;&#45;</option>-->
+<!--        <option th:each="division : ${divisions}" th:value="${division.id}" th:text="${division.name}"></option>-->
+<!--      </select>-->
+
+<!--      &lt;!&ndash; Student Selection &ndash;&gt;-->
+<!--      <h3>Unassigned Students</h3>-->
+<!--      <div id="studentsList">-->
+<!--        <th:block th:each="student : ${unassignedStudents}">-->
+<!--          <label>-->
+<!--            <input type="checkbox" class="studentCheckbox" th:value="${student.id}">-->
+<!--            <span th:text="${student.firstName + ' ' + student.lastName}"></span>-->
+<!--          </label><br>-->
+<!--        </th:block>-->
+<!--      </div>-->
+
+<!--      &lt;!&ndash; Assign Button &ndash;&gt;-->
+<!--      <button id="assignButton">Assign Selected Students</button>-->
+<!--      <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>-->
+<!--      <script>-->
+<!--        $(document).ready(function () {-->
+<!--          $("#assignButton").click(function () {-->
+<!--            var semesterId = "[[${semesterId}]]";-->
+<!--            var divisionId = $("#division").val();-->
+<!--            var selectedStudents = [];-->
+
+<!--            $(".studentCheckbox:checked").each(function () {-->
+<!--              selectedStudents.push($(this).val());-->
+<!--            });-->
+
+<!--            if (divisionId && selectedStudents.length > 0) {-->
+<!--              $.ajax({-->
+<!--                type: "POST",-->
+<!--                url: "/enrollments/assign",-->
+<!--                contentType: "application/json",-->
+<!--                data: JSON.stringify({-->
+<!--                  semesterId: semesterId,-->
+<!--                  divisionId: divisionId,-->
+<!--                  studentIds: selectedStudents-->
+<!--                }),-->
+<!--                success: function (response) {-->
+<!--                  // alert(response);-->
+<!--                  location.reload(); // Refresh page after assignment-->
+<!--                }-->
+<!--              });-->
+<!--            } else {-->
+<!--              alert("Please select a division and at least one student.");-->
+<!--            }-->
+<!--          });-->
+<!--        });-->
+<!--      </script>-->
+<!--    </main>-->
+<!--  </div>-->
+<!--</div>-->
+
+<!--</body>-->
+<!--</html>-->
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="UTF-8">
   <title th:text="'Assign Students to Division'">Assign Students to Division</title>
-<!--  <link rel="stylesheet" type="text/css" href="/css/styles.css">-->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 </head>
 <body>
 
 <!-- Replace the content section -->
 <div th:replace="layout/base.html">
   <div th:fragment="content">
-    <main>
+    <div class="col-md-12">
+      <div class="card shadow mb-4">
+        <div class="card-header">
+          <strong class="card-title">Assign Students to Division</strong>
+        </div>
+        <div class="card-body">
+          <h3>Semester ID: <span th:text="${semesterId}"></span></h3>
 
-      <h1>Assign Students to Division</h1>
+          <!-- Division Selection -->
+          <div class="form-group">
+            <label for="division">Select Division:</label>
+            <select id="division" class="form-control" required>
+              <option value="">--Select Division--</option>
+              <option th:each="division : ${divisions}" th:value="${division.id}" th:text="${division.name}"></option>
+            </select>
+          </div>
 
-      <!-- Semester Info -->
-      <h3>Semester ID: <span th:text="${semesterId}"></span></h3>
+          <!-- Student Selection -->
+          <h4>Unassigned Students</h4>
+          <div id="studentsList" class="mb-3">
+            <th:block th:each="student : ${unassignedStudents}">
+              <div class="form-check">
+                <input type="checkbox" class="form-check-input studentCheckbox" th:value="${student.id}">
+                <label class="form-check-label" th:text="${student.firstName + ' ' + student.lastName}"></label>
+              </div>
+            </th:block>
+          </div>
 
-      <!-- Division Selection -->
-      <label for="division">Select Division:</label>
-      <select id="division" required>
-        <option value="">--Select Division--</option>
-        <option th:each="division : ${divisions}" th:value="${division.id}" th:text="${division.name}"></option>
-      </select>
-
-      <!-- Student Selection -->
-      <h3>Unassigned Students</h3>
-      <div id="studentsList">
-        <th:block th:each="student : ${unassignedStudents}">
-          <label>
-            <input type="checkbox" class="studentCheckbox" th:value="${student.id}">
-            <span th:text="${student.firstName + ' ' + student.lastName}"></span>
-          </label><br>
-        </th:block>
+          <!-- Assign Button -->
+          <button id="assignButton" class="btn btn-primary">Assign Selected Students</button>
+        </div>
       </div>
+    </div>
 
-      <!-- Assign Button -->
-      <button id="assignButton">Assign Selected Students</button>
-      <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-      <script>
-        $(document).ready(function () {
-          $("#assignButton").click(function () {
-            var semesterId = "[[${semesterId}]]";
-            var divisionId = $("#division").val();
-            var selectedStudents = [];
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+      $(document).ready(function () {
+        $("#assignButton").click(function () {
+          var semesterId = "[[${semesterId}]]";
+          var divisionId = $("#division").val();
+          var selectedStudents = [];
 
-            $(".studentCheckbox:checked").each(function () {
-              selectedStudents.push($(this).val());
-            });
-
-            if (divisionId && selectedStudents.length > 0) {
-              $.ajax({
-                type: "POST",
-                url: "/enrollments/assign",
-                contentType: "application/json",
-                data: JSON.stringify({
-                  semesterId: semesterId,
-                  divisionId: divisionId,
-                  studentIds: selectedStudents
-                }),
-                success: function (response) {
-                  // alert(response);
-                  location.reload(); // Refresh page after assignment
-                }
-              });
-            } else {
-              alert("Please select a division and at least one student.");
-            }
+          $(".studentCheckbox:checked").each(function () {
+            selectedStudents.push($(this).val());
           });
+
+          if (divisionId && selectedStudents.length > 0) {
+            $.ajax({
+              type: "POST",
+              url: "/enrollments/assign",
+              contentType: "application/json",
+              data: JSON.stringify({
+                semesterId: semesterId,
+                divisionId: divisionId,
+                studentIds: selectedStudents
+              }),
+              success: function (response) {
+                // alert(response);
+                location.reload(); // Refresh page after assignment
+              }
+            });
+          } else {
+            alert("Please select a division and at least one student.");
+          }
         });
-      </script>
-    </main>
+      });
+    </script>
+
   </div>
 </div>
 

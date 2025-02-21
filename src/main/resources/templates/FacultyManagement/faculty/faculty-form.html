@@ -1,62 +1,183 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-  <meta charset="UTF-8">
-  <title th:text="'Register Faculty'">Register Faculty</title>
-  <link rel="stylesheet" type="text/css" href="/css/styles.css">
+    <meta charset="UTF-8">
+    <title th:text="'Register Faculty'">Register Faculty</title>
+    <link rel="stylesheet" type="text/css" href="/css/styles.css">
 </head>
 <body>
 
 <!-- Replace the content section -->
 <div th:replace="layout/base.html">
-  <div th:fragment="content">
-    <main>
+    <div th:fragment="content">
 
-      <h2>Register New Faculty</h2>
-      <form action="/admin/faculty/register" method="post">
-        <label>Username:</label>
-        <input type="text" name="username" required><br>
+        <div class="col-md-12">
+            <div class="card shadow mb-4">
+                <div class="card-header">
+                    <strong class="card-title">Register New Faculty</strong>
+                </div>
+                <div class="card-body">
+                    <form class="needs-validation" action="/admin/faculty/register" method="post" novalidate>
+                        <div class="form-row">
+                            <div class="col-md-8">
+                                <label for="facultyUsername">Username:</label>
+                                <input type="text" class="form-control" id="facultyUsername" name="username" required>
+                                <div class="valid-feedback">Looks good!</div>
+                            </div>
+                        </div>
 
-        <label>Password:</label>
-        <input type="password" name="password" required><br>
+                        <div class="form-row">
+                            <div class="col-md-8">
+                                <label for="facultyPassword">Password:</label>
+                                <input type="password" class="form-control" id="facultyPassword" name="password"
+                                       required>
+                                <div class="invalid-feedback">Please provide a valid password.</div>
+                            </div>
+                        </div>
 
-        <label>First Name:</label>
-        <input type="text" name="firstName" required><br>
+                        <div class="form-row">
+                            <div class="col-md-6 mb-3">
+                                <label for="facultyFirstName">First Name</label>
+                                <input type="text" class="form-control" id="facultyFirstName" name="firstName" required>
+                                <div class="valid-feedback">Looks good!</div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="facultyLastName">Last Name</label>
+                                <input type="text" class="form-control" id="facultyLastName" name="lastName" required>
+                                <div class="valid-feedback">Looks good!</div>
+                            </div>
+                        </div>
 
-        <label>Last Name:</label>
-        <input type="text" name="lastName" required><br>
+                        <div class="form-row">
+                            <div class="col-md-6 mb-3">
+                                <label for="facultyDesignation">Designation</label>
+                                <input type="text" class="form-control" id="facultyDesignation" name="designation"
+                                       required>
+                                <div class="valid-feedback">Looks good!</div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="facultyQualification">Qualification</label>
+                                <input type="text" class="form-control" id="facultyQualification" name="qualification"
+                                       required>
+                                <div class="valid-feedback">Looks good!</div>
+                            </div>
+                        </div>
 
-        <label>Designation:</label>
-        <input type="text" name="designation" required><br>
+                        <div class="form-row">
+                            <div class="col-md-6 mb-3">
+                                <label for="facultyExperience">Experience (Years)</label>
+                                <input type="number" class="form-control" id="facultyExperience" name="experience"
+                                       required>
+                                <div class="invalid-feedback">Please enter a valid number of years.</div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="facultyPhone">Phone Number</label>
+                                <input type="text" class="form-control" id="facultyPhone" name="phoneNumber" required>
+                                <div class="invalid-feedback">Please enter a correct phone number.</div>
+                            </div>
+                        </div>
 
-        <label>Qualification:</label>
-        <input type="text" name="qualification" required><br>
+                        <div class="form-row">
+                            <div class="col-md-8 mb-3">
+                                <label for="facultyEmail">Email</label>
+                                <input type="email" class="form-control" id="facultyEmail" name="email" required>
+                                <div class="invalid-feedback">Please use a valid email.</div>
+                                <small class="form-text text-muted">We'll never share your email with anyone
+                                    else.</small>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label for="facultyStatus">Status</label>
+                                <select id="facultyStatus" class="form-control" name="status" required>
+                                    <option value="Active">Active</option>
+                                    <option value="Inactive">Inactive</option>
+                                </select>
+                            </div>
+                        </div>
 
-        <label>Experience (Years):</label>
-        <input type="number" name="experience" required><br>
+                        <div class="form-row">
+                            <div class="col-md-8">
+                                <label for="facultyDepartment">Department:</label>
+                                <select id="facultyDepartment" class="form-control" name="department" required>
+                                    <option th:each="department : ${departments}" th:value="${department.id}"
+                                            th:text="${department.name}"></option>
+                                </select>
+                            </div>
+                        </div>
 
-        <label>Phone Number:</label>
-        <input type="text" name="phoneNumber" required><br>
+                        <button class="btn btn-primary mt-3" type="submit">Register Faculty</button>
+                    </form>
+                </div>
+            </div>
+        </div>
 
-        <label>Email:</label>
-        <input type="email" name="email" required><br>
+        <!--    <main>-->
 
-        <label>Status:</label>
-        <select name="status" required>
-          <option value="Active">Active</option>
-          <option value="Inactive">Inactive</option>
-        </select><br>
+        <!--      <h2>Register New Faculty</h2>-->
+        <!--      <form action="/admin/faculty/register" method="post">-->
+        <!--        <label>Username:</label>-->
+        <!--        <input type="text" name="username" required><br>-->
 
-        <label>Department:</label>
-        <select name="department" required>
-          <option th:each="department : ${departments}" th:value="${department.id}" th:text="${department.name}"></option>
-        </select><br>
+        <!--        <label>Password:</label>-->
+        <!--        <input type="password" name="password" required><br>-->
 
-        <button type="submit">Register Faculty</button>
-      </form>
-    </main>
-  </div>
+        <!--        <label>First Name:</label>-->
+        <!--        <input type="text" name="firstName" required><br>-->
+
+        <!--        <label>Last Name:</label>-->
+        <!--        <input type="text" name="lastName" required><br>-->
+
+        <!--        <label>Designation:</label>-->
+        <!--        <input type="text" name="designation" required><br>-->
+
+        <!--        <label>Qualification:</label>-->
+        <!--        <input type="text" name="qualification" required><br>-->
+
+        <!--        <label>Experience (Years):</label>-->
+        <!--        <input type="number" name="experience" required><br>-->
+
+        <!--        <label>Phone Number:</label>-->
+        <!--        <input type="text" name="phoneNumber" required><br>-->
+
+        <!--        <label>Email:</label>-->
+        <!--        <input type="email" name="email" required><br>-->
+
+        <!--        <label>Status:</label>-->
+        <!--        <select name="status" required>-->
+        <!--          <option value="Active">Active</option>-->
+        <!--          <option value="Inactive">Inactive</option>-->
+        <!--        </select><br>-->
+
+        <!--        <label>Department:</label>-->
+        <!--        <select name="department" required>-->
+        <!--          <option th:each="department : ${departments}" th:value="${department.id}" th:text="${department.name}"></option>-->
+        <!--        </select><br>-->
+
+        <!--        <button type="submit">Register Faculty</button>-->
+        <!--      </form>-->
+        <!--    </main>-->
+    </div>
 </div>
+
+
+<script>
+    (function () {
+        'use strict';
+        window.addEventListener('load', function () {
+            // Fetch all the forms we want to apply custom Bootstrap validation styles to
+            var forms = document.getElementsByClassName('needs-validation');
+            // Loop over them and prevent submission
+            var validation = Array.prototype.filter.call(forms, function (form) {
+                form.addEventListener('submit', function (event) {
+                    if (form.checkValidity() === false) {
+                        event.preventDefault();
+                        event.stopPropagation();
+                    }
+                    form.classList.add('was-validated');
+                }, false);
+            });
+        }, false);
+    })();
+</script>
 
 </body>
 </html>

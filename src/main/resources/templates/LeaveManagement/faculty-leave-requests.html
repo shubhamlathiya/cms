@@ -2,17 +2,19 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title th:text="'Custom Page Title'">Custom Page Title</title>
+    <title th:text="'Leave Requests for Faculty'">Leave Requests for Faculty</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 </head>
 <body>
 
 <!-- Replace the content section -->
 <div th:replace="layout/base.html">
     <div th:fragment="content">
-        <h2>Leave Requests for Faculty</h2>
-        <div>
 
-            <table>
+        <div class="container mt-5">
+            <h2 class="mb-4 page-title">Leave Requests for Faculty</h2>
+
+            <table class="table table-striped table-bordered">
                 <thead>
                 <tr>
                     <th>Student Name</th>
@@ -30,30 +32,42 @@
                     <td th:text="${leaveRequest.reason}">Reason</td>
                     <td th:text="${leaveRequest.startDate}">Start Date</td>
                     <td th:text="${leaveRequest.endDate}">End Date</td>
-                    <td th:text="${leaveRequest.status}">Status</td>
+                    <td>
+                        <!-- Apply status color and display status text only once -->
+                        <span th:if="${leaveRequest.status == 'APPROVED'}" class="text-success" th:text="${leaveRequest.status}">Status</span>
+                        <span th:if="${leaveRequest.status == 'REJECTED'}" class="text-danger" th:text="${leaveRequest.status}">Status</span>
+                        <span th:if="${leaveRequest.status == 'PENDING'}" class="text-warning" th:text="${leaveRequest.status}">Status</span>
+                    </td>
                     <td th:text="${leaveRequest.remarks}">Remarks</td>
                     <td th:if="${leaveRequest.status == 'PENDING'}">
-                        <form th:action="@{/leave-requests/faculty/update}" method="post">
+                        <form th:action="@{/leave-requests/faculty/update}" method="post" class="form-inline">
                             <input type="hidden" name="leaveId" th:value="${leaveRequest.id}"/>
                             <input type="hidden" name="facultyId" th:value="${leaveRequest.faculty.facultyId}"/>
 
-                            <select name="status">
-                                <option value="APPROVED">Approve</option>
-                                <option value="REJECTED">Reject</option>
-                            </select>
+                            <div class="form-group mr-2">
+                                <select name="status" class="form-control">
+                                    <option value="APPROVED">Approve</option>
+                                    <option value="REJECTED">Reject</option>
+                                </select>
+                            </div>
 
-                            <input type="text" name="remarks" placeholder="Add remarks..."/>
+                            <div class="form-group mr-2">
+                                <input type="text" name="remarks" class="form-control" placeholder="Add remarks..."/>
+                            </div>
 
-                            <button type="submit">Update Status</button>
+                            <button type="submit" class="btn btn-primary">Update Status</button>
                         </form>
                     </td>
                 </tr>
                 </tbody>
             </table>
+
         </div>
 
     </div>
 </div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 </body>
 </html>

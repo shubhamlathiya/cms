@@ -2,41 +2,91 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title th:text="'Custom Page Title'">Custom Page Title</title>
-<!--    <link rel="stylesheet" type="text/css" href="/css/styles.css">-->
+    <title th:text="'Create Semester'">Create Semester</title>
+    <link rel="stylesheet" type="text/css" href="/css/styles.css">
 </head>
 <body>
 
 <!-- Replace the content section -->
 <div th:replace="layout/base.html">
     <div th:fragment="content">
-        <main>
-            <form th:action="@{/semesters/add}"  th:object="${semester}" method="post">
-                <label for="course">Course:</label>
-                <select name="courseId" id="course">
-                    <th:block th:each="course : ${courses}">
-                        <option th:value="${course.courseID}" th:text="${course.courseName}"></option>
-                    </th:block>
-                </select>
 
-                <label for="semesterName">Semester Name:</label>
-                <input type="text" name="semesterName" id="semesterName" th:field="*{name}"  required>
+        <div class="col-md-12">
+            <div class="card shadow mb-4">
+                <div class="card-header">
+                    <strong class="card-title">Create New Semester</strong>
+                </div>
+                <div class="card-body">
+                    <form class="needs-validation" th:action="@{/semesters/add}" th:object="${semester}" method="post" novalidate>
+                        <div class="form-row">
+                            <div class="col-md-8 mb-3">
+                                <label for="course">Course:</label>
+                                <select name="courseId" id="course" class="form-control" required>
+                                    <th:block th:each="course : ${courses}">
+                                        <option th:value="${course.courseID}" th:text="${course.courseName}"></option>
+                                    </th:block>
+                                </select>
+                                <div class="invalid-feedback">Please select a course.</div>
+                            </div>
+                        </div>
 
-                <label for="academicYear">Academic Year:</label>
-                <input type="number" name="academicYear" id="academicYear" th:field="*{academicYear}"  required>
+                        <div class="form-row">
+                            <div class="col-md-8 mb-3">
+                                <label for="semesterName">Semester Name:</label>
+                                <input type="text" name="semesterName" id="semesterName" th:field="*{name}" class="form-control" required>
+                                <div class="valid-feedback">Looks good!</div>
+                            </div>
+                        </div>
 
-                <label for="startDate">Start Date:</label>
-                <input type="date" name="startDate" id="startDate" th:field="*{startDate}" required>
+                        <div class="form-row">
+                            <div class="col-md-8 mb-3">
+                                <label for="academicYear">Academic Year:</label>
+                                <input type="number" name="academicYear" id="academicYear" th:field="*{academicYear}" class="form-control" required>
+                                <div class="invalid-feedback">Please provide a valid academic year.</div>
+                            </div>
+                        </div>
 
-                <label for="endDate">End Date:</label>
-                <input type="date" name="endDate" id="endDate" th:field="*{endDate}" required>
+                        <div class="form-row">
+                            <div class="col-md-6 mb-3">
+                                <label for="startDate">Start Date:</label>
+                                <input type="date" name="startDate" id="startDate" th:field="*{startDate}" class="form-control" required>
+                                <div class="invalid-feedback">Please select a start date.</div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="endDate">End Date:</label>
+                                <input type="date" name="endDate" id="endDate" th:field="*{endDate}" class="form-control" required>
+                                <div class="invalid-feedback">Please select an end date.</div>
+                            </div>
+                        </div>
 
-                <button type="submit">Create Semester</button>
-            </form>
+                        <button class="btn btn-primary mt-3" type="submit">Create Semester</button>
+                    </form>
+                </div>
+            </div>
+        </div>
 
-        </main>
     </div>
 </div>
+
+<script>
+    (function () {
+        'use strict';
+        window.addEventListener('load', function () {
+            // Fetch all the forms we want to apply custom Bootstrap validation styles to
+            var forms = document.getElementsByClassName('needs-validation');
+            // Loop over them and prevent submission
+            var validation = Array.prototype.filter.call(forms, function (form) {
+                form.addEventListener('submit', function (event) {
+                    if (form.checkValidity() === false) {
+                        event.preventDefault();
+                        event.stopPropagation();
+                    }
+                    form.classList.add('was-validated');
+                }, false);
+            });
+        }, false);
+    })();
+</script>
 
 </body>
 </html>
