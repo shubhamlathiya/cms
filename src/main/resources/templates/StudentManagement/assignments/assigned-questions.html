@@ -1,40 +1,95 @@
+<!--<!DOCTYPE html>-->
+<!--<html xmlns:th="http://www.thymeleaf.org">-->
+<!--<head>-->
+<!--    <title>Faculty Assigned Questions</title>-->
+<!--</head>-->
+<!--<body>-->
+<!--<h2>Assigned Questions</h2>-->
+<!--<table>-->
+<!--    <thead>-->
+<!--    <tr>-->
+<!--        <th>Student ID</th>-->
+<!--        <th>Student Name</th>-->
+<!--        <th th:each="i : ${#numbers.sequence(1, maxQuestions)}" th:text="'Question ' + ${i}"></th>-->
+<!--        <th>Submission Status</th> &lt;!&ndash; New column for submission status &ndash;&gt;-->
+<!--    </tr>-->
+<!--    </thead>-->
+<!--    <tbody>-->
+<!--    <tr th:each="sa : ${assignedQuestions}">-->
+<!--        <td th:text="${sa.studentId}"></td>-->
+<!--        <td th:text="${sa.studentName}"></td>-->
+<!--        <td th:each="i : ${#numbers.sequence(1, maxQuestions)}">-->
+<!--            <span th:if="${i <= sa.questions.size()}" th:text="${sa.questions[i-1]}"></span>-->
+<!--            <span th:if="${i > sa.questions.size()}">No Question</span> &lt;!&ndash; Placeholder if no question &ndash;&gt;-->
+<!--        </td>-->
+<!--        <td>-->
+<!--            &lt;!&ndash; Check if filePath exists for the student submission &ndash;&gt;-->
+<!--            <span th:if="${sa.filePath != null}">-->
+<!--                <a th:href="@{${sa.filePath}}" target="_blank">View Submission</a>-->
+<!--            </span>-->
+<!--            <span th:if="${sa.filePath == null}">-->
+<!--                No Submission-->
+<!--            </span>-->
+<!--        </td>-->
+<!--    </tr>-->
+<!--    </tbody>-->
+<!--</table>-->
+
+<!--<a th:href="@{/faculty/dashboard}" class="btn btn-primary">Back to Dashboard</a>-->
+<!--</body>-->
+<!--</html>-->
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
+    <meta charset="UTF-8">
     <title>Faculty Assigned Questions</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css">
 </head>
 <body>
-<h2>Assigned Questions</h2>
-<table>
-    <thead>
-    <tr>
-        <th>Student ID</th>
-        <th>Student Name</th>
-        <th th:each="i : ${#numbers.sequence(1, maxQuestions)}" th:text="'Question ' + ${i}"></th>
-        <th>Submission Status</th> <!-- New column for submission status -->
-    </tr>
-    </thead>
-    <tbody>
-    <tr th:each="sa : ${assignedQuestions}">
-        <td th:text="${sa.studentId}"></td>
-        <td th:text="${sa.studentName}"></td>
-        <td th:each="i : ${#numbers.sequence(1, maxQuestions)}">
-            <span th:if="${i <= sa.questions.size()}" th:text="${sa.questions[i-1]}"></span>
-            <span th:if="${i > sa.questions.size()}">No Question</span> <!-- Placeholder if no question -->
-        </td>
-        <td>
-            <!-- Check if filePath exists for the student submission -->
-            <span th:if="${sa.filePath != null}">
-                <a th:href="@{${sa.filePath}}" target="_blank">View Submission</a>
-            </span>
-            <span th:if="${sa.filePath == null}">
-                No Submission
-            </span>
-        </td>
-    </tr>
-    </tbody>
-</table>
 
-<a th:href="@{/faculty/dashboard}" class="btn btn-primary">Back to Dashboard</a>
+<div th:replace="layout/base.html">
+    <div th:fragment="content">
+        <div class="container mt-4">
+            <h2>Assigned Questions</h2>
+            <div class="table-responsive">
+                <table class="table table-bordered">
+                    <thead class="table-light">
+                    <tr>
+                        <th>Student ID</th>
+                        <th>Student Name</th>
+                        <th th:each="i : ${#numbers.sequence(1, maxQuestions)}" th:text="'Question ' + ${i}"></th>
+                        <th>Submission Status</th> <!-- New column for submission status -->
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="sa : ${assignedQuestions}">
+                        <td th:text="${sa.studentId}"></td>
+                        <td th:text="${sa.studentName}"></td>
+                        <td th:each="i : ${#numbers.sequence(1, maxQuestions)}">
+                            <span th:if="${i <= sa.questions.size()}" th:text="${sa.questions[i-1]}"></span>
+                            <span th:if="${i > sa.questions.size()}">No Question</span>
+                            <!-- Placeholder if no question -->
+                        </td>
+                        <td>
+                            <!-- Check if filePath exists for the student submission -->
+                            <span th:if="${sa.filePath != null}">
+                        <a th:href="@{${sa.filePath}}" target="_blank" class="btn btn-link">View Submission</a>
+                    </span>
+                            <span th:if="${sa.filePath == null}">
+                        <span class="text-muted">No Submission</span>
+                    </span>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <a th:href="@{/faculty/dashboard}" class="btn btn-primary mt-3">Back to Dashboard</a>
+        </div>
+
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js"></script>
+    </div>
+</div>
+
 </body>
 </html>

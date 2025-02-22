@@ -154,5 +154,4 @@ public class LeaveRequestController {
         return "redirect:/leave-requests/faculty/" + facultyId + "/view";
     }
 
-
 }

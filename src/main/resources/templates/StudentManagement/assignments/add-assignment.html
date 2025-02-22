@@ -1,41 +1,155 @@
+<!--<!DOCTYPE html>-->
+<!--<html xmlns:th="http://www.thymeleaf.org">-->
+<!--<head>-->
+<!--    <title>Add Assignment</title>-->
+<!--</head>-->
+<!--<body>-->
+<!--<h2>Add New Assignment</h2>-->
+<!--<form th:action="@{/assignments/{divisionId}/{semesterId}/{subjectId}/save(divisionId=${divisionId}, semesterId=${semesterId}, subjectId=${subjectId})}"-->
+<!--      method="post" enctype="multipart/form-data">-->
+<!--    <label for="assignmentName">Assignment Name:</label>-->
+<!--    <input type="text" id="assignmentName" name="assignmentName" required><br><br>-->
+
+<!--    <label for="deadline">Deadline:</label>-->
+<!--    <input type="datetime-local" id="deadline" name="deadline" required><br><br>-->
+
+<!--    <label for="maxMarks">Max Marks:</label>-->
+<!--    <input type="number" id="maxMarks" name="maxMarks" required><br><br>-->
+
+<!--    <label for="material">Upload Material:</label>-->
+<!--    <input type="file" id="material" name="material"><br><br>-->
+
+<!--    <label for="questions">Add Questions (one per line):</label><br>-->
+<!--    <textarea id="questions" name="questions" rows="10" cols="50" required></textarea><br><br>-->
+
+<!--    <label for="randomAssignment">Assign Questions Randomly:</label>-->
+<!--    <input type="checkbox" id="randomAssignment" name="randomAssignment" onchange="toggleMaxQuestions()"><br><br>-->
+
+<!--    <div id="maxQuestionsField" style="display: none;">-->
+<!--        <label for="maxQuestions">Max Questions per Student:</label>-->
+<!--        <input type="number" id="maxQuestions" name="maxQuestions"><br><br>-->
+<!--    </div>-->
+
+<!--    <label for="file">Upload File:</label>-->
+<!--    <input type="file" id="file" name="file"><br><br>-->
+
+<!--    <button type="submit">Save Assignment</button>-->
+<!--</form>-->
+<!--<p th:if="${error}" th:text="${error}" style="color: red;"></p>-->
+<!--<script>-->
+<!--    function toggleMaxQuestions() {-->
+<!--        const randomAssignmentCheckbox = document.getElementById("randomAssignment");-->
+<!--        const maxQuestionsField = document.getElementById("maxQuestionsField");-->
+
+<!--        if (randomAssignmentCheckbox.checked) {-->
+<!--            maxQuestionsField.style.display = "block";-->
+<!--        } else {-->
+<!--            maxQuestionsField.style.display = "none";-->
+<!--        }-->
+<!--    }-->
+<!--</script>-->
+
+<!--<a th:href="@{/faculty/dashboard}" class="btn btn-primary">Back to Dashboard</a>-->
+<!--</body>-->
+<!--</html>-->
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
+    <meta charset="UTF-8">
     <title>Add Assignment</title>
+<!--    <link rel="stylesheet" href="/css/styles.css">-->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css">
 </head>
 <body>
-<h2>Add New Assignment</h2>
-<form th:action="@{/assignments/{divisionId}/{semesterId}/{subjectId}/save(divisionId=${divisionId}, semesterId=${semesterId}, subjectId=${subjectId})}"
-      method="post" enctype="multipart/form-data">
-    <label for="assignmentName">Assignment Name:</label>
-    <input type="text" id="assignmentName" name="assignmentName" required><br><br>
 
-    <label for="deadline">Deadline:</label>
-    <input type="datetime-local" id="deadline" name="deadline" required><br><br>
+<!-- Replace the content section -->
+<div th:replace="layout/base.html">
+    <div th:fragment="content">
 
-    <label for="maxMarks">Max Marks:</label>
-    <input type="number" id="maxMarks" name="maxMarks" required><br><br>
+        <div class="col-md-12">
+            <div class="card shadow mb-4">
+                <div class="card-header">
+                    <strong class="card-title">Add New Assignment</strong>
+                </div>
+                <div class="card-body">
+                    <form class="needs-validation" th:action="@{/assignments/{divisionId}/{semesterId}/{subjectId}/save(divisionId=${divisionId}, semesterId=${semesterId}, subjectId=${subjectId})}"
+                          method="post" enctype="multipart/form-data" novalidate>
 
-    <label for="material">Upload Material:</label>
-    <input type="file" id="material" name="material"><br><br>
+                        <!-- Assignment Name -->
+                        <div class="form-row">
+                            <div class="col-md-8 mb-3">
+                                <label for="assignmentName">Assignment Name</label>
+                                <input type="text" class="form-control" id="assignmentName" name="assignmentName" required>
+                                <div class="valid-feedback">Looks good!</div>
+                            </div>
+                        </div>
 
-    <label for="questions">Add Questions (one per line):</label><br>
-    <textarea id="questions" name="questions" rows="10" cols="50" required></textarea><br><br>
+                        <!-- Deadline -->
+                        <div class="form-row">
+                            <div class="col-md-8 mb-3">
+                                <label for="deadline">Deadline</label>
+                                <input type="datetime-local" class="form-control" id="deadline" name="deadline" required>
+                            </div>
+                        </div>
 
-    <label for="randomAssignment">Assign Questions Randomly:</label>
-    <input type="checkbox" id="randomAssignment" name="randomAssignment" onchange="toggleMaxQuestions()"><br><br>
+                        <!-- Max Marks -->
+                        <div class="form-row">
+                            <div class="col-md-8 mb-3">
+                                <label for="maxMarks">Max Marks</label>
+                                <input type="number" class="form-control" id="maxMarks" name="maxMarks" required>
+                            </div>
+                        </div>
 
-    <div id="maxQuestionsField" style="display: none;">
-        <label for="maxQuestions">Max Questions per Student:</label>
-        <input type="number" id="maxQuestions" name="maxQuestions"><br><br>
+                        <!-- Upload Material -->
+                        <div class="form-row">
+                            <div class="col-md-8 mb-3">
+                                <label for="material">Upload Material</label>
+                                <input type="file" class="form-control" id="material" name="material">
+                            </div>
+                        </div>
+
+                        <!-- Add Questions -->
+                        <div class="form-row">
+                            <div class="col-md-8 mb-3">
+                                <label for="questions">Add Questions (one per line)</label><br>
+                                <textarea class="form-control" id="questions" name="questions" rows="10" cols="50" required></textarea>
+                            </div>
+                        </div>
+
+                        <!-- Random Assignment -->
+                        <div class="form-row">
+                            <div class="col-md-8 mb-3">
+                                <label for="randomAssignment">Assign Questions Randomly</label>
+                                <input type="checkbox" id="randomAssignment" name="randomAssignment" onchange="toggleMaxQuestions()">
+                            </div>
+                        </div>
+
+                        <!-- Max Questions -->
+                        <div id="maxQuestionsField" class="form-row" style="display: none;">
+                            <div class="col-md-8 mb-3">
+                                <label for="maxQuestions">Max Questions per Student</label>
+                                <input type="number" class="form-control" id="maxQuestions" name="maxQuestions">
+                            </div>
+                        </div>
+
+                        <!-- Upload File -->
+                        <div class="form-row">
+                            <div class="col-md-8 mb-3">
+                                <label for="file">Upload File</label>
+                                <input type="file" class="form-control" id="file" name="file">
+                            </div>
+                        </div>
+
+                        <!-- Submit Button -->
+                        <button class="btn btn-primary mt-3" type="submit">Save Assignment</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
     </div>
+</div>
 
-    <label for="file">Upload File:</label>
-    <input type="file" id="file" name="file"><br><br>
-
-    <button type="submit">Save Assignment</button>
-</form>
-<p th:if="${error}" th:text="${error}" style="color: red;"></p>
 <script>
     function toggleMaxQuestions() {
         const randomAssignmentCheckbox = document.getElementById("randomAssignment");
@@ -49,6 +163,8 @@
     }
 </script>
 
-<a th:href="@{/faculty/dashboard}" class="btn btn-primary">Back to Dashboard</a>
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js"></script>
+
 </body>
 </html>

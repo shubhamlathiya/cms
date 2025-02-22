@@ -1,37 +1,94 @@
+<!--<!DOCTYPE html>-->
+<!--<html xmlns:th="http://www.thymeleaf.org">-->
+<!--<head>-->
+<!--    <title>Assignments</title>-->
+<!--</head>-->
+<!--<body>-->
+<!--<h2>Assignments for Division <span th:text="${divisionId}"></span>, Semester <span th:text="${semesterId}"></span>, and Subject <span th:text="${subjectId}"></span></h2>-->
+<!--<a th:href="@{/assignments/{divisionId}/{semesterId}/{subjectId}/new(divisionId=${divisionId}, semesterId=${semesterId}, subjectId=${subjectId})}">Add New Assignment</a>-->
+<!--<table>-->
+<!--    <thead>-->
+<!--    <tr>-->
+<!--        <th>ID</th>-->
+<!--        <th>Assignment Name</th>-->
+<!--        <th>Max Questions</th>-->
+<!--        <th>Max Marks</th>-->
+<!--        <th>File Path</th>-->
+<!--        <th>Deadline</th>-->
+<!--    </tr>-->
+<!--    </thead>-->
+<!--    <tbody>-->
+<!--    <tr th:each="assignment : ${assignments}">-->
+<!--        <td th:text="${assignment.id}"></td>-->
+<!--        <td th:text="${assignment.assignmentName}"></td>-->
+<!--        <td th:text="${assignment.maxQuestions}"></td>-->
+<!--        <td th:text="${assignment.maxMarks}"></td>-->
+<!--        <td th:text="${assignment.filePath}"></td>-->
+<!--        <td th:text="${assignment.deadLine}"></td>-->
+<!--        <td>-->
+<!--            <a th:href="@{/assignments/{assignmentId}/assigned-questions(assignmentId=${assignment.id})}">View Assigned Questions</a>-->
+<!--        </td>-->
+<!--    </tr>-->
+<!--    </tbody>-->
+<!--</table>-->
+
+<!--<a th:href="@{/faculty/dashboard}" class="btn btn-primary">Back to Dashboard</a>-->
+<!--</body>-->
+<!--</html>-->
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
+    <meta charset="UTF-8">
     <title>Assignments</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css">
 </head>
 <body>
-<h2>Assignments for Division <span th:text="${divisionId}"></span>, Semester <span th:text="${semesterId}"></span>, and Subject <span th:text="${subjectId}"></span></h2>
-<a th:href="@{/assignments/{divisionId}/{semesterId}/{subjectId}/new(divisionId=${divisionId}, semesterId=${semesterId}, subjectId=${subjectId})}">Add New Assignment</a>
-<table>
-    <thead>
-    <tr>
-        <th>ID</th>
-        <th>Assignment Name</th>
-        <th>Max Questions</th>
-        <th>Max Marks</th>
-        <th>File Path</th>
-        <th>Deadline</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr th:each="assignment : ${assignments}">
-        <td th:text="${assignment.id}"></td>
-        <td th:text="${assignment.assignmentName}"></td>
-        <td th:text="${assignment.maxQuestions}"></td>
-        <td th:text="${assignment.maxMarks}"></td>
-        <td th:text="${assignment.filePath}"></td>
-        <td th:text="${assignment.deadLine}"></td>
-        <td>
-            <a th:href="@{/assignments/{assignmentId}/assigned-questions(assignmentId=${assignment.id})}">View Assigned Questions</a>
-        </td>
-    </tr>
-    </tbody>
-</table>
+<div th:replace="layout/base.html">
+    <div th:fragment="content">
 
-<a th:href="@{/faculty/dashboard}" class="btn btn-primary">Back to Dashboard</a>
+        <div class="container mt-4">
+            <h2>Assignments for Division <span th:text="${divisionId}"></span>, Semester <span
+                    th:text="${semesterId}"></span>, and Subject <span th:text="${subjectId}"></span></h2>
+
+            <a th:href="@{/assignments/{divisionId}/{semesterId}/{subjectId}/new(divisionId=${divisionId}, semesterId=${semesterId}, subjectId=${subjectId})}"
+               class="btn btn-success mb-3">Add New Assignment</a>
+
+            <div class="table-responsive">
+                <table class="table table-bordered table-striped">
+                    <thead class="table-light">
+                    <tr>
+                        <th>ID</th>
+                        <th>Assignment Name</th>
+                        <th>Max Questions</th>
+                        <th>Max Marks</th>
+                        <th>File Path</th>
+                        <th>Deadline</th>
+                        <th>Actions</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="assignment : ${assignments}">
+                        <td th:text="${assignment.id}"></td>
+                        <td th:text="${assignment.assignmentName}"></td>
+                        <td th:text="${assignment.maxQuestions}"></td>
+                        <td th:text="${assignment.maxMarks}"></td>
+                        <td th:text="${assignment.filePath}"></td>
+                        <td th:text="${assignment.deadLine}"></td>
+                        <td>
+                            <a th:href="@{/assignments/{assignmentId}/assigned-questions(assignmentId=${assignment.id})}"
+                               class="btn btn-info btn-sm">View Assigned Questions</a>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <a th:href="@{/faculty/dashboard}" class="btn btn-primary mt-3">Back to Dashboard</a>
+        </div>
+
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    </div>
+</div>
 </body>
 </html>

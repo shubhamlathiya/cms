@@ -2,9 +2,11 @@ package com.codershubham.cms.cms.controller.StudentManagementModules;
 
 import com.codershubham.cms.cms.constant.PathConstant;
 import com.codershubham.cms.cms.model.DTO.StudentQuestionsDto;
+import com.codershubham.cms.cms.model.FacultyManagementModules.FacultyModel;
 import com.codershubham.cms.cms.model.StudentManagementModules.AssignmentModel;
 import com.codershubham.cms.cms.model.StudentManagementModules.AssignmentSubmissionModel;
 import com.codershubham.cms.cms.model.StudentManagementModules.StudentAssignmentModel;
+import com.codershubham.cms.cms.service.FacultyManagementModules.FacultyService;
 import com.codershubham.cms.cms.service.StudentManagementModules.AssignmentService;
 import com.codershubham.cms.cms.util.UserRoleUtil;
 import jakarta.servlet.http.HttpSession;
@@ -32,6 +34,9 @@ public class AssignmentController {
     private AssignmentService assignmentService;
 
     @Autowired
+    private FacultyService facultyService;
+
+    @Autowired
     private UserRoleUtil userRoleUtil;
 
     @Autowired
@@ -44,6 +49,14 @@ public class AssignmentController {
         model.addAttribute("divisionId", divisionId);
         model.addAttribute("semesterId", semesterId);
         model.addAttribute("subjectId", subjectId);
+
+        Long userId = (Long) session.getAttribute("userId");
+
+        FacultyModel faculty = facultyService.getFacultyByUserId(userId);
+        model.addAttribute("faculty", faculty);
+
+        String userRole = userRoleUtil.getUserRole(session);
+        model.addAttribute("userRole", userRole);
         return "StudentManagement/assignments/assignments";
     }
 
@@ -52,6 +65,14 @@ public class AssignmentController {
         model.addAttribute("divisionId", divisionId);
         model.addAttribute("semesterId", semesterId);
         model.addAttribute("subjectId", subjectId);
+
+        Long userId = (Long) session.getAttribute("userId");
+
+        FacultyModel faculty = facultyService.getFacultyByUserId(userId);
+        model.addAttribute("faculty", faculty);
+
+        String userRole = userRoleUtil.getUserRole(session);
+        model.addAttribute("userRole", userRole);
         return "StudentManagement/assignments/add-assignment";
     }
 
@@ -110,18 +131,22 @@ public class AssignmentController {
         }
 
         // Finding the maximum number of questions assigned to any student
-        int maxQuestions = studentQuestionsList.stream()
-                .mapToInt(sa -> sa.getQuestions().size())
-                .max()
-                .orElse(0);
+        int maxQuestions = studentQuestionsList.stream().mapToInt(sa -> sa.getQuestions().size()).max().orElse(0);
 
         // Add attributes to the model for rendering in the view
         model.addAttribute("assignedQuestions", studentQuestionsList);
         model.addAttribute("maxQuestions", maxQuestions);
 
+        Long userId = (Long) session.getAttribute("userId");
+
+        FacultyModel faculty = facultyService.getFacultyByUserId(userId);
+        model.addAttribute("faculty", faculty);
+
+        String userRole = userRoleUtil.getUserRole(session);
+        model.addAttribute("userRole", userRole);
+
         return "StudentManagement/assignments/assigned-questions";
     }
-
 
 
     @PostMapping("/submit/{assignmentId}/{studentId}")
