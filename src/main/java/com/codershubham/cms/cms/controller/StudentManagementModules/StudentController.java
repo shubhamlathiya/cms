@@ -41,12 +41,7 @@ public class StudentController {
     private StudentService studentService;
 
     @Autowired
-    private CourseService courseService;
-
-    @Autowired
     private DepartmentService departmentService;
-
-
 
     @Autowired
     private AttendanceService attendanceService;
@@ -56,9 +51,6 @@ public class StudentController {
 
     @Autowired
     private SyllabusService syllabusService;
-
-    @Autowired
-    private EmailUtil emailUtil;
 
     @Autowired
     private UserRoleUtil userRoleUtil;
