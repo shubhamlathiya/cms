@@ -1,36 +1,27 @@
 package com.codershubham.cms.cms.controller.StudentManagementModules;
 
 import com.codershubham.cms.cms.constant.PathConstant;
-import com.codershubham.cms.cms.model.CourseManagementModules.CourseModel;
 import com.codershubham.cms.cms.model.CourseManagementModules.DepartmentModel;
 import com.codershubham.cms.cms.model.CourseManagementModules.SubjectsModel;
 import com.codershubham.cms.cms.model.CourseManagementModules.SyllabusModel;
 import com.codershubham.cms.cms.model.DTO.StudentQuestionsDto;
+import com.codershubham.cms.cms.model.ExaminationManagementModules.ExamFormModel;
 import com.codershubham.cms.cms.model.StudentManagementModules.*;
-import com.codershubham.cms.cms.model.UserManagementModules.UserModel;
-import com.codershubham.cms.cms.service.CourseManagementModules.CourseService;
+import com.codershubham.cms.cms.repository.StudentManagementModules.SemesterRepository;
 import com.codershubham.cms.cms.service.CourseManagementModules.DepartmentService;
-import com.codershubham.cms.cms.service.CourseManagementModules.SubjectService;
 import com.codershubham.cms.cms.service.CourseManagementModules.SyllabusService;
+import com.codershubham.cms.cms.service.ExaminationManagementModules.ExamService;
 import com.codershubham.cms.cms.service.FacultyManagementModules.AttendanceService;
 import com.codershubham.cms.cms.service.StudentManagementModules.AssignmentService;
-import com.codershubham.cms.cms.service.StudentManagementModules.DivisionService;
-import com.codershubham.cms.cms.service.StudentManagementModules.SemesterService;
 import com.codershubham.cms.cms.service.StudentManagementModules.StudentService;
-import com.codershubham.cms.cms.util.EmailUtil;
 import com.codershubham.cms.cms.util.UserRoleUtil;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 
 @Controller
@@ -57,6 +48,12 @@ public class StudentController {
 
     @Autowired
     private HttpSession session;
+
+    @Autowired
+    private SemesterRepository semesterRepository;
+
+    @Autowired
+    private ExamService examService;
 
     @GetMapping("/dashboard")
     public String studentDashboard(Model model) {
@@ -191,6 +188,86 @@ public class StudentController {
         model.addAttribute("student", student);
 
         return "StudentManagement/lesson-plan"; // Return updated view
+    }
+
+    @GetMapping("/exam/{id}")
+    public String viewExamForm(@PathVariable Long id, Model model) {
+        // Fetch all semesters for the student
+        List<StudentEnrollmentModel> enrollments = studentService.getEnrollmentsByStudentId(id);
+
+        // Map to store subjects per semester
+        Map<Long, List<SubjectsModel>> subjectsBySemester = new HashMap<>();
+
+        for (StudentEnrollmentModel enrollment : enrollments) {
+            SemesterModel semester = enrollment.getSemester();
+            if (semester == null) continue; // Skip if semester is null
+
+            Long semesterId = semester.getId();
+            List<SubjectEnrollmentModel> subjectEnrollments = studentService.getSubjectsByStudentIdAndSemester(id, semesterId);
+
+            // Extract subjects from subject enrollments
+            List<SubjectsModel> subjects = subjectEnrollments.stream()
+                    .map(SubjectEnrollmentModel::getSubject)
+                    .filter(Objects::nonNull) // Ensure no null subjects are added
+                    .collect(Collectors.toList());
+            System.out.println(subjects);
+            // Store subjects under the corresponding semester
+            subjectsBySemester.put(semesterId, subjects);
+        }
+
+        // Fetch the latest exam form for the student based on course_id and semester_id
+//        Long courseId = enrollments.isEmpty() ? null : enrollments.getCourse().getId();
+        Long semesterId = enrollments.isEmpty() ? null : enrollments.get(0).getSemester().getId();
+
+        SemesterModel semester = semesterRepository.findById(semesterId)
+                .orElseThrow(() -> new RuntimeException("Course not found"));
+
+        Long courseId = semester.getCourse().getCourseID();
+
+        if (courseId != null && semesterId != null) {
+            ExamFormModel examForm = examService.getExamFormByCourseAndSemester(courseId, semesterId);
+            if (examForm != null) {
+                // Initialize current date
+                Date now = new Date();
+
+                // Example deadlines from exam form (replace with actual values from your examForm object)
+                Date startDate = new Date();  // Example start date
+                Date endDate = new Date(System.currentTimeMillis() + 1000000000); // 1 hour from now (example)
+                Date endDateWithLateFee = new Date(System.currentTimeMillis() + 2000000000); // 2 hours from now (example)
+                Date endDateWithSuperLateFee = new Date(System.currentTimeMillis() + 300000000); // 3 hours from now (example)
+
+                boolean isEligibleForExam = false;
+                String eligibilityMessage = "Not eligible";
+
+                // Check eligibility based on current date and deadlines
+                if (now.before(endDate)) {
+                    isEligibleForExam = true;
+                    eligibilityMessage = "Eligible to fill the exam form on time";
+                } else if (now.before(endDateWithLateFee)) {
+                    eligibilityMessage = "Eligible to fill the exam form with late fee";
+                } else if (now.before(endDateWithSuperLateFee)) {
+                    eligibilityMessage = "Eligible to fill the exam form with super late fee";
+                }
+
+
+                // Add the exam eligibility information to the model
+                model.addAttribute("examForm", examForm);
+                model.addAttribute("isEligibleForExam", isEligibleForExam);
+                model.addAttribute("eligibilityMessage", eligibilityMessage);
+            }
+        }
+
+        model.addAttribute("studentId", id);
+        model.addAttribute("subjectsBySemester", subjectsBySemester); // Pass subjects
+
+        String userRole = userRoleUtil.getUserRole(session);
+        model.addAttribute("userRole", userRole);
+
+        Long studentId = (Long) session.getAttribute("studentId");
+        StudentModel student = studentService.findById(studentId);
+        model.addAttribute("student", student);
+
+        return "ExaminationManagement/exam-form-students";
     }
 
     @GetMapping("/assignments/{id}")

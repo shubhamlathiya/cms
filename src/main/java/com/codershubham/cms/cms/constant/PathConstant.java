@@ -14,6 +14,7 @@ public class PathConstant {
     public static final String SUBJECTS_PATH = ADMIN_PATH + "/subjects";
     public static final String SYLLABUS_PATH = ADMIN_PATH + "/syllabus";
     public static final String ROLES_PATH = ADMIN_PATH + "/roles";
+    public static final String EXAM_PATH = ADMIN_PATH + "/exam";
 
 
     public static final String SEMESTER_PATH = "semesters";

@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="'Admin Dashboard'">Courses</title>
+</head>
+<body>
+
+<!-- Replace the content section -->
+<div th:replace="layout/base.html">
+    <div th:fragment="content">
+
+        <h2 class="mb-2 page-title">Exam</h2>
+        <!-- Button to go to Add Department form -->
+        <a href="/admin/exam/add">Add Exam</a>
+
+        <p class="card-text">DataTables is a plug-in for the jQuery Javascript library. It is a highly flexible tool,
+            built upon the foundations of progressive enhancement, that adds all of these advanced features to any HTML
+            table. </p>
+        <div class="row my-4">
+            <!-- Small table -->
+            <div class="col-md-12">
+                <div class="card shadow">
+                    <div class="card-body">
+                        <!-- table -->
+                        <table class="table datatables" id="dataTable-1">
+                            <thead>
+                            <tr>
+                                <th></th>
+                                <th>#</th>
+                                <th>Exam Form Name</th>
+                                <th>Department</th>
+                                <th>Course</th>
+                                <th>Semester</th>
+                                <th>year</th>
+                                <th>Start Date</th>
+                                <th>End Date</th>
+                                <th>End Date with lat fee</th>
+                                <th>End Date with super lat fee</th>
+                                <th>Actions</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:each="examsModel : ${exams}">
+                                <td>
+                                    <div class="custom-control custom-checkbox">
+                                        <input type="checkbox" class="custom-control-input">
+                                        <label class="custom-control-label"></label>
+                                    </div>
+                                </td>
+                                <td th:text="${examsModel.id}"></td>
+                                <td th:text="${examsModel.getExamFormName()}"></td>
+                                <td th:text="${examsModel.getDepartment().getName()}"></td>
+                                <td th:text="${examsModel.getCourse().getCourseName()}"></td>
+                                <td th:text="${examsModel.getSemester().getName()}"></td>
+                                <td th:text="${examsModel.year}"></td>
+                                <td th:text="${examsModel.startDate}"></td>
+                                <td th:text="${examsModel.endDate}"></td>
+                                <td th:text="${examsModel.endDateWithLateFee}"></td>
+                                <td th:text="${examsModel.endDateWithSuperLateFee}"></td>
+                                <td>
+                                    <!-- Edit link for each courseModel -->
+<!--                                    <a th:href="@{/admin/courses/update/{courseID}(courseID=${courseModel.courseID})}">Edit</a>-->
+                                    |
+                                    <!-- Delete link for each courseModel -->
+                                    <a th:href="@{/admin/exam/delete/{examID}(examID=${examsModel.id})}"
+                                       th:onclick="return confirm('Are you sure you want to delete?')">Delete</a>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    $('#dataTable-1').DataTable(
+        {
+            autoWidth: true,
+        });
+</script>
+</body>
+</html>

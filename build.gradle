@@ -38,6 +38,7 @@ dependencies {
 	implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity6'
 
 	implementation 'org.apache.poi:poi-ooxml:5.2.3' // Latest Apache POI for Excel handling
+	implementation 'org.apache.pdfbox:pdfbox:2.0.27'
 }
 
 tasks.named('test') {
