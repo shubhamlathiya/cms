@@ -1,4 +1,4 @@
-package com.codershubham.cms.cms.service.authModules;
+package com.codershubham.cms.cms.service.AuthModules;
 
 
 import com.codershubham.cms.cms.model.UserManagementModules.UserModel;
@@ -36,7 +36,7 @@ public class CustomUserDetailsService implements UserDetailsService {
         // Log the user details (for debugging purposes)
 
         System.out.println("User Found: ");
-        System.out.println("Email: " + user.getUsername());
+        System.out.println("UserName: " + user.getUsername());
         System.out.println("Password: " + user.getPassword());
         System.out.println("userId: " + user.getId());
         System.out.println(user.getRole().getName().toUpperCase());
