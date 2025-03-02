@@ -1,6 +1,12 @@
 package com.codershubham.cms.cms.constant;
 
 public class PathConstant {
+    //    Security Path
+    public static final String LOGIN_PATH = "login";
+    public static final String LOGOUT_PATH = "logout";
+    public static final String FORGOT_PASSWORD_PATH = "/auth/forgot-password";
+    public static final String VALIDATE_TOKEN_PATH = "/auth/validate-token";
+    public static final String RESET_PASSWORD_PATH = "/auth/reset-password";
 
     //    user path
     public static final String USERS_PATH = "users";

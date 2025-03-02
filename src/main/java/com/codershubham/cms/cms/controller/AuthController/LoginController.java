@@ -1,5 +1,6 @@
 package com.codershubham.cms.cms.controller.AuthController;
 
+import com.codershubham.cms.cms.constant.PathConstant;
 import com.codershubham.cms.cms.service.AuthModules.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -12,53 +13,52 @@ import java.util.Map;
 public class LoginController {
 
     @Autowired
-    private AuthService authService;
+    AuthService authService;
 
-
-
-    @GetMapping("/login")
+    @GetMapping(PathConstant.LOGIN_PATH)
     public String login() {
         return "AuthManagement/auth-login";
     }
 
-    @PostMapping("/logout")
+    @PostMapping(PathConstant.LOGOUT_PATH)
     public String logout() {
         return "redirect:/login?logout";
     }
 
-    @GetMapping("/auth/forgot-password")
+    @GetMapping(PathConstant.FORGOT_PASSWORD_PATH)
     public String forgotPassword() {
-        return "AuthManagement/forgot-password";
+        return "AuthManagement/auth-resetpw";
     }
 
-    @PostMapping("/auth/forgot-password")
-    public String forgotPasswordPost(@RequestParam("email") String email) {
+    @PostMapping(PathConstant.FORGOT_PASSWORD_PATH)
+    public String forgotPasswordPost(@RequestParam("email") String email , Model model) {
         authService.sendResetPasswordLink(email);
-        return "AuthManagement/forgot-password";
+        model.addAttribute("email", email);
+        return "AuthManagement/auth-confirm";
     }
 
-    @GetMapping("/auth/validate-token")
+    @GetMapping(PathConstant.VALIDATE_TOKEN_PATH)
     public String validateToken(@RequestParam("token") String token, Model model) {
         boolean isValid = authService.validatePasswordResetToken(token);
         if (isValid) {
             model.addAttribute("token", token);
             return "AuthManagement/reset-password";
         }else {
-            return "/auth/forgot-password";
+            return "redirect:/" + PathConstant.FORGOT_PASSWORD_PATH;
         }
     }
 
-    @PostMapping("/auth/reset-password")
+    @PostMapping(PathConstant.RESET_PASSWORD_PATH)
     public String resetPassword(@RequestParam("token") String token, @RequestParam("password") String newPassword, Model model) {
         try {
             System.out.println(newPassword);
             System.out.println(token);
             authService.updatePassword(token, newPassword);
             model.addAttribute("successMessage", "Password reset successful. You can now log in.");
-            return "redirect:/auth/login";
+            return "redirect:/" + PathConstant.LOGIN_PATH;
         } catch (Exception e) {
 //            model.addAttribute("errorMessage", "Error: " + e.getMessage());
-            return "redirect:/auth/forgot-password";
+            return "redirect:/" + PathConstant.FORGOT_PASSWORD_PATH;
         }
     }
 }
