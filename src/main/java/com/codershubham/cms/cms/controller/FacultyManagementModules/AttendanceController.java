@@ -2,8 +2,10 @@ package com.codershubham.cms.cms.controller.FacultyManagementModules;
 
 import com.codershubham.cms.cms.constant.PathConstant;
 import com.codershubham.cms.cms.model.FacultyManagementModules.AttendanceModel;
+import com.codershubham.cms.cms.model.FacultyManagementModules.FacultyModel;
 import com.codershubham.cms.cms.model.FacultyManagementModules.FacultySubjectAssignmentModel;
 import com.codershubham.cms.cms.service.FacultyManagementModules.AttendanceService;
+import com.codershubham.cms.cms.service.FacultyManagementModules.FacultyService;
 import com.codershubham.cms.cms.service.FacultyManagementModules.FacultySubjectAssignmentService;
 import com.codershubham.cms.cms.service.StudentManagementModules.StudentService;
 import com.codershubham.cms.cms.util.UserRoleUtil;
@@ -34,6 +36,9 @@ public class AttendanceController {
 
     @Autowired
     private StudentService studentService;
+
+    @Autowired
+    private FacultyService facultyService;
 
     @Autowired
     private FacultySubjectAssignmentService facultySubjectAssignmentService;
@@ -169,6 +174,9 @@ public class AttendanceController {
             String userRole = userRoleUtil.getUserRole(session);
             model.addAttribute("userRole", userRole);
 
+            Long userId = (Long) session.getAttribute("userId");
+            FacultyModel faculty = facultyService.getFacultyByUserId(userId);
+            model.addAttribute("faculty", faculty);
             return "FacultyManagement/faculty/take-attendance";  // Return Thymeleaf template
         } catch (Exception e) {
             model.addAttribute("error", "An error occurred while fetching attendance data.");

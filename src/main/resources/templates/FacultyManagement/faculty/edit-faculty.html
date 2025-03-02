@@ -1,54 +1,103 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Edit Faculty</title>
 </head>
 <body>
-<h2>Edit Faculty</h2>
-<form th:action="@{/faculty/update/{id}(id=${faculty.facultyId })}" th:object="${faculty}" method="post">
-    <!-- Hidden ID field -->
-    <input type="hidden" th:field="*{facultyId}" />
 
-<!--    <label>Username:</label>-->
-<!--    <input type="text" th:field="*{username}" required><br>-->
+<div th:replace="layout/base.html">
+    <div th:fragment="content">
 
-<!--    <label>Password:</label>-->
-<!--    <input type="password" th:field="*{password}" required><br>-->
+        <div class="col-md-12">
+            <div class="card shadow mb-4">
+                <div class="card-header">
+                    <strong class="card-title">Edit Faculty</strong>
+                </div>
+                <div class="card-body">
+                    <form class="needs-validation"
+                          th:action="@{/faculty/update/{id}(id=${faculty.facultyId})}"
+                          th:object="${faculty}" method="post" novalidate>
 
-    <label>Designation:</label>
-    <input type="text" th:field="*{designation}" required><br>
+                        <input type="hidden" th:field="*{facultyId}"/>
 
-    <label>Qualification:</label>
-    <input type="text" th:field="*{qualification}" required><br>
+                        <div class="form-row">
+                            <div class="col-md-6 mb-3">
+                                <label for="facultyDesignation">Designation</label>
+                                <input type="text" class="form-control" id="facultyDesignation"
+                                       th:field="*{designation}" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="facultyQualification">Qualification</label>
+                                <input type="text" class="form-control" id="facultyQualification"
+                                       th:field="*{qualification}" required>
+                            </div>
+                        </div>
 
-    <label>Experience (Years):</label>
-    <input type="number" th:field="*{experience}" required><br>
+                        <div class="form-row">
+                            <div class="col-md-6 mb-3">
+                                <label for="facultyExperience">Experience (Years)</label>
+                                <input type="number" class="form-control" id="facultyExperience"
+                                       th:field="*{experience}" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="facultyPhone">Phone Number</label>
+                                <input type="text" class="form-control" id="facultyPhone" th:field="*{phoneNumber}"
+                                       required>
+                            </div>
+                        </div>
 
-    <label>Phone Number:</label>
-    <input type="text" th:field="*{phoneNumber}" required><br>
+                        <div class="form-row">
+                            <div class="col-md-8 mb-3">
+                                <label for="facultyEmail">Email</label>
+                                <input type="email" class="form-control" id="facultyEmail" th:field="*{email}" required>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label for="facultyStatus">Status</label>
+                                <select id="facultyStatus" class="form-control" th:field="*{status}" required>
+                                    <option value="Active">Active</option>
+                                    <option value="Inactive">Inactive</option>
+                                </select>
+                            </div>
+                        </div>
 
-    <label>Email:</label>
-    <input type="email" th:field="*{email}" required><br>
+                        <div class="form-row">
+                            <div class="col-md-8">
+                                <label for="facultyDepartment">Department:</label>
+                                <select id="facultyDepartment" class="form-control" name="department" required>
+                                    <option th:each="department : ${departments}"
+                                            th:value="${department.id}"
+                                            th:text="${department.name}"
+                                            th:selected="${faculty.department.id == department.id}"></option>
+                                </select>
+                            </div>
+                        </div>
 
-    <label>Status:</label>
-    <select name="status" required>
-        <option value="Active" th:selected="${faculty.status == 'Active'}">Active</option>
-        <option value="Inactive" th:selected="${faculty.status == 'Inactive'}">Inactive</option>
-    </select><br>
+                        <button class="btn btn-primary mt-3" type="submit">Update Faculty</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
-    <label>Department:</label>
-    <select name="department" required>
-        <option th:each="department : ${departments}"
-                th:value="${department.id}"
-                th:text="${department.name}"
-                th:selected="${faculty.department.id == department.id}"></option>
-    </select><br>
-    <button type="submit">Update Faculty</button>
-</form>
+<script>
+    (function () {
+        'use strict';
+        window.addEventListener('load', function () {
+            var forms = document.getElementsByClassName('needs-validation');
+            var validation = Array.prototype.filter.call(forms, function (form) {
+                form.addEventListener('submit', function (event) {
+                    if (form.checkValidity() === false) {
+                        event.preventDefault();
+                        event.stopPropagation();
+                    }
+                    form.classList.add('was-validated');
+                }, false);
+            });
+        }, false);
+    })();
+</script>
 
-<br>
-<a href="/faculty">Back to Faculty List</a>
 </body>
 </html>

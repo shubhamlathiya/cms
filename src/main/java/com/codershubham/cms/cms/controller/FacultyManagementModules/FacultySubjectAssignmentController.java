@@ -35,9 +35,6 @@ public class FacultySubjectAssignmentController {
     private FacultyService facultyService;
 
     @Autowired
-    private DepartmentService departmentService;
-
-    @Autowired
     private SemesterService semesterService;
 
     @Autowired
@@ -48,13 +45,6 @@ public class FacultySubjectAssignmentController {
 
     @Autowired
     private SubjectService subjectService;
-
-    @Autowired
-    HttpSession session;
-
-    @Autowired
-    private UserRoleUtil userRoleUtil;
-
 
 
     @PostMapping("/assign-subject")
@@ -94,16 +84,4 @@ public class FacultySubjectAssignmentController {
         List<DivisionModel> divisions = divisionService.getDivisionsBySemester(semesterId);
         return ResponseEntity.ok(divisions);
     }
-
-//    @GetMapping("/semester/{semesterId}/subjects")
-//    public ResponseEntity<Map<String, Object>> getSubjectsAssignmentStatus(@PathVariable Long semesterId) {
-//        List<SubjectsModel> assignedSubjects = subjectService.getAssignedSubjectsBySemester(semesterId);
-//        List<SubjectsModel> unassignedSubjects = subjectService.getUnassignedSubjectsBySemester(semesterId);
-//
-//        Map<String, Object> response = new HashMap<>();
-//        response.put("assignedSubjects", assignedSubjects);
-//        response.put("unassignedSubjects", unassignedSubjects);
-//
-//        return ResponseEntity.ok(response);
-//    }
 }

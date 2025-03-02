@@ -29,6 +29,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 @RequestMapping(PathConstant.ADMIN_PATH)
@@ -64,7 +65,7 @@ public class AdminController {
     @Autowired
     private FacultyService facultyService;
 
-    @GetMapping("/dashboard")
+    @GetMapping(PathConstant.DASHBOARD_PATH)
     public String dashboard(Model model) {
 
         String userRole = userRoleUtil.getUserRole(session);
@@ -73,11 +74,18 @@ public class AdminController {
         return "UserManagement/admin/dashboard";
     }
 
-    @GetMapping("/users")
-    public String users() {
-        return "index";
-    }
+    // Display departments, courses, and students
+    @GetMapping("/students")
+    public String showStudentSelectionPage(Model model) {
+        // Fetch all departments
+        List<DepartmentModel> departments = departmentService.getAllDepartments();
+        model.addAttribute("departments", departments);
 
+        String userRole = userRoleUtil.getUserRole(session);
+        model.addAttribute("userRole", userRole);
+
+        return "StudentManagement/students/list-students";
+    }
     // Show the student registration form
     @GetMapping("/students/add")
     public String showAddStudentPage(Model model) {
@@ -197,6 +205,18 @@ public class AdminController {
         return ResponseEntity.ok("Students successfully uploaded!");
     }
 
+    // 1️⃣ Show all faculties
+    @GetMapping("/faculty")
+    public String getAllFaculties(Model model) {
+        List<FacultyModel> faculties = facultyService.getAllFaculties();
+        model.addAttribute("faculties", faculties);
+
+        String userRole = userRoleUtil.getUserRole(session);
+        model.addAttribute("userRole", userRole);
+
+        return "FacultyManagement/faculty/faculty-list";
+    }
+
     // 2️⃣ Show add faculty form
     @GetMapping("/faculty/add")
     public String showAddFacultyForm(Model model) {
@@ -269,6 +289,37 @@ public class AdminController {
         model.addAttribute("userRole", userRole);
 
         return "StudentManagement/students/registration-success";
+    }
+
+    // 4️⃣ Show update faculty form
+    @GetMapping("/faculty/edit/{id}")
+    public String showEditFacultyForm(@PathVariable Long id, Model model) {
+        Optional<FacultyModel> faculty = facultyService.getFacultyById(id);
+        if (faculty.isPresent()) {
+            model.addAttribute("faculty", faculty.get());
+            model.addAttribute("departments", departmentService.getAllDepartments()); // Load departments for selection
+
+            String userRole = userRoleUtil.getUserRole(session);
+            model.addAttribute("userRole", userRole);
+
+            return "FacultyManagement/faculty/edit-faculty";
+        } else {
+            return "redirect:/faculty/list"; // Redirect if faculty not found
+        }
+    }
+
+    // 5️⃣ Update faculty details
+    @PostMapping("/faculty/update/{id}")
+    public String updateFaculty(@PathVariable Long id, @ModelAttribute FacultyModel faculty) {
+        facultyService.updateFaculty(id, faculty);
+        return "redirect:/faculty";
+    }
+
+    // 6️⃣ Delete faculty
+    @GetMapping("/faculty/delete/{id}")
+    public String deleteFaculty(@PathVariable Long id) {
+        facultyService.deleteFaculty(id);
+        return "redirect:/faculty"; // Redirect after deleting
     }
 
     @GetMapping("/faculty-subject/assign-subject")

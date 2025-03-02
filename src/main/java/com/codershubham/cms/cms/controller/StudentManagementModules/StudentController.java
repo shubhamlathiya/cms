@@ -1,14 +1,12 @@
 package com.codershubham.cms.cms.controller.StudentManagementModules;
 
 import com.codershubham.cms.cms.constant.PathConstant;
-import com.codershubham.cms.cms.model.CourseManagementModules.DepartmentModel;
 import com.codershubham.cms.cms.model.CourseManagementModules.SubjectsModel;
 import com.codershubham.cms.cms.model.CourseManagementModules.SyllabusModel;
 import com.codershubham.cms.cms.model.DTO.StudentQuestionsDto;
 import com.codershubham.cms.cms.model.ExaminationManagementModules.ExamFormModel;
 import com.codershubham.cms.cms.model.StudentManagementModules.*;
 import com.codershubham.cms.cms.repository.StudentManagementModules.SemesterRepository;
-import com.codershubham.cms.cms.service.CourseManagementModules.DepartmentService;
 import com.codershubham.cms.cms.service.CourseManagementModules.SyllabusService;
 import com.codershubham.cms.cms.service.ExaminationManagementModules.ExamService;
 import com.codershubham.cms.cms.service.FacultyManagementModules.AttendanceService;
@@ -32,9 +30,6 @@ public class StudentController {
     private StudentService studentService;
 
     @Autowired
-    private DepartmentService departmentService;
-
-    @Autowired
     private AttendanceService attendanceService;
 
     @Autowired
@@ -55,7 +50,7 @@ public class StudentController {
     @Autowired
     private ExamService examService;
 
-    @GetMapping("/dashboard")
+    @GetMapping(PathConstant.DASHBOARD_PATH)
     public String studentDashboard(Model model) {
         Long userId = (Long) session.getAttribute("userId");
 
@@ -379,17 +374,6 @@ public class StudentController {
         model.addAttribute("student", student);
 
         return "StudentManagement/assignments/student-assigned-questions";
-    }
-
-
-    // Display departments, courses, and students
-    @GetMapping("/select")
-    public String showStudentSelectionPage(Model model) {
-        // Fetch all departments
-        List<DepartmentModel> departments = departmentService.getAllDepartments();
-        model.addAttribute("departments", departments);
-
-        return "StudentManagement/students/list-students";
     }
 
 }

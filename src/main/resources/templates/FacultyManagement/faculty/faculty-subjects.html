@@ -26,7 +26,7 @@
                     <th>Subject Code</th>
                     <th>Subject Name</th>
                     <th>Course</th>
-                    <th>Actions</th>
+                    <th colspan="3">Actions</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -42,7 +42,12 @@
                     <td th:text="${assignment.subject.course.courseName}"></td>
                     <td>
                         <a th:href="@{/attendance/take/{assignmentId}(assignmentId=${assignment.id})}" class="btn btn-info btn-sm">Attendance</a>
+                    </td>
+                    <td>
                         <a th:href="@{/assignments/{divisionId}/{semesterId}/{subjectId}(divisionId=${assignment.division.id}, semesterId=${assignment.semester.id}, subjectId=${assignment.subject.subjectid})}" class="btn btn-warning btn-sm">Assignment</a>
+                    </td>
+                    <td>
+                        <a th:href="@{/faculty/syllabus/subject/{subjectID}(subjectID=${assignment.subject.subjectid})}" class="btn btn-link btn-sm">View Syllabus</a>
                     </td>
                 </tr>
                 </tbody>

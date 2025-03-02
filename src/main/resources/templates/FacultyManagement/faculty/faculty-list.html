@@ -1,47 +1,121 @@
+<!--<!DOCTYPE html>-->
+<!--<html xmlns:th="http://www.thymeleaf.org">-->
+<!--<head>-->
+<!--    <meta charset="UTF-8">-->
+<!--    <title th:text="'Faculty List'">Faculty List</title>-->
+<!--    <link rel="stylesheet" type="text/css" href="/css/styles.css">-->
+<!--</head>-->
+<!--<body>-->
+
+<!--&lt;!&ndash; Replace the content section &ndash;&gt;-->
+<!--<div th:replace="layout/base.html">-->
+<!--    <div th:fragment="content">-->
+<!--        <main>-->
+<!--            <h2>Faculty Members</h2>-->
+<!--            <a href="/faculty/add">Add New Faculty</a>-->
+<!--            <table border="1">-->
+<!--                <thead>-->
+<!--                <tr>-->
+<!--                    <th>Faculty ID</th>-->
+<!--                    <th>Name</th>-->
+<!--                    <th>Email</th>-->
+<!--                    <th>Department</th>-->
+<!--                    <th>Designation</th>-->
+<!--                    <th>Actions</th>-->
+<!--                </tr>-->
+<!--                </thead>-->
+<!--                <tbody>-->
+<!--                <tr th:each="faculty : ${faculties}">-->
+<!--                    <td th:text="${faculty.facultyId}"></td>-->
+<!--                    <td th:text="${faculty.user != null ? faculty.user.username : 'N/A'}"></td>-->
+<!--                    <td th:text="${faculty.user != null ? faculty.email : 'N/A'}"></td>-->
+<!--                    <td th:text="${faculty.department != null ? faculty.department.name : 'No Department'}"></td>-->
+<!--                    <td th:text="${faculty.designation}"></td>-->
+<!--                    <td>-->
+<!--                        <a th:href="@{/faculty/edit/{id}(id=${faculty.facultyId})}">Edit</a> |-->
+<!--                        <a th:href="@{/faculty/delete/{id}(id=${faculty.facultyId})}"-->
+<!--                           th:onclick="return confirm('Are you sure you want to delete this faculty?')">Delete</a>-->
+<!--                    </td>-->
+<!--                </tr>-->
+<!--                </tbody>-->
+<!--            </table>-->
+<!--        </main>-->
+<!--    </div>-->
+<!--</div>-->
+
+<!--</body>-->
+<!--</html>-->
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title th:text="'Faculty List'">Faculty List</title>
-    <link rel="stylesheet" type="text/css" href="/css/styles.css">
 </head>
 <body>
 
 <!-- Replace the content section -->
 <div th:replace="layout/base.html">
     <div th:fragment="content">
-        <main>
-            <h2>Faculty Members</h2>
-            <a href="/faculty/add">Add New Faculty</a>
-            <table border="1">
-                <thead>
-                <tr>
-                    <th>Faculty ID</th>
-                    <th>Name</th>
-                    <th>Email</th>
-                    <th>Department</th>
-                    <th>Designation</th>
-                    <th>Actions</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr th:each="faculty : ${faculties}">
-                    <td th:text="${faculty.facultyId}"></td>
-                    <td th:text="${faculty.user != null ? faculty.user.username : 'N/A'}"></td>
-                    <td th:text="${faculty.user != null ? faculty.email : 'N/A'}"></td>
-                    <td th:text="${faculty.department != null ? faculty.department.name : 'No Department'}"></td>
-                    <td th:text="${faculty.designation}"></td>
-                    <td>
-                        <a th:href="@{/faculty/edit/{id}(id=${faculty.facultyId})}">Edit</a> |
-                        <a th:href="@{/faculty/delete/{id}(id=${faculty.facultyId})}"
-                           th:onclick="return confirm('Are you sure you want to delete this faculty?')">Delete</a>
-                    </td>
-                </tr>
-                </tbody>
-            </table>
-        </main>
+
+        <h2 class="mb-2 page-title">Faculty</h2>
+        <!-- Button to add a new faculty member -->
+        <a href="/admin/faculty/add">Add New Faculty</a>
+
+        <p class="card-text">DataTables is a plug-in for the jQuery Javascript library. It is a highly flexible tool,
+            built upon the foundations of progressive enhancement, that adds all of these advanced features to any HTML
+            table.</p>
+        <div class="row my-4">
+            <!-- Small table -->
+            <div class="col-md-12">
+                <div class="card shadow">
+                    <div class="card-body">
+                        <!-- table -->
+                        <table class="table datatables" id="dataTable-1">
+                            <thead>
+                            <tr>
+                                <th></th>
+                                <th>#</th>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Department</th>
+                                <th>Designation</th>
+                                <th>Actions</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:each="faculty : ${faculties}">
+                                <td>
+                                    <div class="custom-control custom-checkbox">
+                                        <input type="checkbox" class="custom-control-input">
+                                        <label class="custom-control-label"></label>
+                                    </div>
+                                </td>
+                                <td th:text="${faculty.facultyId}"></td>
+                                <td th:text="${faculty.user != null ? faculty.user.username : 'N/A'}"></td>
+                                <td th:text="${faculty.user != null ? faculty.email : 'N/A'}"></td>
+                                <td th:text="${faculty.department != null ? faculty.department.name : 'No Department'}"></td>
+                                <td th:text="${faculty.designation}"></td>
+                                <td>
+                                    <a th:href="@{/admin/faculty/edit/{id}(id=${faculty.facultyId})}">Edit</a>
+                                    |
+                                    <a th:href="@{/admin/faculty/delete/{id}(id=${faculty.facultyId})}"
+                                       th:onclick="return confirm('Are you sure you want to delete this faculty?')">Delete</a>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
-
+<script>
+    $('#dataTable-1').DataTable(
+        {
+            autoWidth: true,
+        });
+</script>
 </body>
 </html>
+

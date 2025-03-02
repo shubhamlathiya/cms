@@ -2,10 +2,12 @@ package com.codershubham.cms.cms.controller.FacultyManagementModules;
 
 import com.codershubham.cms.cms.constant.PathConstant;
 import com.codershubham.cms.cms.model.CourseManagementModules.DepartmentModel;
+import com.codershubham.cms.cms.model.CourseManagementModules.SyllabusModel;
 import com.codershubham.cms.cms.model.FacultyManagementModules.FacultyModel;
 import com.codershubham.cms.cms.model.FacultyManagementModules.FacultySubjectAssignmentModel;
 import com.codershubham.cms.cms.model.UserManagementModules.UserModel;
 import com.codershubham.cms.cms.service.CourseManagementModules.DepartmentService;
+import com.codershubham.cms.cms.service.CourseManagementModules.SyllabusService;
 import com.codershubham.cms.cms.service.FacultyManagementModules.FacultyService;
 import com.codershubham.cms.cms.service.FacultyManagementModules.FacultySubjectAssignmentService;
 import com.codershubham.cms.cms.util.EmailUtil;
@@ -36,9 +38,12 @@ public class FacultyController {
     private UserRoleUtil userRoleUtil;
 
     @Autowired
+    private SyllabusService syllabusService;
+
+    @Autowired
     HttpSession session;
 
-    @GetMapping("/dashboard")
+    @GetMapping(PathConstant.DASHBOARD_PATH)
     public String studentDashboard(Model model, HttpSession session) {
         Long userId = (Long) session.getAttribute("userId");
 
@@ -61,48 +66,16 @@ public class FacultyController {
         return "FacultyManagement/faculty-dashboard"; // Ensure this matches your Thymeleaf template name
     }
 
-    // 1️⃣ Show all faculties
-    @GetMapping
-    public String getAllFaculties(Model model) {
-        List<FacultyModel> faculties = facultyService.getAllFaculties();
-        model.addAttribute("faculties", faculties);
-
+    @GetMapping("/event")
+    public String event(Model model, HttpSession session) {
+        Long userId = (Long) session.getAttribute("userId");
+        FacultyModel faculty = facultyService.getFacultyByUserId(userId);
+        model.addAttribute("faculty", faculty);
         String userRole = userRoleUtil.getUserRole(session);
         model.addAttribute("userRole", userRole);
-
-        return "FacultyManagement/faculty/faculty-list";
+        return "FacultyManagement/calendar";
     }
 
-    // 4️⃣ Show update faculty form
-    @GetMapping("/edit/{id}")
-    public String showEditFacultyForm(@PathVariable Long id, Model model) {
-        Optional<FacultyModel> faculty = facultyService.getFacultyById(id);
-        if (faculty.isPresent()) {
-            model.addAttribute("faculty", faculty.get());
-            model.addAttribute("departments", departmentService.getAllDepartments()); // Load departments for selection
-
-            String userRole = userRoleUtil.getUserRole(session);
-            model.addAttribute("userRole", userRole);
-
-            return "FacultyManagement/faculty/edit-faculty";
-        } else {
-            return "redirect:/faculty/list"; // Redirect if faculty not found
-        }
-    }
-
-    // 5️⃣ Update faculty details
-    @PostMapping("/update/{id}")
-    public String updateFaculty(@PathVariable Long id, @ModelAttribute FacultyModel faculty) {
-        facultyService.updateFaculty(id, faculty);
-        return "redirect:/faculty";
-    }
-
-    // 6️⃣ Delete faculty
-    @GetMapping("/delete/{id}")
-    public String deleteFaculty(@PathVariable Long id) {
-        facultyService.deleteFaculty(id);
-        return "redirect:/faculty"; // Redirect after deleting
-    }
 
     @GetMapping("/subjects/{facultyId}")
     public String getFacultySubjects(@PathVariable Long facultyId, Model model) {
@@ -115,9 +88,7 @@ public class FacultyController {
         Long userId = (Long) session.getAttribute("userId");
 
         FacultyModel faculty = facultyService.getFacultyByUserId(userId);
-        // Add the student to the model
         model.addAttribute("faculty", faculty);
         return "FacultyManagement/faculty/faculty-subjects"; // Renders faculty-subjects.html
     }
-
 }
