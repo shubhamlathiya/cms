@@ -92,6 +92,7 @@
 
             <div class="card p-4 mt-4">
                 <h3 class="text-primary">Student List</h3>
+                <h4><a href="#" id="downloadLink">Download PDF</a></h4>
                 <table class="table table-striped mt-3">
                     <thead class="table-dark">
                     <tr>
@@ -185,6 +186,9 @@
                         '</tr>');
                 });
                 hideLoader("loader-division");
+
+                // Enable the download link when the student data is loaded
+                $('#downloadLink').prop('href', '/admin/students/download?divisionId=' + divisionId);
             });
         } else {
             $('#studentTable').empty();

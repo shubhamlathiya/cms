@@ -17,9 +17,12 @@ import com.codershubham.cms.cms.service.StudentManagementModules.DivisionService
 import com.codershubham.cms.cms.service.StudentManagementModules.SemesterService;
 import com.codershubham.cms.cms.service.StudentManagementModules.StudentService;
 import com.codershubham.cms.cms.util.EmailUtil;
+import com.codershubham.cms.cms.util.PdfGeneratorUtil;
 import com.codershubham.cms.cms.util.UserRoleUtil;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -28,6 +31,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -86,6 +91,35 @@ public class AdminController {
 
         return "StudentManagement/students/list-students";
     }
+
+    @GetMapping("/students/download")
+    public ResponseEntity<byte[]> downloadPdf(@RequestParam("divisionId") Long divisionId) {
+        // Fetch the student data based on divisionId (replace with your actual service logic)
+        List<StudentModel> students = studentService.getStudentsByDivision(divisionId);
+
+        // Prepare the data for the table in the PDF
+        List<String[]> tableData = new ArrayList<>();
+        tableData.add(new String[]{"ID", "First Name", "Last Name", "Email"});
+
+        for (StudentModel student : students) {
+            tableData.add(new String[]{
+                    String.valueOf(student.getId()),
+                    student.getFirstName(),
+                    student.getLastName(),
+                    student.getEmail()
+            });
+        }
+
+        // Generate the PDF with the student list table
+        byte[] pdfBytes = PdfGeneratorUtil.generatePdfWithTable("Student List", tableData);
+
+        // Return the PDF as a download
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=student_list.pdf")
+                .contentType(MediaType.APPLICATION_PDF)
+                .body(pdfBytes);
+    }
+
     // Show the student registration form
     @GetMapping("/students/add")
     public String showAddStudentPage(Model model) {

@@ -51,6 +51,7 @@
     <div th:fragment="content">
         <div class="container mt-4">
             <h2>Assigned Questions</h2>
+            <h4><a th:href="@{/assignments/{assignmentId}/download-pdf(assignmentId=${assignmentId})}">Download pdf</a></h4>
             <div class="table-responsive">
                 <table class="table table-bordered">
                     <thead class="table-light">

@@ -1,40 +1,5 @@
 package com.codershubham.cms.cms.util;
 
-
-//import org.apache.pdfbox.pdmodel.*;
-//import org.apache.pdfbox.pdmodel.font.PDType1Font;
-//import org.apache.pdfbox.pdmodel.common.PDRectangle;
-//
-//import java.io.ByteArrayOutputStream;
-//import java.io.IOException;
-//
-//public class PdfGeneratorUtil {
-//
-//    public static byte[] generatePdf(String content) {
-//        try (PDDocument document = new PDDocument()) {
-//            PDPage page = new PDPage(PDRectangle.A4);
-//            document.addPage(page);
-//
-//            try (PDPageContentStream contentStream = new PDPageContentStream(document, page)) {
-//                contentStream.setFont(PDType1Font.HELVETICA_BOLD, 16);
-//                contentStream.beginText();
-//                contentStream.newLineAtOffset(100, 700);
-//                contentStream.showText(content);
-//                contentStream.endText();
-//            }
-//
-//            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-//            document.save(byteArrayOutputStream);
-//
-//            return byteArrayOutputStream.toByteArray();
-//        } catch (IOException e) {
-//            throw new RuntimeException("Error while generating PDF", e);
-//        }
-//    }
-//}
-
-//package com.example.utils;
-
 import org.apache.pdfbox.pdmodel.*;
 import org.apache.pdfbox.pdmodel.font.PDType1Font;
 import org.apache.pdfbox.pdmodel.common.PDRectangle;

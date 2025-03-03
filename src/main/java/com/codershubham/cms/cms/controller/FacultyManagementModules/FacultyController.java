@@ -44,8 +44,6 @@ public class FacultyController {
 
     @Autowired
     private EmailUtil emailUtil;
-    @Autowired
-    private SyllabusService syllabusService;
 
     @Autowired
     HttpSession session;

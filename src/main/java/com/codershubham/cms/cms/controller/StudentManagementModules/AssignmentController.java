@@ -6,12 +6,17 @@ import com.codershubham.cms.cms.model.FacultyManagementModules.FacultyModel;
 import com.codershubham.cms.cms.model.StudentManagementModules.AssignmentModel;
 import com.codershubham.cms.cms.model.StudentManagementModules.AssignmentSubmissionModel;
 import com.codershubham.cms.cms.model.StudentManagementModules.StudentAssignmentModel;
+import com.codershubham.cms.cms.model.StudentManagementModules.StudentModel;
 import com.codershubham.cms.cms.service.FacultyManagementModules.FacultyService;
 import com.codershubham.cms.cms.service.StudentManagementModules.AssignmentService;
+import com.codershubham.cms.cms.util.PdfGeneratorUtil;
 import com.codershubham.cms.cms.util.UserRoleUtil;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -141,13 +146,69 @@ public class AssignmentController {
 
         FacultyModel faculty = facultyService.getFacultyByUserId(userId);
         model.addAttribute("faculty", faculty);
-
+        model.addAttribute("assignmentId", assignmentId);
         String userRole = userRoleUtil.getUserRole(session);
         model.addAttribute("userRole", userRole);
 
         return "StudentManagement/assignments/assigned-questions";
     }
 
+    @GetMapping("/{assignmentId}/download-pdf")
+    public ResponseEntity<byte[]> downloadPdf(@PathVariable Long assignmentId) {
+        // Fetching assigned questions for the given assignment
+        List<StudentAssignmentModel> assignedQuestions = assignmentService.getAssignedQuestions(assignmentId);
+
+        // Grouping questions by student ID
+        Map<Long, StudentQuestionsDto> groupedQuestions = new HashMap<>();
+        for (StudentAssignmentModel assignment : assignedQuestions) {
+            Long studentId = assignment.getStudent().getId();
+            String questionText = assignment.getQuestion().getQuestionText();
+
+            groupedQuestions.putIfAbsent(studentId, new StudentQuestionsDto(studentId, assignment.getStudent().getFirstName()));
+            groupedQuestions.get(studentId).getQuestions().add(questionText);
+        }
+
+        // Convert map values into a list
+        List<StudentQuestionsDto> studentQuestionsList = new ArrayList<>(groupedQuestions.values());
+
+        // Check if students have submitted the assignment
+        for (StudentQuestionsDto studentQuestions : studentQuestionsList) {
+            Long studentId = studentQuestions.getStudentId();
+            AssignmentSubmissionModel submission = assignmentService.getAssignmentSubmission(assignmentId, studentId);
+
+            if (submission != null && submission.getSubmissionFilePath() != null) {
+                studentQuestions.setFilePath(submission.getSubmissionFilePath());
+                studentQuestions.setSubmitted(true);
+            } else {
+                studentQuestions.setFilePath(null);
+                studentQuestions.setSubmitted(false);
+            }
+        }
+
+        // Prepare data for the PDF table
+        List<String[]> tableData = new ArrayList<>();
+        tableData.add(new String[]{"Student ID", "Name", "Questions", "Submitted"}); // Header row
+
+        for (StudentQuestionsDto student : studentQuestionsList) {
+            String questions = String.join("; ", student.getQuestions()); // Combine questions in a readable format
+            String submitted = student.isSubmitted() ? "Yes" : "No";
+            tableData.add(new String[]{
+                    String.valueOf(student.getStudentId()),
+                    student.getStudentName(),
+                    questions,
+                    submitted
+            });
+        }
+
+        // Generate PDF
+        byte[] pdfBytes = PdfGeneratorUtil.generatePdfWithTable("Assignment #" + assignmentId, tableData);
+
+        // Return the PDF as a download
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=assigned_questions.pdf")
+                .contentType(MediaType.APPLICATION_PDF)
+                .body(pdfBytes);
+    }
 
     @PostMapping("/submit/{assignmentId}/{studentId}")
     public String submitAssignment(@PathVariable Long assignmentId, @PathVariable Long studentId, @RequestParam(required = false) MultipartFile submissionFile, @RequestParam(required = false) String remarks, Model model, RedirectAttributes redirectAttributes) throws IOException {
