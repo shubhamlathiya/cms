@@ -79,6 +79,7 @@
                             <table class="table table-bordered table-striped">
                                 <thead class="table-dark">
                                 <tr>
+                                    <th>Select</th>
                                     <th>ID</th>
                                     <th>First Name</th>
                                     <th>Last Name</th>
@@ -86,11 +87,29 @@
                                 </tr>
                                 </thead>
                                 <tbody id="studentTable">
-                                <!-- Dynamic Student Data Will Be Appended Here -->
                                 </tbody>
                             </table>
+
+                            <div class="form-group mt-3">
+                                <label for="emailMessage">Message:</label>
+                                <textarea class="form-control" id="emailMessage" rows="4"></textarea>
+                            </div>
+
+                            <div class="form-group mt-3">
+                                <label for="emailFile">Attach File:</label>
+                                <input type="file" class="form-control-file" id="emailFile">
+                            </div>
+
+                            <!-- Loader Spinner (Initially Hidden) -->
+                            <div id="loadingSpinner" class="text-center mt-4" style="display: none;">
+                                <div class="spinner-border text-primary" role="status">
+                                    <span class="sr-only">Loading...</span>
+                                </div>
+                                <p>Sending emails...</p>
+                            </div>
                         </div>
                         <div class="modal-footer">
+                            <button type="button" class="btn btn-danger" id="sendEmail">Send Email</button>
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                         </div>
                     </div>
@@ -109,16 +128,17 @@
     $(document).on("click", ".view-students", function (e) {
         e.preventDefault();
         var divisionId = $(this).data("division-id");
-        console.log(divisionId);
+
         $.get("/faculty/students/list/" + divisionId, function (students) {
             var tableBody = $('#studentTable');
-            tableBody.empty(); // Clear previous data
+            tableBody.empty();
 
             if (students.length === 0) {
-                tableBody.append('<tr><td colspan="4" class="text-center">No students found</td></tr>');
+                tableBody.append('<tr><td colspan="5" class="text-center">No students found</td></tr>');
             } else {
                 $.each(students, function (index, student) {
                     tableBody.append('<tr>' +
+                        '<td><input type="checkbox" class="student-checkbox" value="' + student.email + '"></td>' +
                         '<td>' + student.id + '</td>' +
                         '<td>' + student.firstName + '</td>' +
                         '<td>' + student.lastName + '</td>' +
@@ -127,9 +147,51 @@
                 });
             }
 
-            $("#studentModal").modal("show"); // Show the modal
+            $("#studentModal").modal("show");
         }).fail(function () {
             alert("Failed to fetch student data.");
+        });
+    });
+
+    $("#sendEmail").on("click", function () {
+        var selectedEmails = [];
+        $(".student-checkbox:checked").each(function () {
+            selectedEmails.push($(this).val());
+        });
+
+        if (selectedEmails.length === 0) {
+            alert("Please select at least one student.");
+            return;
+        }
+
+        var message = $("#emailMessage").val();
+        var file = $("#emailFile")[0].files[0];
+
+        var formData = new FormData();
+        formData.append("emails", selectedEmails);
+        formData.append("message", message);
+        if (file) {
+            formData.append("file", file);
+        }
+
+        // Show loader while processing
+        $("#loadingSpinner").show();
+
+        $.ajax({
+            type: "POST",
+            url: "/faculty/send-email",
+            data: formData,
+            processData: false,
+            contentType: false,
+            success: function () {
+                alert("Email sent successfully!");
+                $("#studentModal").modal("hide");
+                $("#loadingSpinner").hide(); // Hide loader after success
+            },
+            error: function () {
+                alert("Failed to send emails.");
+                $("#loadingSpinner").hide(); // Hide loader after error
+            }
         });
     });
 </script>

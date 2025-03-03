@@ -4,12 +4,15 @@ package com.codershubham.cms.cms.util;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
+import java.io.IOException;
 
 
 @Service
@@ -75,7 +78,7 @@ public class EmailUtil {
      * @param body           Email body (plain text)
      * @param attachmentPath File path of the attachment
      */
-    public void sendEmailWithAttachment(String to, String subject, String body, String attachmentPath) {
+    public void sendEmailWithAttachment(String to, String subject, String body, MultipartFile attachmentPath) {
         try {
             MimeMessage message = mailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(message, true);
@@ -84,8 +87,19 @@ public class EmailUtil {
             helper.setSubject(subject);
             helper.setText(body, false); // false means plain text
 
-            FileSystemResource file = new FileSystemResource(new File(attachmentPath));
-            helper.addAttachment(file.getFilename(), file);
+            // Check if file is not null and has content
+            if (attachmentPath != null && !attachmentPath.isEmpty()) {
+                try {
+                    helper.addAttachment(attachmentPath.getOriginalFilename(), new ByteArrayResource(attachmentPath.getBytes()));
+                } catch (IOException e) {
+                    logUtil.logError("Mails", "Error reading file: " + e.getMessage());
+                    return; // Skip sending email if file reading fails
+                }
+            }
+
+
+//            FileSystemResource file = new FileSystemResource(new File(attachmentPath));
+//            helper.addAttachment(file.getFilename(), file);
 
             mailSender.send(message);
             logUtil.logSuccess("Mails", "Email with attachment sent successfully to {}");

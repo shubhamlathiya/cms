@@ -21,6 +21,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Optional;
@@ -41,6 +42,8 @@ public class FacultyController {
     @Autowired
     private UserRoleUtil userRoleUtil;
 
+    @Autowired
+    private EmailUtil emailUtil;
     @Autowired
     private SyllabusService syllabusService;
 
@@ -102,4 +105,13 @@ public class FacultyController {
         return ResponseEntity.ok(students);
     }
 
+    @PostMapping("/send-email")
+    public ResponseEntity<String> sendEmails(@RequestParam List<String> emails, @RequestParam String message, @RequestParam(required = false) MultipartFile file) {
+
+        for (String email : emails) {
+            emailUtil.sendEmailWithAttachment(email, "Faculty Notification", message, file);
+        }
+
+        return ResponseEntity.ok("Emails sent successfully to all recipients!");
+    }
 }
