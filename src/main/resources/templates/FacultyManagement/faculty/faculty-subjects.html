@@ -7,7 +7,7 @@
 </head>
 <body>
 
-<!-- Replace the content section -->
+<!-- Main Content -->
 <div th:replace="layout/base.html">
     <div th:fragment="content">
 
@@ -26,7 +26,7 @@
                     <th>Subject Code</th>
                     <th>Subject Name</th>
                     <th>Course</th>
-                    <th colspan="3">Actions</th>
+                    <th colspan="4">Actions</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -41,24 +41,98 @@
                     <td th:text="${assignment.subject.subjectName}"></td>
                     <td th:text="${assignment.subject.course.courseName}"></td>
                     <td>
-                        <a th:href="@{/attendance/take/{assignmentId}(assignmentId=${assignment.id})}" class="btn btn-info btn-sm">Attendance</a>
+                        <a th:href="@{/attendance/take/{assignmentId}(assignmentId=${assignment.id})}"
+                           class="btn btn-info btn-sm">Attendance</a>
                     </td>
                     <td>
-                        <a th:href="@{/assignments/{divisionId}/{semesterId}/{subjectId}(divisionId=${assignment.division.id}, semesterId=${assignment.semester.id}, subjectId=${assignment.subject.subjectid})}" class="btn btn-warning btn-sm">Assignment</a>
+                        <a th:href="@{/assignments/{divisionId}/{semesterId}/{subjectId}(divisionId=${assignment.division.id}, semesterId=${assignment.semester.id}, subjectId=${assignment.subject.subjectid})}"
+                           class="btn btn-warning btn-sm">Assignment</a>
                     </td>
                     <td>
-                        <a th:href="@{/faculty/syllabus/subject/{subjectID}(subjectID=${assignment.subject.subjectid})}" class="btn btn-link btn-sm">View Syllabus</a>
+                        <a th:href="@{/faculty/syllabus/subject/{subjectID}(subjectID=${assignment.subject.subjectid})}"
+                           class="btn btn-link btn-sm">View Syllabus</a>
+                    </td>
+                    <td>
+                        <button type="button" class="btn btn-link btn-sm view-students"
+                                th:data-division-id="${assignment.division.getId()}">
+                            View Students
+                        </button>
                     </td>
                 </tr>
                 </tbody>
             </table>
 
             <a th:href="@{/faculty/dashboard}" class="btn btn-primary">Back to Dashboard</a>
+
+            <!-- Student List Modal -->
+            <div class="modal fade" id="studentModal" tabindex="-1" aria-labelledby="studentModalLabel"
+                 aria-hidden="true">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="studentModalLabel">Student List</h5>
+                            <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <table class="table table-bordered table-striped">
+                                <thead class="table-dark">
+                                <tr>
+                                    <th>ID</th>
+                                    <th>First Name</th>
+                                    <th>Last Name</th>
+                                    <th>Email</th>
+                                </tr>
+                                </thead>
+                                <tbody id="studentTable">
+                                <!-- Dynamic Student Data Will Be Appended Here -->
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
         </div>
     </div>
 </div>
 
+<!-- jQuery & Bootstrap JS -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+
+<script>
+    $(document).on("click", ".view-students", function (e) {
+        e.preventDefault();
+        var divisionId = $(this).data("division-id");
+        console.log(divisionId);
+        $.get("/faculty/students/list/" + divisionId, function (students) {
+            var tableBody = $('#studentTable');
+            tableBody.empty(); // Clear previous data
+
+            if (students.length === 0) {
+                tableBody.append('<tr><td colspan="4" class="text-center">No students found</td></tr>');
+            } else {
+                $.each(students, function (index, student) {
+                    tableBody.append('<tr>' +
+                        '<td>' + student.id + '</td>' +
+                        '<td>' + student.firstName + '</td>' +
+                        '<td>' + student.lastName + '</td>' +
+                        '<td>' + student.email + '</td>' +
+                        '</tr>');
+                });
+            }
+
+            $("#studentModal").modal("show"); // Show the modal
+        }).fail(function () {
+            alert("Failed to fetch student data.");
+        });
+    });
+</script>
 
 </body>
 </html>

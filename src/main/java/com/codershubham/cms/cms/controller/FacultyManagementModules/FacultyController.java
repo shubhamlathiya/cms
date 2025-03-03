@@ -5,15 +5,19 @@ import com.codershubham.cms.cms.model.CourseManagementModules.DepartmentModel;
 import com.codershubham.cms.cms.model.CourseManagementModules.SyllabusModel;
 import com.codershubham.cms.cms.model.FacultyManagementModules.FacultyModel;
 import com.codershubham.cms.cms.model.FacultyManagementModules.FacultySubjectAssignmentModel;
+import com.codershubham.cms.cms.model.StudentManagementModules.StudentModel;
 import com.codershubham.cms.cms.model.UserManagementModules.UserModel;
 import com.codershubham.cms.cms.service.CourseManagementModules.DepartmentService;
 import com.codershubham.cms.cms.service.CourseManagementModules.SyllabusService;
 import com.codershubham.cms.cms.service.FacultyManagementModules.FacultyService;
 import com.codershubham.cms.cms.service.FacultyManagementModules.FacultySubjectAssignmentService;
+import com.codershubham.cms.cms.service.StudentManagementModules.StudentService;
 import com.codershubham.cms.cms.util.EmailUtil;
 import com.codershubham.cms.cms.util.UserRoleUtil;
+import jakarta.persistence.Access;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -29,7 +33,7 @@ public class FacultyController {
     private FacultyService facultyService;
 
     @Autowired
-    private DepartmentService departmentService;
+    private StudentService studentService;
 
     @Autowired
     private FacultySubjectAssignmentService facultySubjectAssignmentService;
@@ -91,4 +95,11 @@ public class FacultyController {
         model.addAttribute("faculty", faculty);
         return "FacultyManagement/faculty/faculty-subjects"; // Renders faculty-subjects.html
     }
+
+    @GetMapping("/students/list/{divisionId}")
+    public ResponseEntity<List<StudentModel>> getStudentsByDivision(@PathVariable Long divisionId) {
+        List<StudentModel> students = studentService.getStudentsByDivision(divisionId);
+        return ResponseEntity.ok(students);
+    }
+
 }
