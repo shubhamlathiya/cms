@@ -5,6 +5,7 @@ import com.codershubham.cms.cms.model.CourseManagementModules.DepartmentModel;
 import com.codershubham.cms.cms.model.CourseManagementModules.SyllabusModel;
 import com.codershubham.cms.cms.model.FacultyManagementModules.FacultyModel;
 import com.codershubham.cms.cms.model.FacultyManagementModules.FacultySubjectAssignmentModel;
+import com.codershubham.cms.cms.model.StudentManagementModules.DivisionModel;
 import com.codershubham.cms.cms.model.StudentManagementModules.StudentModel;
 import com.codershubham.cms.cms.model.UserManagementModules.UserModel;
 import com.codershubham.cms.cms.service.CourseManagementModules.DepartmentService;
@@ -112,4 +113,21 @@ public class FacultyController {
 
         return ResponseEntity.ok("Emails sent successfully to all recipients!");
     }
+
+    @GetMapping("/classes")
+    public String showClasses(Model model) {
+        Long userId = (Long) session.getAttribute("userId");
+        // Get the logged-in faculty's ID from the session
+        Long facultyId = (Long) session.getAttribute("facultyId");
+        FacultyModel faculty = facultyService.getFacultyByUserId(userId);
+        // Fetch divisions for the faculty
+        List<DivisionModel> divisions = facultyService.getDivisionsByFacultyId(facultyId);
+        model.addAttribute("divisions", divisions);
+        model.addAttribute("faculty", faculty);
+
+        String userRole = userRoleUtil.getUserRole(session);
+        model.addAttribute("userRole", userRole);
+        return "FacultyManagement/faculty-classes"; // Return the classes view template
+    }
+
 }

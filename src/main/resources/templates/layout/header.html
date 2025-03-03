@@ -152,6 +152,12 @@
                         <span class="ml-3 item-text">Assign Subjects</span>
                     </a>
                 </li>
+                <li class="nav-item w-100" th:if="${userRole == 'FACULTY'}">
+                    <a class="nav-link" th:href="@{/faculty/classes}">
+                        <i class="fe fe-calendar fe-16"></i>
+                        <span class="ml-3 item-text">Assign Class</span>
+                    </a>
+                </li>
                 <li class="nav-item dropdown" th:if="${userRole == 'FACULTY'}">
                     <a href="#contact" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle nav-link">
                         <i class="fe fe-book fe-16"></i>

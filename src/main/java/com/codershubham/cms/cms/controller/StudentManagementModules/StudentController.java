@@ -69,11 +69,21 @@ public class StudentController {
 
         String userRole = userRoleUtil.getUserRole(session);
         model.addAttribute("userRole", userRole);
-        // Add the student to the model
         model.addAttribute("userId", userId);
         // Return the view name
         return "StudentManagement/dashboard"; // Ensure this matches your Thymeleaf template name
     }
+
+//    @GetMapping("/profile")
+//    public String studentProfile(Model model) {
+//        Long userId = (Long) session.getAttribute("userId");
+//
+//        String userRole = userRoleUtil.getUserRole(session);
+//        model.addAttribute("userRole", userRole);
+//        model.addAttribute("userId", userId);
+//
+//        return "StudentManagement/profile";
+//    }
 
     @GetMapping("/attendance/{id}")
     public String viewAttendance(@PathVariable Long id, Model model) {

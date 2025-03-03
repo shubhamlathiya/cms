@@ -3,11 +3,13 @@ package com.codershubham.cms.cms.service.FacultyManagementModules;
 import com.codershubham.cms.cms.model.CourseManagementModules.DepartmentModel;
 import com.codershubham.cms.cms.model.FacultyManagementModules.FacultyModel;
 import com.codershubham.cms.cms.model.LeaveManagementModules.LeaveRequestModel;
+import com.codershubham.cms.cms.model.StudentManagementModules.DivisionModel;
 import com.codershubham.cms.cms.model.UserManagementModules.RoleModel;
 import com.codershubham.cms.cms.model.UserManagementModules.UserModel;
 import com.codershubham.cms.cms.repository.CourseManagementModules.DepartmentRepository;
 import com.codershubham.cms.cms.repository.FacultyManagementModules.FacultyRepository;
 import com.codershubham.cms.cms.repository.LeaveManagementModules.LeaveRequestRepository;
+import com.codershubham.cms.cms.repository.StudentManagementModules.DivisionRepository;
 import com.codershubham.cms.cms.repository.UserManagementModules.RoleRepository;
 import com.codershubham.cms.cms.repository.UserManagementModules.UserRepository;
 import jakarta.transaction.Transactional;
@@ -36,6 +38,9 @@ public class FacultyService {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private DivisionRepository divisionRepository;
 
     @Autowired
     private LeaveRequestRepository leaveRequestRepository;
@@ -122,6 +127,9 @@ public class FacultyService {
                 .orElse(null); // Return null if no faculty member is found
     }
 
+    public List<DivisionModel> getDivisionsByFacultyId(Long facultyId) {
+        return divisionRepository.findByFacultyId(facultyId);
+    }
 //    public List<FacultyModel> getFacultiesByDepartmentId(Long departmentId) {
 //        return facultyRepository.findByDepartmentId(departmentId);
 //    }
