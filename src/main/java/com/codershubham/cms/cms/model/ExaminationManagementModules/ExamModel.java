@@ -2,10 +2,13 @@ package com.codershubham.cms.cms.model.ExaminationManagementModules;
 
 
 import com.codershubham.cms.cms.model.CourseManagementModules.SubjectsModel;
+import com.codershubham.cms.cms.model.FacultyManagementModules.FacultyModel;
+import com.codershubham.cms.cms.model.StudentManagementModules.StudentModel;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.List;
 import java.util.Set;
 
 
@@ -14,92 +17,133 @@ import java.util.Set;
 public class ExamModel {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "exam_id")
-    private Long examId;
-
-    @Column(name = "exam_name", nullable = false)
-    private String examName;
-
-    @Column(name = "exam_date", nullable = false)
-    private LocalDate examDate;
-
-    @Column(name = "start_time", nullable = false)
-    private LocalTime startTime;
-
-    @Column(name = "end_time", nullable = false)
-    private LocalTime endTime;
+    private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "subject_id", nullable = false)
-    private SubjectsModel subject;
+    @JoinColumn(name = "exam_form_id", nullable = false)
+    private ExamFormModel examForm;
 
-    @Column(name = "semester_id", nullable = false)
-    private Long semesterId;
+    @ManyToOne
+    @JoinColumn(name = "student_id", nullable = false)
+    private StudentModel student;
 
-    @Column(name = "course_id", nullable = false)
-    private Long courseId;
+    @ManyToOne
+    @JoinColumn(name = "faculty_id")
+    private FacultyModel approvedByFaculty; // Faculty who approved the exam form
 
-    public Long getExamId() {
-        return examId;
+    @Column(name = "fee_amount", nullable = false)
+    private Double feeAmount;
+
+    @Column(name = "late_fee", nullable = true)
+    private Double lateFee;
+
+    @Column(name = "super_late_fee", nullable = true)
+    private Double superLateFee;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status", nullable = false)
+    private ExamFormStatus status = ExamFormStatus.PENDING_APPROVAL;
+
+    @Column(name = "submission_date", nullable = false)
+    private LocalDate submissionDate;
+
+    @Column(name = "payment_status", nullable = false)
+    private Boolean paymentStatus = false;
+
+    @ManyToMany
+    @JoinTable(
+            name = "exam_form_subjects",
+            joinColumns = @JoinColumn(name = "exam_form_detail_id"),
+            inverseJoinColumns = @JoinColumn(name = "subject_id")
+    )
+    private List<SubjectsModel> subjects; // List of subjects for this exam form
+
+    public Long getId() {
+        return id;
     }
 
-    public void setExamId(Long examId) {
-        this.examId = examId;
+    public void setId(Long id) {
+        this.id = id;
     }
 
-    public String getExamName() {
-        return examName;
+    public ExamFormModel getExamForm() {
+        return examForm;
     }
 
-    public void setExamName(String examName) {
-        this.examName = examName;
+    public void setExamForm(ExamFormModel examForm) {
+        this.examForm = examForm;
     }
 
-    public LocalDate getExamDate() {
-        return examDate;
+    public StudentModel getStudent() {
+        return student;
     }
 
-    public void setExamDate(LocalDate examDate) {
-        this.examDate = examDate;
+    public void setStudent(StudentModel student) {
+        this.student = student;
     }
 
-    public LocalTime getStartTime() {
-        return startTime;
+    public FacultyModel getApprovedByFaculty() {
+        return approvedByFaculty;
     }
 
-    public void setStartTime(LocalTime startTime) {
-        this.startTime = startTime;
+    public void setApprovedByFaculty(FacultyModel approvedByFaculty) {
+        this.approvedByFaculty = approvedByFaculty;
     }
 
-    public LocalTime getEndTime() {
-        return endTime;
+    public Double getFeeAmount() {
+        return feeAmount;
     }
 
-    public void setEndTime(LocalTime endTime) {
-        this.endTime = endTime;
+    public void setFeeAmount(Double feeAmount) {
+        this.feeAmount = feeAmount;
     }
 
-    public SubjectsModel getSubject() {
-        return subject;
+    public Double getLateFee() {
+        return lateFee;
     }
 
-    public void setSubject(SubjectsModel subject) {
-        this.subject = subject;
+    public void setLateFee(Double lateFee) {
+        this.lateFee = lateFee;
     }
 
-    public Long getSemesterId() {
-        return semesterId;
+    public Double getSuperLateFee() {
+        return superLateFee;
     }
 
-    public void setSemesterId(Long semesterId) {
-        this.semesterId = semesterId;
+    public void setSuperLateFee(Double superLateFee) {
+        this.superLateFee = superLateFee;
     }
 
-    public Long getCourseId() {
-        return courseId;
+    public ExamFormStatus getStatus() {
+        return status;
     }
 
-    public void setCourseId(Long courseId) {
-        this.courseId = courseId;
+    public void setStatus(ExamFormStatus status) {
+        this.status = status;
+    }
+
+    public LocalDate getSubmissionDate() {
+        return submissionDate;
+    }
+
+    public void setSubmissionDate(LocalDate submissionDate) {
+        this.submissionDate = submissionDate;
+    }
+
+    public Boolean getPaymentStatus() {
+        return paymentStatus;
+    }
+
+    public void setPaymentStatus(Boolean paymentStatus) {
+        this.paymentStatus = paymentStatus;
+    }
+
+    public List<SubjectsModel> getSubjects() {
+        return subjects;
+    }
+
+    public void setSubjects(List<SubjectsModel> subjects) {
+        this.subjects = subjects;
     }
 }
+

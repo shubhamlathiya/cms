@@ -4,6 +4,7 @@ import com.codershubham.cms.cms.model.CourseManagementModules.DepartmentModel;
 import com.codershubham.cms.cms.model.FacultyManagementModules.FacultyModel;
 import com.codershubham.cms.cms.model.LeaveManagementModules.LeaveRequestModel;
 import com.codershubham.cms.cms.model.StudentManagementModules.DivisionModel;
+import com.codershubham.cms.cms.model.StudentManagementModules.StudentModel;
 import com.codershubham.cms.cms.model.UserManagementModules.RoleModel;
 import com.codershubham.cms.cms.model.UserManagementModules.UserModel;
 import com.codershubham.cms.cms.repository.CourseManagementModules.DepartmentRepository;
@@ -51,6 +52,10 @@ public class FacultyService {
 
     public Optional<FacultyModel> getFacultyById(Long id) {
         return facultyRepository.findById(id);
+    }
+
+    public FacultyModel findById(Long id) {
+        return facultyRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Faculty not found with ID: " + id));
     }
 
     @Transactional

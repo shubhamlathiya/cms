@@ -68,6 +68,10 @@ public class SubjectService {
         subjectRepository.deleteById(subjectID);  // Delete the subject from the database
     }
 
+    public List<SubjectsModel> findAllById(List<Long> subjectIds) {
+        return subjectRepository.findAllById(subjectIds);
+    }
+
     // Get a subject by ID
     public SubjectsModel getSubjectById(long subjectID) {
         return subjectRepository.findById(subjectID)

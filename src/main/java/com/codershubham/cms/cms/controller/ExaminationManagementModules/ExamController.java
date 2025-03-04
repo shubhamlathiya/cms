@@ -4,7 +4,7 @@ import com.codershubham.cms.cms.constant.PathConstant;
 import com.codershubham.cms.cms.model.CourseManagementModules.DepartmentModel;
 import com.codershubham.cms.cms.model.ExaminationManagementModules.ExamFormModel;
 import com.codershubham.cms.cms.service.CourseManagementModules.DepartmentService;
-import com.codershubham.cms.cms.service.ExaminationManagementModules.ExamService;
+import com.codershubham.cms.cms.service.ExaminationManagementModules.ExamFormService;
 import com.codershubham.cms.cms.util.PdfGeneratorUtil;
 import com.codershubham.cms.cms.util.UserRoleUtil;
 import jakarta.servlet.http.HttpSession;
@@ -27,7 +27,7 @@ import java.util.List;
 public class ExamController {
 
     @Autowired
-    private ExamService examService;
+    private ExamFormService examFormService;
 
     @Autowired
     private DepartmentService departmentService;
@@ -40,7 +40,7 @@ public class ExamController {
 
     @GetMapping
     public String getAllExam(Model model) {
-        model.addAttribute("exams", examService.getAllExamForms());
+        model.addAttribute("exams", examFormService.getAllExamForms());
 
         String userRole = userRoleUtil.getUserRole(session);
         model.addAttribute("userRole", userRole);
@@ -81,13 +81,13 @@ public class ExamController {
     @PostMapping("/add")
     public String createExamForm(ExamFormModel examForm) {
 //        System.out.println(examForm.getDepartment());
-        examService.createExamForm(examForm);
+        examFormService.createExamForm(examForm);
         return "redirect:/admin/exam"; // Redirect to the form page
     }
 
     @GetMapping("/delete/{id}")
     public String deleteExams(@PathVariable Long id) {
-        examService.deleteExam(id);
+        examFormService.deleteExam(id);
         return "redirect:/" + PathConstant.EXAM_PATH;
     }
 }

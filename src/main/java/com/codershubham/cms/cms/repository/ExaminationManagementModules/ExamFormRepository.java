@@ -1,5 +1,6 @@
 package com.codershubham.cms.cms.repository.ExaminationManagementModules;
 
+
 import com.codershubham.cms.cms.model.ExaminationManagementModules.ExamFormModel;
 import com.codershubham.cms.cms.model.ExaminationManagementModules.ExamFormStatus;
 import com.codershubham.cms.cms.model.ExaminationManagementModules.ExamModel;
@@ -10,11 +11,9 @@ import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
-public interface ExamRepository extends JpaRepository<ExamModel, Long> {
+public interface ExamFormRepository extends JpaRepository<ExamFormModel, Long> {
 
-    List<ExamModel> findByStatus(ExamFormStatus status);
-
-    @Query("SELECT e FROM ExamModel e WHERE e.student = :student")
-    List<ExamModel> findByStudent(@Param("student") StudentModel student);
+    @Query("SELECT ef FROM ExamFormModel ef WHERE ef.course.courseID = :courseId AND ef.semester.id = :semesterId")
+    ExamFormModel findByCourseIdAndSemesterId(@Param("courseId") Long courseId, @Param("semesterId") Long semesterId);
 
 }

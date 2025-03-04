@@ -1,17 +1,21 @@
 package com.codershubham.cms.cms.service.ExaminationManagementModules;
 
-
-import com.codershubham.cms.cms.model.CourseManagementModules.CourseModel;
-import com.codershubham.cms.cms.model.CourseManagementModules.DepartmentModel;
+import com.codershubham.cms.cms.model.CourseManagementModules.SubjectsModel;
 import com.codershubham.cms.cms.model.ExaminationManagementModules.ExamFormModel;
-import com.codershubham.cms.cms.model.StudentManagementModules.SemesterModel;
-import com.codershubham.cms.cms.repository.CourseManagementModules.CourseRepository;
+import com.codershubham.cms.cms.model.ExaminationManagementModules.ExamFormStatus;
+import com.codershubham.cms.cms.model.ExaminationManagementModules.ExamModel;
+import com.codershubham.cms.cms.model.FacultyManagementModules.FacultyModel;
+import com.codershubham.cms.cms.model.StudentManagementModules.StudentModel;
 import com.codershubham.cms.cms.repository.ExaminationManagementModules.ExamRepository;
-import com.codershubham.cms.cms.repository.StudentManagementModules.SemesterRepository;
-import com.codershubham.cms.cms.service.CourseManagementModules.DepartmentService;
+import com.codershubham.cms.cms.repository.FacultyManagementModules.FacultyRepository;
+import com.codershubham.cms.cms.service.CourseManagementModules.SubjectService;
+import com.codershubham.cms.cms.service.FacultyManagementModules.FacultyService;
+import com.codershubham.cms.cms.service.StudentManagementModules.StudentService;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -21,45 +25,70 @@ public class ExamService {
     private ExamRepository examRepository;
 
     @Autowired
-    private CourseRepository courseRepository;
+    private FacultyRepository FacultyRepository;
 
     @Autowired
-    private DepartmentService departmentRepository;
+    private StudentService studentService;
 
     @Autowired
-    private SemesterRepository semesterRepository;
+    private ExamFormService examFormService;
 
-    public ExamFormModel createExamForm(ExamFormModel examForm) {
-        DepartmentModel department = departmentRepository.getDepartmentById(examForm.getDepartment().getId());
-        examForm.setDepartment(department);
+    @Autowired
+    private SubjectService subjectService;
 
-        CourseModel course = courseRepository.findById(examForm.getCourse().getCourseID())
-                .orElseThrow(() -> new RuntimeException("Course not found"));
-        examForm.setCourse(course);
+    @Autowired
+    private FacultyService facultyService;
 
-        SemesterModel semester = semesterRepository.findById(examForm.getSemester().getId())
-                .orElseThrow(() -> new RuntimeException("Semester not found"));
-        examForm.setSemester(semester);
+    @Transactional
+    public boolean submitExamForm(Long studentId,Long facultyId, Long examFormId, List<Long> subjectIds, Double feeAmount) {
+        try {
+            // Fetch student, exam form, and subjects
+            StudentModel student = studentService.findById(studentId);
+            ExamFormModel examForm = examFormService.findById(examFormId);
+            List<SubjectsModel> subjects = subjectService.findAllById(subjectIds);
 
-        return examRepository.save(examForm);
+            FacultyModel facultyModel = facultyService.findById(facultyId);
+            // Create ExamFormDetails entry
+            ExamModel examFormDetails = new ExamModel();
+            examFormDetails.setStudent(student);
+            examFormDetails.setExamForm(examForm);
+            examFormDetails.setSubjects(subjects);
+            examFormDetails.setApprovedByFaculty(facultyModel);
+            examFormDetails.setFeeAmount(feeAmount);
+            examFormDetails.setSubmissionDate(LocalDate.now());
+            examFormDetails.setStatus(ExamFormStatus.PENDING_APPROVAL);
+            examFormDetails.setPaymentStatus(false); // Payment not yet confirmed
+
+            // Save the exam form submission
+            examRepository.save(examFormDetails);
+
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 
+    public void facultyApproveExamForm(Long examFormDetailId, Long facultyId, boolean approve) {
+        ExamModel details = examRepository.findById(examFormDetailId).orElseThrow();
+        FacultyModel faculty = FacultyRepository.findById(facultyId).orElseThrow();
 
-    public List<ExamFormModel> getAllExamForms() {
-        return examRepository.findAll();
-    }
-    /**
-     * Get the exam form for a given course and semester.
-     * @param courseId The course ID.
-     * @param semesterId The semester ID.
-     * @return The exam form if found, otherwise null.
-     */
-    public ExamFormModel getExamFormByCourseAndSemester(Long courseId, Long semesterId) {
-        return examRepository.findByCourseIdAndSemesterId(courseId, semesterId);
+        if (approve) {
+            details.setStatus(ExamFormStatus.FACULTY_APPROVED);
+        } else {
+            details.setStatus(ExamFormStatus.FACULTY_REJECTED);
+        }
+
+        details.setApprovedByFaculty(faculty);
+        examRepository.save(details);
     }
 
-    public void deleteExam(Long id) {
-        examRepository.deleteById(id);
+    public boolean hasStudentSubmittedExamForm(Long studentId) {
+        StudentModel student = studentService.findById(studentId);
+
+        List<ExamModel> examForms = examRepository.findByStudent(student);
+        return !examForms.isEmpty();  // If there are any records, the student has already submitted
     }
+
 
 }

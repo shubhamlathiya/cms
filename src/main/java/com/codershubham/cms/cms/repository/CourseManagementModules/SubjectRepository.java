@@ -11,6 +11,7 @@ import java.util.List;
 public interface SubjectRepository extends JpaRepository<SubjectsModel, Long> {
     List<SubjectsModel> findByCourseModel(CourseModel courseModel);
 
+//    List<SubjectsModel> findAllById(List<Long> ids);
 //    @Query("SELECT s FROM SubjectsModel s WHERE s.semester.id = :semesterId AND s.faculty IS NOT NULL")
 //    List<SubjectsModel> findSubjectsAssignedToFaculty(@Param("semesterId") Long semesterId);
 //
