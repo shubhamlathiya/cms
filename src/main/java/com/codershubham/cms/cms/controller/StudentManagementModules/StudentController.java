@@ -3,6 +3,7 @@ package com.codershubham.cms.cms.controller.StudentManagementModules;
 import com.codershubham.cms.cms.constant.PathConstant;
 import com.codershubham.cms.cms.model.CourseManagementModules.SubjectsModel;
 import com.codershubham.cms.cms.model.CourseManagementModules.SyllabusModel;
+import com.codershubham.cms.cms.model.DTO.AttendanceRecordDto;
 import com.codershubham.cms.cms.model.DTO.StudentQuestionsDto;
 import com.codershubham.cms.cms.model.ExaminationManagementModules.ExamFormModel;
 import com.codershubham.cms.cms.model.ExaminationManagementModules.ExamFormStatus;
@@ -21,6 +22,7 @@ import com.codershubham.cms.cms.util.UserRoleUtil;
 import jakarta.servlet.http.HttpSession;
 import org.aspectj.bridge.MessageUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -108,6 +110,7 @@ public class StudentController {
         // Map to store subject-wise attendance percentages per semester
         Map<Long, Map<SubjectsModel, Double>> attendancePercentageBySemester = new HashMap<>();
 
+        Long divisionId1 = enrollments.get(0).getDivision().getId();
         for (StudentEnrollmentModel enrollment : enrollments) {
             SemesterModel semester = enrollment.getSemester();
             DivisionModel division = enrollment.getDivision();
@@ -160,9 +163,23 @@ public class StudentController {
         Long studentId = (Long) session.getAttribute("studentId");
         StudentModel student = studentService.findById(studentId);
         model.addAttribute("student", student);
+        model.addAttribute("divisionId", divisionId1);
         return "StudentManagement/attendance-view"; // Return view name
     }
 
+    @GetMapping("/details/{studentId}/{divisionId}/{subjectId}")
+    public ResponseEntity<List<AttendanceRecordDto>> getAttendanceDetails(
+            @PathVariable Long studentId,
+            @PathVariable Long divisionId,
+            @PathVariable Long subjectId) {
+
+        List<AttendanceRecordDto> attendanceRecords = attendanceService.getAttendanceByStudentAndSubject(studentId, divisionId, subjectId);
+
+        if (attendanceRecords.isEmpty()) {
+            return ResponseEntity.noContent().build(); // Returns 204 No Content if no records are found
+        }
+        return ResponseEntity.ok(attendanceRecords); // Returns 200 OK with the attendance data
+    }
 
     @GetMapping("/lesson-plan/{id}")
     public String viewLessonPlan(@PathVariable Long id, Model model) {

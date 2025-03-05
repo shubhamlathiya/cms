@@ -30,6 +30,14 @@
         .attendance-poor {
             color: red;
         }
+
+        .present-status {
+            color: green; /* Green for Present */
+        }
+
+        .absent-status {
+            color: red; /* Red for Absent */
+        }
     </style>
 </head>
 <body>
@@ -53,11 +61,17 @@
                     <tbody>
                     <!-- Loop through subjects -->
                     <tr th:each="subjectEntry : ${entry.value}">
-                        <td th:text="${subjectEntry.key.subjectName}"></td>
                         <td>
-                                <span th:text="${#numbers.formatDecimal(subjectEntry.value, 1, 2)} + '%' "
-                                      th:classappend="${subjectEntry.value >= 75 ? 'attendance-excellent' : (subjectEntry.value >= 50 ? 'attendance-good' : 'attendance-poor')}">
-                                </span>
+                            <a href="#" th:text="${subjectEntry.key.subjectName}" data-toggle="modal"
+                               data-target="#attendanceModal"
+                               th:attr="data-subject-id=${subjectEntry.key.subjectid},
+                                         data-student-id=${studentId},
+                                         data-division-id=${divisionId}"></a>
+                        </td>
+                        <td>
+                            <span th:text="${#numbers.formatDecimal(subjectEntry.value, 1, 2)} + '%' "
+                                  th:classappend="${subjectEntry.value >= 75 ? 'attendance-excellent' : (subjectEntry.value >= 50 ? 'attendance-good' : 'attendance-poor')}">
+                            </span>
                         </td>
                     </tr>
                     </tbody>
@@ -69,7 +83,81 @@
     </div>
 </div>
 
+<!-- Modal for Attendance Details -->
+<div class="modal fade" id="attendanceModal" tabindex="-1" role="dialog" aria-labelledby="attendanceModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="attendanceModalLabel">Attendance Details</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <table class="table table-bordered">
+                    <thead>
+                    <tr>
+                        <th>Lecture No</th>
+                        <th>Date</th>
+                        <th>Status</th>
+                    </tr>
+                    </thead>
+                    <tbody id="attendanceDetailsBody">
+                    <!-- Attendance details will be loaded here dynamically -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $('#attendanceModal').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget);
+            var subjectId = button.data('subject-id');
+            var studentId = button.data('student-id');
+            var divisionId = button.data('division-id');  // Assuming the button contains divisionId as well
+
+            $.ajax({
+                url: '/students/details/' + studentId + '/' + divisionId + '/' + subjectId,  // Updated URL
+                method: 'GET',
+                success: function (data) {
+                    var tbody = $('#attendanceDetailsBody');
+                    tbody.empty();
+
+                    if (data.length > 0) {
+                        data.forEach(function (record) {
+                            var attendanceDate = new Date(record.attendanceDate); // Convert to Date object
+                            var attendanceTime = new Date('1970-01-01T' + record.attendanceTime); // Format the time correctly
+
+                            var lecture_number = record.lectureNumber;
+                            // Format the date and time to a readable string (you can adjust this format as needed)
+                            var formattedDate = attendanceDate.toLocaleDateString();
+                            var formattedTime = attendanceTime.toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'});
+
+                            // Determine the class for the status (green for Present, red for Absent)
+                            var statusClass = record.status === 'Present' ? 'present-status' : 'absent-status';
+                            var statusText = record.status === 'Present' ? 'Present' : 'Absent';
+
+                            // Displaying the attendance records in the table
+                            tbody.append('<tr><td>'+ lecture_number +'</td><td>' + formattedDate + ' ' + formattedTime + '</td><td class="' + statusClass + '">' + statusText + '</td></tr>');
+                        });
+                    } else {
+                        tbody.append('<tr><td colspan="2">No attendance records found.</td></tr>');
+                    }
+                },
+                error: function () {
+                    var tbody = $('#attendanceDetailsBody');
+                    tbody.empty();
+                    tbody.append('<tr><td colspan="2">Error fetching attendance data.</td></tr>');
+                }
+            });
+        });
+    });
+</script>
 
 </body>
 </html>

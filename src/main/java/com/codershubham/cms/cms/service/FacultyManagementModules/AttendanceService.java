@@ -1,6 +1,7 @@
 package com.codershubham.cms.cms.service.FacultyManagementModules;
 
 import com.codershubham.cms.cms.model.CourseManagementModules.SubjectsModel;
+import com.codershubham.cms.cms.model.DTO.AttendanceRecordDto;
 import com.codershubham.cms.cms.model.FacultyManagementModules.AttendanceModel;
 import com.codershubham.cms.cms.model.FacultyManagementModules.FacultyModel;
 import com.codershubham.cms.cms.model.FacultyManagementModules.FacultySubjectAssignmentModel;
@@ -18,6 +19,7 @@ import java.time.LocalTime;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class AttendanceService {
@@ -114,6 +116,22 @@ public class AttendanceService {
 
     public int getTotalLecturesBySubjectAndDivision(Long divisionId, Long subjectId) {
         return attendanceRepository.countTotalLecturesBySubjectAndDivision(divisionId, subjectId);
+    }
+
+    public List<AttendanceRecordDto> getAttendanceByStudentAndSubject(Long studentId, Long divisionId, Long subjectId) {
+        List<AttendanceModel> attendanceModels = attendanceRepository.findByStudentIdAndDivisionIdAndSubjectId(studentId, divisionId, subjectId);
+
+        // Convert AttendanceModel to AttendanceRecordDto
+        return attendanceModels.stream()
+                .map(attendance -> new AttendanceRecordDto(
+                        attendance.getStudent().getId(),
+                        attendance.getDivision().getId(),
+                        attendance.getSubject().getSubjectid(),
+                        attendance.getLectureNumber(),
+                        attendance.getAttendanceDate().toString(),  // Formatting Date
+                        attendance.getAttendanceTime().toString(),  // Formatting Time
+                        attendance.getStatus()))
+                .collect(Collectors.toList());
     }
 
 }

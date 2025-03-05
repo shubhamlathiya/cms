@@ -1,6 +1,7 @@
 package com.codershubham.cms.cms.repository.FacultyManagementModules;
 
 import com.codershubham.cms.cms.model.CourseManagementModules.SubjectsModel;
+import com.codershubham.cms.cms.model.DTO.AttendanceRecordDto;
 import com.codershubham.cms.cms.model.FacultyManagementModules.AttendanceModel;
 import com.codershubham.cms.cms.model.FacultyManagementModules.FacultyModel;
 import com.codershubham.cms.cms.model.StudentManagementModules.StudentModel;
@@ -34,5 +35,12 @@ public interface AttendanceRepository extends JpaRepository<AttendanceModel, Lon
 
     @Query("SELECT COUNT(DISTINCT a.lectureNumber) FROM AttendanceModel a WHERE a.division.id = :divisionId AND a.subject.subjectid = :subjectId")
     int countTotalLecturesBySubjectAndDivision(@Param("divisionId") Long divisionId, @Param("subjectId") Long subjectId);
+
+    @Query("SELECT a FROM AttendanceModel a " +
+            "WHERE a.student.id = :studentId AND a.division.id = :divisionId AND a.subject.subjectid = :subjectId")
+    List<AttendanceModel> findByStudentIdAndDivisionIdAndSubjectId(@Param("studentId") Long studentId,
+                                                                   @Param("divisionId") Long divisionId,
+                                                                   @Param("subjectId") Long subjectId);
+
 
 }
