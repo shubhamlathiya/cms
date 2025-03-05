@@ -90,5 +90,7 @@ public class ExamService {
         return !examForms.isEmpty();  // If there are any records, the student has already submitted
     }
 
-
+    public ExamModel getExamByStudentAndForm(Long studentId, Long examFormId) {
+        return examRepository.findByStudentIdAndExamFormId(studentId, examFormId).orElse(null);
+    }
 }

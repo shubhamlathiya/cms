@@ -210,114 +210,61 @@ public class StudentController {
         return "StudentManagement/lesson-plan"; // Return updated view
     }
 
-//    @GetMapping("/exam")
-//    public String viewExamForm(Model model) {
-//        // Fetch student details
-//        Long studentId = (Long) session.getAttribute("studentId");
-//        StudentModel student = studentService.findById(studentId);
-//        if (student == null) {
-//            throw new RuntimeException("Student not found");
-//        }
-//
-//        // Fetch the latest exam form based on the student's course and semester
-//        List<StudentEnrollmentModel>  enrollments = studentService.getEnrollmentsByStudentId(studentId);
-//
-//        Long semesterId = enrollments.isEmpty() ? null : enrollments.get(0).getSemester().getId();
-//
-//
-//        SemesterModel semester = semesterRepository.findById(semesterId)
-//                .orElseThrow(() -> new RuntimeException("Course not found"));
-//        Long courseId = semester.getCourse().getCourseID();
-//
-//        ExamFormModel examForm = examFormService.getExamFormByCourseAndSemester(courseId, semesterId);
-//        if (examForm == null) {
-//            throw new RuntimeException("No exam form found for the selected course and semester");
-//        }
-//
-//        // Check eligibility based on exam form deadlines
-//        Date now = new Date();
-//        Date startDate = examForm.getStartDate();
-//        Date endDate = examForm.getEndDate();
-//        Date endDateWithLateFee = examForm.getEndDateWithLateFee();
-//        Date endDateWithSuperLateFee = examForm.getEndDateWithSuperLateFee();
-//
-//        boolean isEligibleForExam = false;
-//        String eligibilityMessage = "Not eligible";
-//
-//        if (now.before(endDate)) {
-//            isEligibleForExam = true;
-//            eligibilityMessage = "Eligible to fill the exam form on time";
-//        } else if (now.before(endDateWithLateFee)) {
-//            eligibilityMessage = "Eligible to fill the exam form with late fee";
-//        } else if (now.before(endDateWithSuperLateFee)) {
-//            eligibilityMessage = "Eligible to fill the exam form with super late fee";
-//        }
-//
-//        // Add attributes to the model
-//        model.addAttribute("student", student);
-//        model.addAttribute("examForm", examForm);
-//        model.addAttribute("isEligibleForExam", isEligibleForExam);
-//        model.addAttribute("eligibilityMessage", eligibilityMessage);
-//
-//        return "ExaminationManagement/exam-details-students";
-//    }
-@GetMapping("/exam")
-public String viewExamForm(Model model) {
-    // Fetch student details
-    Long studentId = (Long) session.getAttribute("studentId");
-    StudentModel student = studentService.findById(studentId);
-    if (student == null) {
-        throw new RuntimeException("Student not found");
-    }
+    @GetMapping("/exam")
+    public String viewExamForm(Model model) {
+        // Fetch student details
+        Long studentId = (Long) session.getAttribute("studentId");
+        StudentModel student = studentService.findById(studentId);
+        if (student == null) {
+            throw new RuntimeException("Student not found");
+        }
 
-    // Check if the student has already submitted the exam form
-    boolean hasSubmittedExamForm = examService.hasStudentSubmittedExamForm(studentId);
+        // Check if the student has already submitted the exam form
+        boolean hasSubmittedExamForm = examService.hasStudentSubmittedExamForm(studentId);
 //    if (hasSubmittedExamForm) {
 //        hasSubmittedExamForm = true;
 //        model.addAttribute("message", "You have already submitted your exam form.");
 //    }
 
-    // Fetch the latest exam form based on the student's course and semester
-    List<StudentEnrollmentModel> enrollments = studentService.getEnrollmentsByStudentId(studentId);
-    Long semesterId = enrollments.isEmpty() ? null : enrollments.get(0).getSemester().getId();
+        // Fetch the latest exam form based on the student's course and semester
+        List<StudentEnrollmentModel> enrollments = studentService.getEnrollmentsByStudentId(studentId);
+        Long semesterId = enrollments.isEmpty() ? null : enrollments.get(0).getSemester().getId();
 
-    SemesterModel semester = semesterRepository.findById(semesterId)
-            .orElseThrow(() -> new RuntimeException("Course not found"));
-    Long courseId = semester.getCourse().getCourseID();
+        SemesterModel semester = semesterRepository.findById(semesterId).orElseThrow(() -> new RuntimeException("Course not found"));
+        Long courseId = semester.getCourse().getCourseID();
 
-    ExamFormModel examForm = examFormService.getExamFormByCourseAndSemester(courseId, semesterId);
-    if (examForm == null) {
-        throw new RuntimeException("No exam form found for the selected course and semester");
+        ExamFormModel examForm = examFormService.getExamFormByCourseAndSemester(courseId, semesterId);
+        if (examForm == null) {
+            throw new RuntimeException("No exam form found for the selected course and semester");
+        }
+
+        // Check eligibility based on exam form deadlines
+        Date now = new Date();
+        Date startDate = examForm.getStartDate();
+        Date endDate = examForm.getEndDate();
+        Date endDateWithLateFee = examForm.getEndDateWithLateFee();
+        Date endDateWithSuperLateFee = examForm.getEndDateWithSuperLateFee();
+
+        boolean isEligibleForExam = false;
+        String eligibilityMessage = "Not eligible";
+
+        if (now.before(endDate)) {
+            isEligibleForExam = true;
+            eligibilityMessage = "Eligible to fill the exam form on time";
+        } else if (now.before(endDateWithLateFee)) {
+            eligibilityMessage = "Eligible to fill the exam form with late fee";
+        } else if (now.before(endDateWithSuperLateFee)) {
+            eligibilityMessage = "Eligible to fill the exam form with super late fee";
+        }
+
+        // Add attributes to the model
+        model.addAttribute("student", student);
+        model.addAttribute("examForm", examForm);
+        model.addAttribute("isEligibleForExam", isEligibleForExam);
+        model.addAttribute("eligibilityMessage", eligibilityMessage);
+        model.addAttribute("examFromFileUP", hasSubmittedExamForm);
+        return "ExaminationManagement/exam-details-students";
     }
-
-    // Check eligibility based on exam form deadlines
-    Date now = new Date();
-    Date startDate = examForm.getStartDate();
-    Date endDate = examForm.getEndDate();
-    Date endDateWithLateFee = examForm.getEndDateWithLateFee();
-    Date endDateWithSuperLateFee = examForm.getEndDateWithSuperLateFee();
-
-    boolean isEligibleForExam = false;
-    String eligibilityMessage = "Not eligible";
-
-    if (now.before(endDate)) {
-        isEligibleForExam = true;
-        eligibilityMessage = "Eligible to fill the exam form on time";
-    } else if (now.before(endDateWithLateFee)) {
-        eligibilityMessage = "Eligible to fill the exam form with late fee";
-    } else if (now.before(endDateWithSuperLateFee)) {
-        eligibilityMessage = "Eligible to fill the exam form with super late fee";
-    }
-
-    // Add attributes to the model
-    model.addAttribute("student", student);
-    model.addAttribute("examForm", examForm);
-    model.addAttribute("isEligibleForExam", isEligibleForExam);
-    model.addAttribute("eligibilityMessage", eligibilityMessage);
-    model.addAttribute("examFromFileUP", hasSubmittedExamForm);
-    return "ExaminationManagement/exam-details-students";
-}
-
 
     @GetMapping("/exam/{id}")
     public String viewExamForm(@PathVariable Long id, Model model) {
@@ -335,9 +282,7 @@ public String viewExamForm(Model model) {
             List<SubjectEnrollmentModel> subjectEnrollments = studentService.getSubjectsByStudentIdAndSemester(id, semesterId);
 
             // Extract subjects from subject enrollments
-            List<SubjectsModel> subjects = subjectEnrollments.stream()
-                    .map(SubjectEnrollmentModel::getSubject)
-                    .filter(Objects::nonNull) // Ensure no null subjects are added
+            List<SubjectsModel> subjects = subjectEnrollments.stream().map(SubjectEnrollmentModel::getSubject).filter(Objects::nonNull) // Ensure no null subjects are added
                     .collect(Collectors.toList());
             System.out.println(subjects);
             // Store subjects under the corresponding semester
@@ -352,8 +297,7 @@ public String viewExamForm(Model model) {
 
         DivisionModel division = divisionService.getDivisionById(divisionID);
 
-        SemesterModel semester = semesterRepository.findById(semesterId)
-                .orElseThrow(() -> new RuntimeException("Course not found"));
+        SemesterModel semester = semesterRepository.findById(semesterId).orElseThrow(() -> new RuntimeException("Course not found"));
 
         Long courseId = semester.getCourse().getCourseID();
 
@@ -405,17 +349,11 @@ public String viewExamForm(Model model) {
     }
 
     @PostMapping("/exam/submit")
-    public String submitExamForm(
-            @RequestParam Long studentId,
-            @RequestParam Long facultyId,
-            @RequestParam Long examFormId,
-            @RequestParam List<Long> subjectIds,
-            @RequestParam(required = false) Double feeAmount,
-            RedirectAttributes redirectAttributes) {
+    public String submitExamForm(@RequestParam Long studentId, @RequestParam Long facultyId, @RequestParam Long examFormId, @RequestParam List<Long> subjectIds, @RequestParam(required = false) Double feeAmount, RedirectAttributes redirectAttributes) {
 
         feeAmount = 1500.00;
         // Call service to handle the exam form submission
-        boolean isSubmitted = examService.submitExamForm(studentId,facultyId, examFormId, subjectIds, feeAmount);
+        boolean isSubmitted = examService.submitExamForm(studentId, facultyId, examFormId, subjectIds, feeAmount);
 
         if (isSubmitted) {
             redirectAttributes.addFlashAttribute("message", "Exam Form Submitted Successfully!");

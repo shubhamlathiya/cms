@@ -9,6 +9,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface ExamRepository extends JpaRepository<ExamModel, Long> {
 
@@ -16,5 +17,7 @@ public interface ExamRepository extends JpaRepository<ExamModel, Long> {
 
     @Query("SELECT e FROM ExamModel e WHERE e.student = :student")
     List<ExamModel> findByStudent(@Param("student") StudentModel student);
+
+    Optional<ExamModel> findByStudentIdAndExamFormId(Long studentId, Long examFormId);
 
 }
