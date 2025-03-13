@@ -159,6 +159,15 @@
                     </a>
                 </li>
                 <li class="nav-item dropdown" th:if="${userRole == 'FACULTY'}">
+                    <a href="#faculty_exam" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle nav-link">
+                        <i class="fe fe-book fe-16"></i>
+                        <span class="ml-3 item-text">Exam Form</span>
+                    </a>
+                    <ul class="collapse list-unstyled pl-4 w-100" id="faculty_exam">
+                        <a class="nav-link pl-3" th:href="@{/faculty/exams/{facultyId}(facultyId=${faculty.facultyId})}"><span class="ml-1">Exam-APPROVAL</span></a>
+                    </ul>
+                </li>
+                <li class="nav-item dropdown" th:if="${userRole == 'FACULTY'}">
                     <a href="#contact" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle nav-link">
                         <i class="fe fe-book fe-16"></i>
                         <span class="ml-3 item-text">leave-requests</span>
