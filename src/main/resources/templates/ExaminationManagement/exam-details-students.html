@@ -2,136 +2,43 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Submitted Exam Forms</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <title th:text="'Exam Forms'">Exam Forms</title>
 </head>
 <body>
 
-<div class="container mt-5">
-    <h1 class="mb-4">Exam Forms</h1>
+<!-- Replace the content section -->
+<div th:replace="layout/base.html">
+    <div th:fragment="content">
+        <h1 class="mb-4">Exam Forms</h1>
 
-    <!-- Exam Form List -->
-    <h2>Available Exam Forms</h2>
-    <table class="table table-bordered">
-        <thead class="table-dark">
-        <tr>
-            <th>Exam Form Name</th>
-            <th>Form Type</th>
-            <th>Course</th>
-            <th>Start Date</th>
-            <th>End Date</th>
-            <th>Action</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr th:each="examForm : ${examForm}">
-            <td th:text="${examForm.examFormName}"></td>
-            <td th:text="${examForm.formType}"></td>
-            <td th:text="${examForm.course.courseName}"></td>
-            <td th:text="${#dates.format(examForm.startDate, 'yyyy-MM-dd')}"></td>
-            <td th:text="${#dates.format(examForm.endDate, 'yyyy-MM-dd')}"></td>
-            <td th:if="${!examFromFileUP}">
-                <a th:href="@{/students/exam/{id}(id=${student.id})}" class="btn btn-primary">Submit Exam Form</a>
-            </td>
-        </tr>
-        </tbody>
-    </table>
-
-    <!-- Submitted Form Details -->
-<!--        <h2 class="mt-5">Submitted Form Details</h2>-->
-<!--        <table class="table table-bordered">-->
-<!--            <thead class="table-dark">-->
-<!--            <tr>-->
-<!--                <th>Exam Form Name</th>-->
-<!--                <th>Fee Paid</th>-->
-<!--                <th>Approved by Mentor</th>-->
-<!--                <th>Approved by Accounts</th>-->
-<!--                <th>Actions</th>-->
-<!--            </tr>-->
-<!--            </thead>-->
-<!--            <tbody>-->
-<!--            <tr th:each="submittedForm : ${submittedForms}">-->
-<!--                <td th:text="${submittedForm.examForm.examFormName}"></td>-->
-<!--                <td th:text="${submittedForm.isFeePaid ? 'Yes' : 'No'}"></td>-->
-<!--                <td th:text="${submittedForm.isApprovedByMentor ? 'Yes' : 'No'}"></td>-->
-<!--                <td th:text="${submittedForm.isApprovedByAccounts ? 'Yes' : 'No'}"></td>-->
-<!--                <td>-->
-<!--                    <a th:if="${!submittedForm.isFeePaid}" th:href="@{/exam/pay-fee/{id}(id=${submittedForm.id})}" class="btn btn-warning">Pay Fee</a>-->
-<!--                    <a th:if="${submittedForm.isApprovedByMentor && submittedForm.isApprovedByAccounts}" th:href="@{/exam/print/{id}(id=${submittedForm.id})}" class="btn btn-success">Print Form</a>-->
-<!--                </td>-->
-<!--            </tr>-->
-<!--            </tbody>-->
-<!--        </table>-->
+        <!-- Exam Form List -->
+        <h2>Available Exam Forms</h2>
+        <table class="table table-bordered">
+            <thead class="table-dark">
+            <tr>
+                <th>Exam Form Name</th>
+                <th>Form Type</th>
+                <th>Course</th>
+                <th>Start Date</th>
+                <th>End Date</th>
+                <th>Action</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="examForm : ${examForm}">
+                <td th:text="${examForm.examFormName}"></td>
+                <td th:text="${examForm.formType}"></td>
+                <td th:text="${examForm.course.courseName}"></td>
+                <td th:text="${#dates.format(examForm.startDate, 'yyyy-MM-dd')}"></td>
+                <td th:text="${#dates.format(examForm.endDate, 'yyyy-MM-dd')}"></td>
+                <td th:if="${!examFromFileUP}">
+                    <a th:href="@{/students/exam/{id}(id=${student.id})}" class="btn btn-primary">Submit Exam Form</a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
 </div>
 
 </body>
 </html>
-<!--<!DOCTYPE html>-->
-<!--<html xmlns:th="http://www.thymeleaf.org">-->
-<!--<head>-->
-<!--    <meta charset="UTF-8">-->
-<!--    <title>Submitted Exam Forms</title>-->
-<!--    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">-->
-<!--</head>-->
-<!--<body>-->
-
-<!--<div class="container mt-5">-->
-<!--    <h1 class="mb-4">Exam Forms</h1>-->
-
-<!--    &lt;!&ndash; Exam Form List &ndash;&gt;-->
-<!--    <h2>Available Exam Forms</h2>-->
-<!--    <table class="table table-bordered">-->
-<!--        <thead class="table-dark">-->
-<!--        <tr>-->
-<!--            <th>Exam Form Name</th>-->
-<!--            <th>Form Type</th>-->
-<!--            <th>Course</th>-->
-<!--            <th>Start Date</th>-->
-<!--            <th>End Date</th>-->
-<!--            <th>Action</th>-->
-<!--        </tr>-->
-<!--        </thead>-->
-<!--        <tbody>-->
-<!--        <tr th:each="examForm : ${examForms}">-->
-<!--            <td th:text="${examForm.examFormName}"></td>-->
-<!--            <td th:text="${examForm.formType}"></td>-->
-<!--            <td th:text="${examForm.course.courseName}"></td>-->
-<!--            <td th:text="${#dates.format(examForm.startDate, 'yyyy-MM-dd')}"></td>-->
-<!--            <td th:text="${#dates.format(examForm.endDate, 'yyyy-MM-dd')}"></td>-->
-<!--            <td th:if="${!hasSubmittedExamForm}">-->
-<!--                <a th:href="@{/students/exam/{id}(id=${student.id})}" class="btn btn-primary">Submit Exam Form</a>-->
-<!--            </td>-->
-<!--        </tr>-->
-<!--        </tbody>-->
-<!--    </table>-->
-
-<!--    &lt;!&ndash; Submitted Exam Details &ndash;&gt;-->
-<!--    <h2 class="mt-5">Submitted Exam Details</h2>-->
-<!--    <table class="table table-bordered">-->
-<!--        <thead class="table-dark">-->
-<!--        <tr>-->
-<!--            <th>Exam Form Name</th>-->
-<!--            <th>Fee Amount</th>-->
-<!--            <th>Late Fee</th>-->
-<!--            <th>Super Late Fee</th>-->
-<!--            <th>Payment Status</th>-->
-<!--            <th>Approval Status</th>-->
-<!--            <th>Submission Date</th>-->
-<!--        </tr>-->
-<!--        </thead>-->
-<!--        <tbody>-->
-<!--        <tr th:each="exam : ${exams}">-->
-<!--            <td th:text="${exam.examForm.examFormName}"></td>-->
-<!--            <td th:text="${exam.feeAmount}"></td>-->
-<!--            <td th:text="${exam.lateFee != null ? exam.lateFee : 'N/A'}"></td>-->
-<!--            <td th:text="${exam.superLateFee != null ? exam.superLateFee : 'N/A'}"></td>-->
-<!--            <td th:text="${exam.paymentStatus == 1 ? 'Paid' : 'Pending'}"></td>-->
-<!--            <td th:text="${exam.status}"></td>-->
-<!--            <td th:text="${exam.submissionDate}"></td>-->
-<!--        </tr>-->
-<!--        </tbody>-->
-<!--    </table>-->
-<!--</div>-->
-
-<!--</body>-->
-<!--</html>-->

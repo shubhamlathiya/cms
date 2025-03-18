@@ -238,10 +238,6 @@ public class StudentController {
 
         // Check if the student has already submitted the exam form
         boolean hasSubmittedExamForm = examService.hasStudentSubmittedExamForm(studentId);
-//    if (hasSubmittedExamForm) {
-//        hasSubmittedExamForm = true;
-//        model.addAttribute("message", "You have already submitted your exam form.");
-//    }
 
         // Fetch the latest exam form based on the student's course and semester
         List<StudentEnrollmentModel> enrollments = studentService.getEnrollmentsByStudentId(studentId);
@@ -280,6 +276,14 @@ public class StudentController {
         model.addAttribute("isEligibleForExam", isEligibleForExam);
         model.addAttribute("eligibilityMessage", eligibilityMessage);
         model.addAttribute("examFromFileUP", hasSubmittedExamForm);
+
+        String userRole = userRoleUtil.getUserRole(session);
+        model.addAttribute("userRole", userRole);
+
+//        Long studentId = (Long) session.getAttribute("studentId");
+//        StudentModel student = studentService.findById(studentId);
+//        model.addAttribute("student", student);
+
         return "ExaminationManagement/exam-details-students";
     }
 
