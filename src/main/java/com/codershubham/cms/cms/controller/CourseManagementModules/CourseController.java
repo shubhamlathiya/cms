@@ -52,9 +52,9 @@ public class CourseController {
         return "redirect:/" + PathConstant.COURSES_PATH;  // Redirect back to the courses page after creation
     }
 
-    @GetMapping("/update/{courseID}")
-    public String updateCourseForm(@PathVariable Long courseID, Model model) {
-        CourseModel courseModel = courseService.getCourseById(courseID);
+    @GetMapping(PathConstant.UPDATE_PATH)
+    public String updateCourseForm(@PathVariable Long id, Model model) {
+        CourseModel courseModel = courseService.getCourseById(id);
         model.addAttribute("departments", departmentService.getAllDepartments());  // List of departments for dropdown
         model.addAttribute("course", courseModel);  // Add the course to be updated
         String userRole = userRoleUtil.getUserRole(session);
@@ -62,15 +62,15 @@ public class CourseController {
         return "CourseManagement/courses/update-course";  // Form to update a course
     }
 
-    @PostMapping("/update/{courseID}")
-    public String updateCourse(@PathVariable Long courseID, @ModelAttribute CourseModel updatedCourseModel) {
-        courseService.updateCourse(courseID, updatedCourseModel);
+    @PostMapping(PathConstant.UPDATE_PATH)
+    public String updateCourse(@PathVariable Long id, @ModelAttribute CourseModel updatedCourseModel) {
+        courseService.updateCourse(id, updatedCourseModel);
         return "redirect:/" + PathConstant.COURSES_PATH;   // Redirect back to the courses page after update
     }
 
-    @GetMapping("/delete/{courseID}")
-    public String deleteCourse(@PathVariable int courseID) {
-        courseService.deleteCourse(courseID);
+    @GetMapping(PathConstant.DELETE_PATH)
+    public String deleteCourse(@PathVariable int id) {
+        courseService.deleteCourse(id);
         return "redirect:/" + PathConstant.COURSES_PATH;   // Redirect back to the courses page after deletion
     }
 }

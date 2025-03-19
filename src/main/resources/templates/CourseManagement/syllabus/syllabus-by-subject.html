@@ -104,14 +104,14 @@
                                 <td>
                                         <span th:if="${userRole == 'ADMIN'}">
                                             <a class="btn btn-sm btn-warning"
-                                               th:href="@{/admin/syllabus/edit/{id}(id=${syllabus.syllabusid})}">Edit</a>
+                                               th:href="@{/admin/syllabus/update/{id}(id=${syllabus.syllabusid})}">Edit</a>
                                             <a class="btn btn-sm btn-danger"
                                                th:href="@{/admin/syllabus/delete/{id}(id=${syllabus.syllabusid})}"
                                                onclick="return confirm('Are you sure?')">Delete</a>
                                         </span>
                                     <span th:if="${userRole == 'FACULTY'}">
                                             <a class="btn btn-sm btn-warning"
-                                               th:href="@{/faculty/syllabus/edit/{id}(id=${syllabus.syllabusid})}">Edit</a>
+                                               th:href="@{/faculty/syllabus/update/{id}(id=${syllabus.syllabusid})}">Edit</a>
                                             <a class="btn btn-sm btn-danger"
                                                th:href="@{/faculty/syllabus/delete/{id}(id=${syllabus.syllabusid})}"
                                                onclick="return confirm('Are you sure?')">Delete</a>

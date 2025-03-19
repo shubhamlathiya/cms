@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-
 import java.util.Arrays;
 import java.util.List;
 
@@ -64,7 +63,7 @@ public class ExamController {
     }
 
     // Show the exam form creation page
-    @GetMapping("/add")
+    @GetMapping(PathConstant.ADD_PATH)
     public String showCreateExamForm(Model model) {
 
         List<DepartmentModel> departments = departmentService.getAllDepartments();
@@ -78,14 +77,14 @@ public class ExamController {
     }
 
     // Handle exam form submission
-    @PostMapping("/add")
+    @PostMapping(PathConstant.ADD_PATH)
     public String createExamForm(ExamFormModel examForm) {
 //        System.out.println(examForm.getDepartment());
         examFormService.createExamForm(examForm);
         return "redirect:/admin/exam"; // Redirect to the form page
     }
 
-    @GetMapping("/delete/{id}")
+    @GetMapping(PathConstant.DELETE_PATH)
     public String deleteExams(@PathVariable Long id) {
         examFormService.deleteExam(id);
         return "redirect:/" + PathConstant.EXAM_PATH;

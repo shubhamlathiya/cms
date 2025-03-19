@@ -97,7 +97,7 @@ public class FacultySyllabusController {
     }
 
     // 4️⃣ Show Update Syllabus Form
-    @GetMapping("/edit/{id}")
+    @GetMapping(PathConstant.UPDATE_PATH)
     public String showUpdateSyllabusForm(@PathVariable Long id, Model model) {
         Optional<SyllabusModel> syllabus = syllabusService.getSyllabusById(id);
         if (syllabus.isPresent()) {
@@ -119,7 +119,7 @@ public class FacultySyllabusController {
     }
 
     // 5️⃣ Process Update Syllabus
-    @PostMapping("/update/{id}")
+    @PostMapping(PathConstant.UPDATE_PATH)
     public String updateSyllabus(@PathVariable Long id, @ModelAttribute SyllabusModel syllabus) {
         syllabusService.updateSyllabus(id, syllabus);
         return "redirect:/" + PathConstant.SYLLABUS_PATH + "/subject/" + syllabus.getSubject().getSubjectid();
@@ -127,7 +127,7 @@ public class FacultySyllabusController {
     }
 
 
-    @GetMapping("/delete/{id}")
+    @GetMapping(PathConstant.DELETE_PATH)
     public String deleteSyllabus(@PathVariable Long id) {
         Optional<SyllabusModel> syllabus = syllabusService.getSyllabusById(id);
         if (syllabus.isPresent()) {

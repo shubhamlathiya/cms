@@ -49,7 +49,7 @@ public class DepartmentController {
         return "redirect:/" + PathConstant.DEPARTMENTS_PATH;
     }
 
-    @GetMapping("/update/{id}")
+    @GetMapping(PathConstant.UPDATE_PATH)
     public String updateDepartment(@PathVariable Long id, Model model) {
         // Fetch the department from the database using the provided id
         DepartmentModel departmentModel = departmentService.getDepartmentById(id);
@@ -63,13 +63,13 @@ public class DepartmentController {
         return "CourseManagement/departments/edit-department";
     }
 
-    @PostMapping("/update/{id}")
+    @PostMapping(PathConstant.UPDATE_PATH)
     public String updateDepartment(@PathVariable Long id, @ModelAttribute DepartmentModel departmentModel) {
         departmentService.updateDepartment(id, departmentModel);
         return "redirect:/" + PathConstant.DEPARTMENTS_PATH;
     }
 
-    @GetMapping("/delete/{id}")
+    @GetMapping(PathConstant.DELETE_PATH)
     public String deleteDepartment(@PathVariable Long id) {
         departmentService.deleteDepartment(id);
         return "redirect:/" + PathConstant.DEPARTMENTS_PATH;

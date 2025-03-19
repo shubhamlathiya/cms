@@ -64,10 +64,10 @@ public class SubjectController {
     }
 
     // Show form for updating an existing subject
-    @GetMapping("/update/{subjectID}")
-    public String updateSubjectForm(@PathVariable Long subjectID, Model model) {
+    @GetMapping(PathConstant.UPDATE_PATH)
+    public String updateSubjectForm(@PathVariable Long id, Model model) {
         // Fetch the subject by its ID
-        SubjectsModel subject = subjectService.getSubjectById(subjectID);
+        SubjectsModel subject = subjectService.getSubjectById(id);
         // Fetch all courses for the dropdown
         model.addAttribute("courses", courseService.getAllCourses());
         model.addAttribute("subject", subject);  // Add the subject to the model for editing
@@ -79,19 +79,19 @@ public class SubjectController {
     }
 
     // Update an existing subject
-    @PostMapping("/update/{subjectID}")
-    public String updateSubject(@PathVariable Long subjectID, @ModelAttribute SubjectsModel updatedSubject) {
+    @PostMapping(PathConstant.UPDATE_PATH)
+    public String updateSubject(@PathVariable Long id, @ModelAttribute SubjectsModel updatedSubject) {
         // Set the current date and time for the updated date
         updatedSubject.setCreatedAt(LocalDateTime.now());
         // Update the subject
-        subjectService.updateSubject(subjectID, updatedSubject);
+        subjectService.updateSubject(id, updatedSubject);
         return "redirect:/" + PathConstant.SUBJECTS_PATH;   // Redirect to the subjects list page after update
     }
 
     // Delete a subject
-    @GetMapping("/delete/{subjectID}")
-    public String deleteSubject(@PathVariable Long subjectID) {
-        subjectService.deleteSubject(subjectID);  // Delete the subject
+    @GetMapping(PathConstant.DELETE_PATH)
+    public String deleteSubject(@PathVariable Long id) {
+        subjectService.deleteSubject(id);  // Delete the subject
         return "redirect:/" + PathConstant.SUBJECTS_PATH;   // Redirect to the subjects list page after deletion
     }
 }

@@ -1,21 +1,15 @@
 package com.codershubham.cms.cms.controller.FacultyManagementModules;
 
 import com.codershubham.cms.cms.constant.PathConstant;
-import com.codershubham.cms.cms.model.CourseManagementModules.DepartmentModel;
-import com.codershubham.cms.cms.model.CourseManagementModules.SyllabusModel;
 import com.codershubham.cms.cms.model.FacultyManagementModules.FacultyModel;
 import com.codershubham.cms.cms.model.FacultyManagementModules.FacultySubjectAssignmentModel;
 import com.codershubham.cms.cms.model.StudentManagementModules.DivisionModel;
 import com.codershubham.cms.cms.model.StudentManagementModules.StudentModel;
-import com.codershubham.cms.cms.model.UserManagementModules.UserModel;
-import com.codershubham.cms.cms.service.CourseManagementModules.DepartmentService;
-import com.codershubham.cms.cms.service.CourseManagementModules.SyllabusService;
 import com.codershubham.cms.cms.service.FacultyManagementModules.FacultyService;
 import com.codershubham.cms.cms.service.FacultyManagementModules.FacultySubjectAssignmentService;
 import com.codershubham.cms.cms.service.StudentManagementModules.StudentService;
 import com.codershubham.cms.cms.util.EmailUtil;
 import com.codershubham.cms.cms.util.UserRoleUtil;
-import jakarta.persistence.Access;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -25,7 +19,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
-import java.util.Optional;
 
 @Controller
 @RequestMapping(PathConstant.FACULTY_PATH)

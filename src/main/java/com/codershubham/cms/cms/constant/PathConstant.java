@@ -36,4 +36,7 @@ public class PathConstant {
 //    common URL
     public static final String ADD_PATH = "add";
     public static final String DASHBOARD_PATH = "dashboard";
+
+    public static final String UPDATE_PATH = "/update/{id}";
+    public static final String DELETE_PATH = "/delete/{id}";
 }

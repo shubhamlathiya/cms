@@ -385,37 +385,6 @@ public class StudentController {
         return "redirect:/student/dashboard";
     }
 
-//    @PostMapping("/exam/submit")
-//    public String submitExamForm(
-//            @RequestParam Long studentId,
-//            @RequestParam Long examFormId,
-//            @RequestParam List<Long> subjectIds,
-//            @RequestParam Double feeAmount,
-//            RedirectAttributes redirectAttributes) {
-//
-//        // Fetch student and exam form details
-//        StudentModel student = studentService.findById(studentId);
-//        ExamFormModel examForm = examFormService.findById(examFormId);
-//        List<SubjectsModel> subjects = subjectService.findAllById(subjectIds);
-//
-//        // Create ExamFormDetails entry
-//        ExamModel examFormDetails = new ExamModel();
-//        examFormDetails.setStudent(student);
-//        examFormDetails.setExamForm(examForm);
-//        examFormDetails.setSubjects(subjects);
-//        examFormDetails.setFeeAmount(feeAmount);
-//        examFormDetails.setSubmissionDate(LocalDate.now());
-//        examFormDetails.setStatus(ExamFormStatus.PENDING_APPROVAL);
-//        examFormDetails.setPaymentStatus(false); // Payment not yet confirmed
-//
-//        // Save the exam form submission
-//        exam.save(examFormDetails);
-//
-//        redirectAttributes.addFlashAttribute("message", "Exam Form Submitted Successfully!");
-//        return "redirect:/student/dashboard";
-//    }
-
-
     @GetMapping("/assignments/{id}")
     public String viewAssignments(@PathVariable Long id, Model model) {
         // Fetch all enrollments for the student
