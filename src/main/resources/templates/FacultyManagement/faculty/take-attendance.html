@@ -398,6 +398,7 @@
                          th:data-lecture="${entry.key}"
                          th:data-records="${entry.value.records}"
                          th:data-time="${entry.value.time}"
+                         th:data-date="${entry.value.date}"
                          onclick="openEditModal(this)">
     Edit
                         </button>
@@ -431,6 +432,12 @@
                         <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                     </div>
                     <div class="modal-body">
+
+                        <!-- Attendance Date Selection -->
+                        <h4>Select Attendance Date:</h4>
+                        <input type="date" class="form-control" name="attendanceDate1" id="attendanceDate1"
+                               th:value="${#dates.format(#dates.createNow(), 'yyyy-MM-dd')}">
+
                         <!-- Time Selection -->
                         <h4>Select Time Slot:</h4>
                         <div class="form-check">
@@ -492,6 +499,7 @@
                             <input type="hidden" name="divisionId" th:value="${assignment.division.id}">
                             <input type="hidden" name="lectureNumber" id="addHiddenLectureNumber">
                             <input type="hidden" name="selectedTime" id="addSelectedTime">
+                            <input type="hidden" name="attendanceDate" id="attendanceDate">
 
                             <button type="submit" class="btn btn-primary mt-3">Submit Attendance</button>
                         </form>
@@ -510,6 +518,11 @@
                         <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                     </div>
                     <div class="modal-body">
+
+                        <!-- Attendance Date Selection -->
+                        <h4>Select Attendance Date:</h4>
+                        <input type="date" class="form-control" name="editattendanceDate1" id="editattendanceDate1">
+
                         <!-- Time Selection -->
                         <h4>Select Time Slot:</h4>
                         <div class="form-check">
@@ -575,6 +588,7 @@
                             <input type="hidden" name="divisionId" th:value="${assignment.division.id}">
                             <input type="hidden" name="lectureNumber" id="editHiddenLectureNumber">
                             <input type="hidden" name="selectedTime" id="editSelectedTime">
+                            <input type="hidden" name="attendanceDate" id="editAttendanceDate">
 
                             <button type="submit" class="btn btn-primary mt-3">Update Attendance</button>
                         </form>
@@ -603,7 +617,7 @@
         const lectureNumber = button.getAttribute("data-lecture");
         const recordsData = button.getAttribute("data-records");
         const selectedTime = button.getAttribute("data-time");
-
+        const selectedDate = button.getAttribute("data-date");
         // Log the raw data
         // for debugging
         // console.log("Raw records data:", recordsData);
@@ -643,6 +657,7 @@
 
         // Assuming selectedTime is in the format "HH:mm:ss"
         const timeSlotInputs = document.getElementsByName("editTimeSlot");
+        const dateInputs = document.getElementsByName("editattendanceDate1");
         // console.log(timeSlotInputs); // Log the NodeList of radio buttons
         // console.log(selectedTime); // Log the selected time
 
@@ -660,6 +675,11 @@
                 break; // Exit the loop once the matching time slot is found
             }
         }
+        dateInputs.forEach(input => {
+            input.value = selectedDate;
+        });
+
+
         // Show the modal
         const modalElement = document.getElementById("editAttendanceModal");
         if (!modalElement) {
@@ -686,11 +706,15 @@
     document.getElementById("addAttendanceForm").onsubmit = function () {
         var timeSlots = document.getElementsByName("timeSlot");
         var selectedTimeInput = document.getElementById("addSelectedTime");
+        var attendanceDate1 = document.getElementById("attendanceDate1");
+        var attendanceDate = document.getElementById("attendanceDate");
         var timeSlotSelected = false; // Flag to check if a time slot is selected
 
+        console.log(attendanceDate1.valueOf());
         for (var i = 0; i < timeSlots.length; i++) {
             if (timeSlots[i].checked) {
-                selectedTimeInput.value = timeSlots[i].value; // Set the selected time
+                selectedTimeInput.value = timeSlots[i].value;
+                attendanceDate.value = attendanceDate1.value; // Set the selected time
                 timeSlotSelected = true; // Mark that a time slot is selected
                 break; // Exit the loop once a checked time slot is found
             }
@@ -707,11 +731,14 @@
     document.getElementById("editAttendanceModal").onsubmit = function () {
         var timeSlots = document.getElementsByName("editTimeSlot");
         var selectedTimeInput = document.getElementById("editSelectedTime");
+        var attendanceDate1 = document.getElementById("editattendanceDate1");
+        var attendanceDate = document.getElementById("editAttendanceDate");
         var timeSlotSelected = false; // Flag to check if a time slot is selected
 
         for (var i = 0; i < timeSlots.length; i++) {
             if (timeSlots[i].checked) {
-                selectedTimeInput.value = timeSlots[i].value; // Set the selected time
+                selectedTimeInput.value = timeSlots[i].value;
+                attendanceDate.value = attendanceDate1.value; // Set the selected time
                 timeSlotSelected = true; // Mark that a time slot is selected
                 break; // Exit the loop once a checked time slot is found
             }

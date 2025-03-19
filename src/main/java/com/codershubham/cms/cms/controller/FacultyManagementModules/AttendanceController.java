@@ -54,12 +54,17 @@ public class AttendanceController {
 
     // ✅ Mark Attendance via Form Submission
     @PostMapping("/mark")
-    public String markAttendance(@RequestParam Long facultyId, @RequestParam Long subjectId, @RequestParam Long divisionId, @RequestParam int lectureNumber, @RequestParam String selectedTime, @RequestParam Map<String, String> studentAttendances) {
+    public String markAttendance(@RequestParam Long facultyId, @RequestParam Long subjectId, @RequestParam Long divisionId, @RequestParam int lectureNumber, @RequestParam String selectedTime, @RequestParam Map<String, String> studentAttendances, @RequestParam String attendanceDate) {
 
+//        System.out.println("hy shubham");
+//        System.out.println(attendanceDate);
         String startTime = selectedTime.split(" - ")[0].trim();  // Extracts "08:40"
         LocalTime lectureTime = LocalTime.parse(startTime); // Parse only start time
 
-        // Iterate over submitted student attendance data
+        LocalDate attendanceDate1 = LocalDate.parse(attendanceDate, DateTimeFormatter.ISO_DATE);
+
+
+//        Iterate over submitted student attendance data
         for (Map.Entry<String, String> entry : studentAttendances.entrySet()) {
             if (entry.getKey().contains(".studentId")) {
                 Long studentId = Long.parseLong(entry.getValue());
@@ -69,7 +74,7 @@ public class AttendanceController {
                 boolean isPresent = studentAttendances.containsKey(presentKey);
 
                 // Call service method to mark attendance
-                attendanceService.markAttendance(studentId, subjectId, facultyId, divisionId, lectureNumber, lectureTime, isPresent ? "Present" : "Absent", LocalDate.now());
+                attendanceService.markAttendance(studentId, subjectId, facultyId, divisionId, lectureNumber, lectureTime, isPresent ? "Present" : "Absent", attendanceDate1);
             }
         }
 
@@ -88,16 +93,12 @@ public class AttendanceController {
             }
 
             // Get students by division (minimal details)
-            List<Map<String, Object>> students = studentService.getStudentsByDivision(assignment.getDivision().getId())
-                    .stream()
-                    .map(student -> {
-                        Map<String, Object> studentMap = new HashMap<>(); // Create a new HashMap
-                        studentMap.put("id", student.getId());
-                        studentMap.put("name", (student.getFirstName() != null ? student.getFirstName() : "") + " " +
-                                (student.getLastName() != null ? student.getLastName() : ""));
-                        return studentMap; // Return the map
-                    })
-                    .collect(Collectors.toList());
+            List<Map<String, Object>> students = studentService.getStudentsByDivision(assignment.getDivision().getId()).stream().map(student -> {
+                Map<String, Object> studentMap = new HashMap<>(); // Create a new HashMap
+                studentMap.put("id", student.getId());
+                studentMap.put("name", (student.getFirstName() != null ? student.getFirstName() : "") + " " + (student.getLastName() != null ? student.getLastName() : ""));
+                return studentMap; // Return the map
+            }).collect(Collectors.toList());
 
             // Calculate total lectures based on subject credits
             int totalLectures = assignment.getSubject().getCredits() * 15;
@@ -112,19 +113,15 @@ public class AttendanceController {
                     List<AttendanceModel> attendanceList = attendanceService.getAttendanceDetails(assignmentId, i);
 
                     if (!attendanceList.isEmpty()) {
-                        String attendanceDate = attendanceList.get(0).getAttendanceDate() != null ?
-                                attendanceList.get(0).getAttendanceDate().format(dateFormatter) : "N/A";
-                        String attendanceTime = attendanceList.get(0).getAttendanceTime() != null ?
-                                attendanceList.get(0).getAttendanceTime().format(timeFormatter) : "N/A";
+                        String attendanceDate = attendanceList.get(0).getAttendanceDate() != null ? attendanceList.get(0).getAttendanceDate().format(dateFormatter) : "N/A";
+                        String attendanceTime = attendanceList.get(0).getAttendanceTime() != null ? attendanceList.get(0).getAttendanceTime().format(timeFormatter) : "N/A";
 
-                        List<Map<String, Object>> attendanceRecords = attendanceList.stream()
-                                .map(attendance -> {
-                                    Map<String, Object> recordMap = new HashMap<>();
-                                    recordMap.put("studentId", attendance.getStudent() != null ? attendance.getStudent().getId() : null);
-                                    recordMap.put("status", attendance.getStatus() != null ? attendance.getStatus() : false);
-                                    return recordMap;
-                                })
-                                .collect(Collectors.toList());
+                        List<Map<String, Object>> attendanceRecords = attendanceList.stream().map(attendance -> {
+                            Map<String, Object> recordMap = new HashMap<>();
+                            recordMap.put("studentId", attendance.getStudent() != null ? attendance.getStudent().getId() : null);
+                            recordMap.put("status", attendance.getStatus() != null ? attendance.getStatus() : false);
+                            return recordMap;
+                        }).collect(Collectors.toList());
 
                         // Serialize attendanceRecords to JSON
                         String jsonRecords;
@@ -134,10 +131,7 @@ public class AttendanceController {
                             jsonRecords = "[]"; // Handle error
                         }
 
-                        attendanceMap.put(i, Map.of(
-                                "date", attendanceDate,
-                                "time", attendanceTime,
-                                "records", jsonRecords // Store the JSON string
+                        attendanceMap.put(i, Map.of("date", attendanceDate, "time", attendanceTime, "records", jsonRecords // Store the JSON string
                         ));
                     }
                 } else {
@@ -146,26 +140,7 @@ public class AttendanceController {
             }
 
             // Add data to the model for the Thymeleaf template
-            model.addAttribute("assignment", Map.of(
-                    "id", assignment.getId(),
-                    "faculty", Map.of(
-                            "id", assignment.getFaculty().getFacultyId(),
-                            "name", assignment.getFaculty().getFirstName()
-                    ),
-                    "subject", Map.of(
-                            "id", assignment.getSubject().getSubjectid(),
-                            "name", assignment.getSubject().getSubjectName(),
-                            "credits", assignment.getSubject().getCredits()
-                    ),
-                    "division", Map.of(
-                            "id", assignment.getDivision().getId(),
-                            "name", assignment.getDivision().getName()
-                    ),
-                    "semester", Map.of(
-                            "id", assignment.getSemester().getId(),
-                            "name", assignment.getSemester().getName()
-                    )
-            ));
+            model.addAttribute("assignment", Map.of("id", assignment.getId(), "faculty", Map.of("id", assignment.getFaculty().getFacultyId(), "name", assignment.getFaculty().getFirstName()), "subject", Map.of("id", assignment.getSubject().getSubjectid(), "name", assignment.getSubject().getSubjectName(), "credits", assignment.getSubject().getCredits()), "division", Map.of("id", assignment.getDivision().getId(), "name", assignment.getDivision().getName()), "semester", Map.of("id", assignment.getSemester().getId(), "name", assignment.getSemester().getName())));
 
             model.addAttribute("students", students);
             model.addAttribute("totalLectures", totalLectures);
