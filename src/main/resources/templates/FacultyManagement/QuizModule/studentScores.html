@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Student Scores</title>
+</head>
+<body>
+<h1>Quiz: <span th:text="${quiz.title}"></span></h1>
+<h2>Student Scores</h2>
+
+<table>
+    <thead>
+    <tr>
+        <th>Student ID</th>
+        <th>Student Name</th>
+        <th>Attempted</th>
+        <th>Score</th>
+        <th>Attempt Date</th>
+        <th>Details</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="attempt : ${quizAttempts}">
+        <td th:text="${attempt.student.id}"></td>
+        <td th:text="${attempt.student.name}"></td>
+        <td>
+            <span th:if="${attempt.attempted}">Yes</span>
+            <span th:unless="${attempt.attempted}">No</span>
+        </td>
+        <td th:text="${attempt.score}"></td>
+        <td th:text="${attempt.attemptedAt}"></td>
+        <td>
+            <a th:href="@{/quizzes/attempt-details(id=${attempt.id})}">View Answers</a>
+        </td>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>

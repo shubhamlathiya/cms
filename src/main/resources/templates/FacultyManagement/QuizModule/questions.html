@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="'Questions'">Questions</title>
+</head>
+<body>
+
+<!-- Replace the content section -->
+<div th:replace="layout/base.html">
+    <div th:fragment="content">
+        <h1 class="text-center mb-4">Questions</h1>
+
+        <!-- Add Question Form -->
+        <form th:action="@{/quizzes/questions/add}" method="post" enctype="multipart/form-data">
+            <div class="mb-3">
+                <label for="questionText" class="form-label">Question Text</label>
+                <input type="text" class="form-control" id="questionText" name="questionText" required>
+            </div>
+            <div class="mb-3">
+                <label for="option1" class="form-label">Option 1</label>
+                <input type="text" class="form-control" id="option1" name="option1" required>
+            </div>
+            <div class="mb-3">
+                <label for="option2" class="form-label">Option 2</label>
+                <input type="text" class="form-control" id="option2" name="option2" required>
+            </div>
+            <div class="mb-3">
+                <label for="option3" class="form-label">Option 3</label>
+                <input type="text" class="form-control" id="option3" name="option3" required>
+            </div>
+            <div class="mb-3">
+                <label for="option4" class="form-label">Option 4</label>
+                <input type="text" class="form-control" id="option4" name="option4" required>
+            </div>
+            <div class="mb-3">
+                <label for="correctOption" class="form-label">Correct Option (1-4)</label>
+                <input type="number" class="form-control" id="correctOption" name="correctOption" min="1" max="4" required>
+            </div>
+            <input type="hidden" name="quizId" th:value="${quizId}">
+            <button type="submit" class="btn btn-primary">Add Question</button>
+        </form>
+
+        <hr>
+        <!-- Provide link to download the template -->
+        <h3>Download Sample Excel Template</h3>
+        <a th:href="@{/file/downloadTemplate}" class="btn btn-info">Download Template</a>
+
+
+        <!-- Upload Excel File Form -->
+        <h3>Upload Questions from Excel</h3>
+        <form th:action="@{/quizzes/questions/upload}" method="post" enctype="multipart/form-data">
+            <div class="mb-3">
+                <label for="excelFile" class="form-label">Choose Excel File</label>
+                <input type="file" class="form-control" id="excelFile" name="excelFile" accept=".xlsx" required>
+            </div>
+            <input type="hidden" name="quizId" th:value="${quizId}">
+            <button type="submit" class="btn btn-success">Upload Excel</button>
+        </form>
+
+        <!-- Question List -->
+        <table class="table table-bordered mt-4">
+            <thead>
+            <tr>
+                <th>Question Text</th>
+                <th>Option 1</th>
+                <th>Option 2</th>
+                <th>Option 3</th>
+                <th>Option 4</th>
+                <th>Correct Option</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="question : ${questions}">
+                <td th:text="${question.questionText}">Question Text</td>
+                <td th:text="${question.option1}">Option 1</td>
+                <td th:text="${question.option2}">Option 2</td>
+                <td th:text="${question.option3}">Option 3</td>
+                <td th:text="${question.option4}">Option 4</td>
+                <td th:text="${question.correctOption}">1</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+</body>
+</html>

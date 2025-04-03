@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="'Student Quiz'">Student Quiz</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        .quiz-details {
+            display: none; /* Hide quiz details initially */
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+
+<!-- Replace the content section -->
+<div th:replace="layout/base.html">
+    <div th:fragment="content">
+        <main class="container mt-4">
+            <h2 class="mb-4">Your Quiz</h2>
+
+            <!-- Loop through semesters -->
+            <div th:each="semesterEntry : ${subjectQuizMap}">
+                <h3 class="mb-3">Semester <span th:text="${semesterEntry.key}"></span></h3>
+
+                <table class="table table-bordered table-striped">
+                    <thead>
+                    <tr>
+                        <th>Subject</th>
+                        <th>Available Quizzes</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <!-- Loop through subjects -->
+                    <tr th:each="subjectEntry : ${semesterEntry.value}">
+                        <td th:text="${subjectEntry.key.subjectName}"></td>
+                        <td>
+                            <button class="btn btn-primary show-quiz-btn"
+                                    th:data-subject-id="${subjectEntry.key.subjectid}">
+                                View Quiz
+                            </button>
+                            <span th:if="${#lists.isEmpty(subjectEntry.value)}" class="text-muted">No Quiz Available</span>
+
+                            <!-- Quiz Details (Initially Hidden) -->
+                            <div class="quiz-details" th:id="'quiz-details-' + ${subjectEntry.key.subjectid}">
+                                <table class="table table-sm mt-2">
+                                    <thead>
+                                    <tr>
+                                        <th>Title</th>
+                                        <th>Date</th>
+                                        <th>Start Time</th>
+                                        <th>End Time</th>
+                                        <th>Total Marks</th>
+                                        <th>Action</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr th:each="quizData : ${subjectEntry.value}">
+                                        <td th:text="${quizData['quiz'].title}"></td>
+                                        <td th:text="${quizData['quiz'].quizDate}"></td>
+                                        <td th:text="${quizData['quiz'].startTime}"></td>
+                                        <td th:text="${quizData['quiz'].endTime}"></td>
+                                        <td th:text="${quizData['quiz'].totalMarks}"></td>
+                                        <td>
+                                            <!-- Check if the student has attempted the quiz -->
+                                            <div th:if="${quizData['attempt'] != null}">
+                                                <p class="text-success">Attempted</p>
+                                                <p>Score: <span th:text="${quizData['attempt'].score}"></span> / <span th:text="${quizData['quiz'].totalMarks}"></span></p>
+                                            </div>
+
+                                            <div th:if="${quizData['attempt'] == null}">
+                                                <!-- Show Instructions before starting the quiz -->
+                                                <button class="btn btn-info btn-sm start-quiz-btn"
+                                                        th:data-quiz-id="${quizData['quiz'].id}" data-toggle="modal" data-target="#quizInstructionModal">
+                                                    Start Quiz
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <a th:href="@{/students/dashboard}" class="btn btn-secondary mt-3">Back to Dashboard</a>
+        </main>
+    </div>
+</div>
+
+<!-- Modal for Quiz Instructions -->
+<div class="modal fade" id="quizInstructionModal" tabindex="-1" role="dialog" aria-labelledby="quizInstructionModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="quizInstructionModalLabel">Quiz Instructions</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <h6>Instructions:</h6>
+                <ul>
+                    <li>Read each question carefully.</li>
+                    <li>Do not switch tabs or copy questions. Doing so will terminate the quiz.</li>
+                    <li>You can attempt each question once. After submitting, you cannot change your answers.</li>
+                    <li>The quiz is timed, and once started, the clock will count down.</li>
+                </ul>
+                <p>Please ensure you're ready to begin before clicking "Start Quiz."</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary start-quiz" data-dismiss="modal">Start Quiz</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- jQuery Script to Show/Hide Quiz Details and Start Quiz -->
+<script>
+    $(document).ready(function () {
+        // Toggle quiz details visibility
+        $(".show-quiz-btn").click(function () {
+            let subjectId = $(this).data("subject-id");
+            $("#quiz-details-" + subjectId).toggle();
+        });
+
+        // Start quiz after modal confirmation
+        $(".start-quiz").click(function () {
+            // Retrieve the quiz ID from the button's data attribute
+            let quizId = $(".start-quiz-btn").data("quiz-id");
+
+            // Check if quizId is defined
+            if (quizId !== undefined && quizId !== null) {
+                window.location.href = '/students/quiz/' + quizId + '/start'; // Redirect to quiz page
+            } else {
+                alert("Error: Quiz ID is not defined.");
+            }
+        });
+    });
+</script>
+
+<!-- Bootstrap JS -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>

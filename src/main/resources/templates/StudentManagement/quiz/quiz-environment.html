@@ -1,0 +1,248 @@
+<!--<!DOCTYPE html>-->
+<!--<html xmlns:th="http://www.thymeleaf.org">-->
+<!--<head>-->
+<!--    <title>Quiz Environment</title>-->
+<!--    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">-->
+<!--    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>-->
+<!--    <script>-->
+<!--        $(document).ready(function () {-->
+<!--            let timeLimit = 1800; // 30 minutes in seconds-->
+<!--            let remainingTime = timeLimit; // Initialize timer-->
+
+<!--            let alertCounter = 0;  // For counting how many times the alert has been triggered-->
+
+<!--            // Start the timer-->
+<!--            function startTimer() {-->
+<!--                const timerElement = $('#timer');-->
+<!--                const interval = setInterval(function () {-->
+<!--                    if (remainingTime <= 0) {-->
+<!--                        clearInterval(interval);-->
+<!--                        alert("Time's up! The quiz will now be submitted.");-->
+<!--                        $('form').submit();  // Submit the form after time is up-->
+<!--                    } else {-->
+<!--                        remainingTime&#45;&#45;;-->
+<!--                        const minutes = Math.floor(remainingTime / 60);-->
+<!--                        const seconds = remainingTime % 60;-->
+<!--                        timerElement.text(`${minutes}:${seconds < 10 ? '0' + seconds : seconds}`);-->
+<!--                    }-->
+<!--                }, 1000); // Update every second-->
+<!--            }-->
+
+<!--            // Restrict copy, paste, right-click actions-->
+<!--            $(document).on("contextmenu", function (e) {-->
+<!--                e.preventDefault();-->
+<!--                showAlert('Do not right-click during the quiz!');-->
+<!--            });-->
+
+<!--            $(document).on("copy paste", function (e) {-->
+<!--                e.preventDefault();-->
+<!--                showAlert('Copy and paste are not allowed during the quiz!');-->
+<!--            });-->
+
+<!--            // Show an alert and increment the counter-->
+<!--            function showAlert(message) {-->
+<!--                if (alertCounter < 3) {-->
+<!--                    alert(message);-->
+<!--                    alertCounter++;-->
+<!--                }-->
+
+<!--                // After 3 alerts, automatically submit the quiz-->
+<!--                if (alertCounter >= 3) {-->
+<!--                    alert("You have exceeded the allowed number of attempts to copy/paste. The quiz will now be submitted.");-->
+<!--                    $('form').submit();  // Automatically submit the form-->
+<!--                }-->
+<!--            }-->
+
+<!--            // Prevent tab switching (show alert if the user switches tab)-->
+<!--            document.addEventListener("visibilitychange", function () {-->
+<!--                if (document.hidden) {-->
+<!--                    showAlert("Warning: Do not switch tabs during the quiz!");-->
+<!--                }-->
+<!--            });-->
+
+<!--            // Alert when the user selects an option-->
+<!--            $("input[type='radio']").change(function () {-->
+<!--                alert("You have selected an option.");-->
+<!--            });-->
+
+<!--            // Start the timer when the page loads-->
+<!--            startTimer();-->
+<!--        });-->
+<!--    </script>-->
+<!--</head>-->
+<!--<body>-->
+<!--<div class="container mt-4">-->
+<!--    <h2 th:text="${quiz.title}"></h2>-->
+<!--    <p><strong>Time Limit:</strong> <span id="timer">30:00</span></p>-->
+
+<!--    &lt;!&ndash; Loop through Questions &ndash;&gt;-->
+<!--    <form th:action="@{/students/quiz/{quizid}/submit(quizid=${quiz.id})}" method="post">-->
+<!--        <input type="hidden" name="quizId" th:value="${quiz.id}"/>-->
+
+<!--        <div th:each="question, index : ${quiz.questions}">-->
+<!--            <h5 th:text="${index.index + 1} + '. ' + ${question.questionText}"></h5>-->
+<!--            <div>-->
+<!--                <label><input type="radio" th:name="'question_' + ${question.id}" th:value="1"/> <span th:text="${question.option1}"></span></label><br>-->
+<!--                <label><input type="radio" th:name="'question_' + ${question.id}" th:value="2"/> <span th:text="${question.option2}"></span></label><br>-->
+<!--                <label><input type="radio" th:name="'question_' + ${question.id}" th:value="3"/> <span th:text="${question.option3}"></span></label><br>-->
+<!--                <label><input type="radio" th:name="'question_' + ${question.id}" th:value="4"/> <span th:text="${question.option4}"></span></label>-->
+<!--            </div>-->
+<!--            <hr>-->
+<!--        </div>-->
+
+<!--        <button type="submit" class="btn btn-primary">Submit Quiz</button>-->
+<!--    </form>-->
+<!--</div>-->
+<!--</body>-->
+<!--</html>-->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Quiz Environment</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        /* Full height layout */
+        html, body {
+            height: 100%;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #f4f4f9;
+        }
+
+        .container {
+            max-width: 800px;
+            width: 100%;
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .quiz-content {
+            height: 80vh;
+            overflow-y: auto;
+        }
+
+        #timer {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #e63946;
+        }
+
+        h5 {
+            margin-bottom: 15px;
+        }
+
+        button {
+            width: 100%;
+            font-size: 1.25rem;
+        }
+    </style>
+    <script>
+        $(document).ready(function () {
+            let timeLimit = 1800; // 30 minutes in seconds
+            let remainingTime = timeLimit; // Initialize timer
+            let alertCounter = 0;  // For counting how many times the alert has been triggered
+            let isQuizCompleted = false; // To check if the quiz is completed
+
+            // Start the timer
+            function startTimer() {
+                const timerElement = $('#timer');
+                const interval = setInterval(function () {
+                    if (remainingTime <= 0) {
+                        clearInterval(interval);
+                        alert("Time's up! The quiz will now be submitted.");
+                        $('form').submit();  // Submit the form after time is up
+                    } else {
+                        remainingTime--;
+                        const minutes = Math.floor(remainingTime / 60);
+                        const seconds = remainingTime % 60;
+                        timerElement.text(`${minutes}:${seconds < 10 ? '0' + seconds : seconds}`);
+                    }
+                }, 1000); // Update every second
+            }
+
+            // Restrict copy, paste, right-click actions
+            $(document).on("contextmenu", function (e) {
+                e.preventDefault();
+                showAlert('Do not right-click during the quiz!');
+            });
+
+            $(document).on("copy paste", function (e) {
+                e.preventDefault();
+                showAlert('Copy and paste are not allowed during the quiz!');
+            });
+
+            // Show an alert and increment the counter
+            function showAlert(message) {
+                if (alertCounter < 3) {
+                    alert(message);
+                    alertCounter++;
+                }
+
+                // After 3 alerts, automatically submit the quiz
+                if (alertCounter >= 3) {
+                    alert("You have exceeded the allowed number of attempts to copy/paste. The quiz will now be submitted.");
+                    $('form').submit();  // Automatically submit the form
+                }
+            }
+
+            // Prevent tab switching (show alert if the user switches tab)
+            document.addEventListener("visibilitychange", function () {
+                if (document.hidden) {
+                    showAlert("Warning: Do not switch tabs during the quiz!");
+                }
+            });
+
+            // Alert when the user selects an option
+            $("input[type='radio']").change(function () {
+                alert("You have selected an option.");
+            });
+
+            // Prevent closing or navigating away without submitting
+            window.onbeforeunload = function () {
+                if (!isQuizCompleted) {
+                    return "You have not submitted your quiz. Are you sure you want to leave?";
+                }
+            };
+
+            // Mark quiz as completed
+            $("form").on("submit", function () {
+                isQuizCompleted = true;
+            });
+
+            // Start the timer when the page loads
+            startTimer();
+        });
+    </script>
+</head>
+<body>
+<div class="container">
+    <h2 th:text="${quiz.title}"></h2>
+    <p><strong>Time Limit:</strong> <span id="timer">30:00</span></p>
+
+    <!-- Loop through Questions -->
+    <div class="quiz-content">
+        <form th:action="@{/students/quiz/{quizid}/submit(quizid=${quiz.id})}" method="post">
+            <input type="hidden" name="quizId" th:value="${quiz.id}"/>
+
+            <div th:each="question, index : ${quiz.questions}">
+                <h5 th:text="${index.index + 1} + '. ' + ${question.questionText}"></h5>
+                <div>
+                    <label><input type="radio" th:name="'question_' + ${question.id}" th:value="1"/> <span th:text="${question.option1}"></span></label><br>
+                    <label><input type="radio" th:name="'question_' + ${question.id}" th:value="2"/> <span th:text="${question.option2}"></span></label><br>
+                    <label><input type="radio" th:name="'question_' + ${question.id}" th:value="3"/> <span th:text="${question.option3}"></span></label><br>
+                    <label><input type="radio" th:name="'question_' + ${question.id}" th:value="4"/> <span th:text="${question.option4}"></span></label>
+                </div>
+                <hr>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Submit Quiz</button>
+        </form>
+    </div>
+</div>
+</body>
+</html>

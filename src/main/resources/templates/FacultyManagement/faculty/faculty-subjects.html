@@ -26,7 +26,7 @@
                     <th>Subject Code</th>
                     <th>Subject Name</th>
                     <th>Course</th>
-                    <th colspan="4">Actions</th>
+                    <th colspan="5">Actions</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -47,6 +47,10 @@
                     <td>
                         <a th:href="@{/assignments/{divisionId}/{semesterId}/{subjectId}(divisionId=${assignment.division.id}, semesterId=${assignment.semester.id}, subjectId=${assignment.subject.subjectid})}"
                            class="btn btn-warning btn-sm">Assignment</a>
+                    </td>
+                    <td>
+                        <a th:href="@{/quizzes/{divisionId}/{semesterId}/{subjectId}(divisionId=${assignment.division.id}, semesterId=${assignment.semester.id}, subjectId=${assignment.subject.subjectid})}"
+                           class="btn btn-warning btn-sm">Quiz</a>
                     </td>
                     <td>
                         <a th:href="@{/faculty/syllabus/subject/{subjectID}(subjectID=${assignment.subject.subjectid})}"

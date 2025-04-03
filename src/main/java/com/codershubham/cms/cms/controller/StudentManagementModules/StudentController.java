@@ -6,21 +6,24 @@ import com.codershubham.cms.cms.model.CourseManagementModules.SyllabusModel;
 import com.codershubham.cms.cms.model.DTO.AttendanceRecordDto;
 import com.codershubham.cms.cms.model.DTO.StudentQuestionsDto;
 import com.codershubham.cms.cms.model.ExaminationManagementModules.ExamFormModel;
-import com.codershubham.cms.cms.model.ExaminationManagementModules.ExamFormStatus;
-import com.codershubham.cms.cms.model.ExaminationManagementModules.ExamModel;
+import com.codershubham.cms.cms.model.ExaminationManagementModules.QuizModule.QuizAnswerModel;
+import com.codershubham.cms.cms.model.ExaminationManagementModules.QuizModule.QuizAttemptModel;
+import com.codershubham.cms.cms.model.ExaminationManagementModules.QuizModule.QuizModel;
+import com.codershubham.cms.cms.model.ExaminationManagementModules.QuizModule.QuizQuestionModel;
 import com.codershubham.cms.cms.model.StudentManagementModules.*;
 import com.codershubham.cms.cms.repository.StudentManagementModules.SemesterRepository;
-import com.codershubham.cms.cms.service.CourseManagementModules.SubjectService;
 import com.codershubham.cms.cms.service.CourseManagementModules.SyllabusService;
 import com.codershubham.cms.cms.service.ExaminationManagementModules.ExamFormService;
 import com.codershubham.cms.cms.service.ExaminationManagementModules.ExamService;
+import com.codershubham.cms.cms.service.ExaminationManagementModules.QuizModule.QuizAttemptService;
+import com.codershubham.cms.cms.service.ExaminationManagementModules.QuizModule.QuizQuestionService;
+import com.codershubham.cms.cms.service.ExaminationManagementModules.QuizModule.QuizService;
 import com.codershubham.cms.cms.service.FacultyManagementModules.AttendanceService;
 import com.codershubham.cms.cms.service.StudentManagementModules.AssignmentService;
 import com.codershubham.cms.cms.service.StudentManagementModules.DivisionService;
 import com.codershubham.cms.cms.service.StudentManagementModules.StudentService;
 import com.codershubham.cms.cms.util.UserRoleUtil;
 import jakarta.servlet.http.HttpSession;
-import org.aspectj.bridge.MessageUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -28,10 +31,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
-
 
 @Controller
 @RequestMapping(PathConstant.STUDENTS_PATH)
@@ -67,6 +68,15 @@ public class StudentController {
     @Autowired
     private ExamService examService;
 
+    @Autowired
+    private QuizService quizService;
+
+    @Autowired
+    private QuizAttemptService quizAttemptService;
+
+    @Autowired
+    private QuizQuestionService quizQuestionService;
+
     @GetMapping(PathConstant.DASHBOARD_PATH)
     public String studentDashboard(Model model) {
         Long userId = (Long) session.getAttribute("userId");
@@ -90,17 +100,6 @@ public class StudentController {
         // Return the view name
         return "StudentManagement/dashboard"; // Ensure this matches your Thymeleaf template name
     }
-
-//    @GetMapping("/profile")
-//    public String studentProfile(Model model) {
-//        Long userId = (Long) session.getAttribute("userId");
-//
-//        String userRole = userRoleUtil.getUserRole(session);
-//        model.addAttribute("userRole", userRole);
-//        model.addAttribute("userId", userId);
-//
-//        return "StudentManagement/profile";
-//    }
 
     @GetMapping("/attendance/{id}")
     public String viewAttendance(@PathVariable Long id, Model model) {
@@ -442,6 +441,166 @@ public class StudentController {
         model.addAttribute("student", student);
 
         return "StudentManagement/assignments/student-assignments-view"; // Return view name
+    }
+
+    @GetMapping("/quiz/{id}")
+    public String viewQuiz(@PathVariable Long id, Model model, HttpSession session) {
+        // Fetch all enrollments for the student
+        List<StudentEnrollmentModel> enrollments = studentService.getEnrollmentsByStudentId(id);
+
+        // Map to store subjects and their quizzes per semester, along with the attempt status
+        Map<Long, Map<SubjectsModel, List<Map<String, Object>>>> subjectQuizMap = new HashMap<>();
+
+        Long studentId = (Long) session.getAttribute("studentId");
+
+        for (StudentEnrollmentModel enrollment : enrollments) {
+            SemesterModel semester = enrollment.getSemester();
+            DivisionModel division = enrollment.getDivision();
+
+            if (semester == null || division == null) {
+                continue; // Skip invalid enrollments
+            }
+
+            Long semesterId = semester.getId();
+            Long divisionId = division.getId();
+
+            // Get subjects enrolled by the student for this semester
+            List<SubjectEnrollmentModel> subjects = studentService.getSubjectsByStudentIdAndSemester(id, semesterId);
+
+            // Map to store available quizzes for each subject
+            Map<SubjectsModel, List<Map<String, Object>>> subjectQuizListMap = new HashMap<>();
+
+            for (SubjectEnrollmentModel subjectEnrollment : subjects) {
+                SubjectsModel subject = subjectEnrollment.getSubject();
+
+                if (subject == null) {
+                    continue; // Skip invalid subjects
+                }
+
+                Long subjectId = subject.getSubjectid();
+
+                // Fetch quizzes for this subject and division
+                List<QuizModel> quizzes = quizService.getQuizzesForSubjectAndDivision(subjectId, divisionId, semesterId);
+
+                // List to store quizzes and attempt status for this subject
+                List<Map<String, Object>> quizAttemptList = new ArrayList<>();
+
+                for (QuizModel quiz : quizzes) {
+                    // Check if student has already attempted the quiz
+                    Optional<QuizAttemptModel> attempt = quizAttemptService.getAttemptByStudentAndQuiz(studentId, quiz.getId());
+
+                    // Create a map to store the quiz and its attempt status
+                    Map<String, Object> quizData = new HashMap<>();
+                    quizData.put("quiz", quiz);
+                    quizData.put("attempt", attempt.orElse(null)); // null if not attempted
+
+                    // Add to the list
+                    quizAttemptList.add(quizData);
+                }
+
+                // Store quizzes with attempt data for this subject
+                subjectQuizListMap.put(subject, quizAttemptList);
+            }
+
+            // Store subject quizzes data per semester
+            subjectQuizMap.put(semesterId, subjectQuizListMap);
+        }
+
+        // Add data to model for Thymeleaf rendering
+        model.addAttribute("studentId", id);
+        model.addAttribute("subjectQuizMap", subjectQuizMap);
+
+        String userRole = userRoleUtil.getUserRole(session);
+        model.addAttribute("userRole", userRole);
+
+        StudentModel student = studentService.findById(studentId);
+        model.addAttribute("student", student);
+
+        return "StudentManagement/quiz/quiz-view"; // Return view name
+    }
+
+    @GetMapping("/quiz/{quizId}/start")
+    public String startQuiz(@PathVariable Long quizId, Model model) {
+        Long studentId = (Long) session.getAttribute("studentId");
+
+        // Fetch quiz and student details
+        QuizModel quiz = quizService.getQuizById(quizId);
+        StudentModel student = studentService.findById(studentId);
+
+        // Check if the quiz has already been attempted
+        Optional<QuizAttemptModel> existingAttempt = quizAttemptService.getAttemptByStudentAndQuiz(studentId, quizId);
+        if (existingAttempt.isPresent()) {
+            model.addAttribute("message", "You have already attempted this quiz.");
+            return "StudentManagement/quiz/quiz-result"; // Redirect to result page if already attempted
+        }
+
+        // Show quiz details (questions and options)
+        model.addAttribute("quiz", quiz);
+        model.addAttribute("student", student);
+
+        return "StudentManagement/quiz/quiz-environment"; // Return quiz page with questions
+    }
+
+    @PostMapping("/quiz/{quizId}/submit")
+    public String submitQuiz(@PathVariable Long quizId, @RequestParam Map<String, String> responses, HttpSession session, Model model) {
+        Long studentId = (Long) session.getAttribute("studentId");
+
+        // Fetch quiz and student details
+        QuizModel quiz = quizService.getQuizById(quizId);
+        StudentModel student = studentService.findById(studentId);
+
+        // Check if quiz is already attempted by this student
+        Optional<QuizAttemptModel> existingAttempt = quizAttemptService.getAttemptByStudentAndQuiz(studentId, quizId);
+        if (existingAttempt.isPresent()) {
+            model.addAttribute("message", "You have already attempted this quiz.");
+            return "StudentManagement/quiz/quiz-result"; // Redirect to result page if already attempted
+        }
+
+        // Create a new quiz attempt record
+        QuizAttemptModel attempt = new QuizAttemptModel();
+        attempt.setQuiz(quiz);
+        attempt.setStudent(student);
+
+        int totalScore = 0;
+        List<QuizAnswerModel> answerList = new ArrayList<>();
+
+        // Iterate over each question in the quiz
+        for (QuizQuestionModel question : quiz.getQuestions()) {
+            String paramName = "question_" + question.getId();
+            String selectedOptionStr = responses.get(paramName);
+
+            // Check if an answer was provided for this question
+            if (selectedOptionStr != null) {
+                int selectedOption = Integer.parseInt(selectedOptionStr);
+                boolean isCorrect = (selectedOption == question.getCorrectOption());
+
+                // Increase the score if the answer is correct
+                if (isCorrect) {
+                    totalScore += 1;
+                }
+
+                // Create a new answer object to store the selected option and its correctness
+                QuizAnswerModel answer = new QuizAnswerModel();
+                answer.setAttempt(attempt);
+                answer.setQuestion(question);
+                answer.setSelectedOption(selectedOption);
+                answer.setCorrect(isCorrect);
+                answerList.add(answer);
+            }
+        }
+
+        // Set final score for the quiz attempt
+        attempt.setScore(totalScore);
+
+        // Save the quiz attempt and associated answers
+        quizAttemptService.saveAttempt(attempt, answerList);
+
+        // Add attributes for the result page
+        model.addAttribute("quiz", quiz);
+        model.addAttribute("attempt", attempt);
+        model.addAttribute("message", "Quiz Submitted Successfully!");
+
+        return "StudentManagement/quiz/quiz-result"; // Redirect to result page
     }
 
     @GetMapping("/assignments/{studentId}/{subjectId}/questions")
